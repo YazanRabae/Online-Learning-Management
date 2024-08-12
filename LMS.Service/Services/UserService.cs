@@ -22,8 +22,11 @@ namespace LMS.Service.Services
         public  async Task Register(RegisterDto model)
         {
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-            await userManager.CreateAsync(user, model.Password);
-            await signInManager.SignInAsync(user, isPersistent: false);
+            var result =await userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                await signInManager.SignInAsync(user, isPersistent: false);
+            }
         }
         public async Task LogIn(LogInDto model)
         {

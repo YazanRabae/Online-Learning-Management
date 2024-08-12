@@ -53,5 +53,9 @@ namespace Online_Learning_Management.Controllers
 
             return View(model);
         }
+        public IActionResult Profile()
+        {
+            return View();
+        }
     }
 }

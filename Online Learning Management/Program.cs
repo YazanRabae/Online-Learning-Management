@@ -17,9 +17,7 @@ namespace Online_Learning_Management
             builder.Services.AddDbContext<DbLMS>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("DbLMS")));
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>(option =>
-            option.Password.RequiredLength = 7
-            ).AddEntityFrameworkStores<DbLMS>();
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DbLMS>();
 
        
 

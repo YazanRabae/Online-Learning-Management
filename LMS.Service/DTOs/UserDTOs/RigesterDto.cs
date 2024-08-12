@@ -13,6 +13,8 @@ namespace LMS.Service.DTOs.UserDTOs
         public string Name { get; set; }
         [Required]
         [EmailAddress]
+        [Key]
+        
         public string Email { get; set; }
 
         [Required]
