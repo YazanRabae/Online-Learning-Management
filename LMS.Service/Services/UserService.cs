@@ -1,6 +1,7 @@
 ﻿using LMS.Repository.Repositories.Users;
 using LMS.Service.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,10 @@ namespace LMS.Service.Services
            await signInManager.PasswordSignInAsync(
           model.Email, model.Password, model.RememberMe, false);
         }
-
+        public async Task Logout()
+        {
+            await signInManager.SignOutAsync();
+        }
 
     }
 }

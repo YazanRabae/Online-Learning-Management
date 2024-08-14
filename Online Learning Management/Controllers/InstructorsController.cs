@@ -1,6 +1,5 @@
 ﻿using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,10 +52,28 @@ namespace Online_Learning_Management.Controllers
 
             return View(model);
         }
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            return View();
+            var user = await userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToAction("Register");
+            }
+
+            var model = new RegisterDto
+            {
+                Name = user.UserName,
+                Email = user.Email
+            };
+
+            return View(model);
         }
-       
+        public async Task<IActionResult> Logout()
+        {
+            await userService.Logout();
+            return RedirectToAction("index", "Home");
+        }
+
     }
 }
