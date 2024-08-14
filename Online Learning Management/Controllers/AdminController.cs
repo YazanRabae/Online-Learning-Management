@@ -10,5 +10,17 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
+        public IActionResult GetStudents()
+        {
+            return View();
+        }
+        public IActionResult GetInstructors()
+        {
+            return View();
+        }
+        public IActionResult GetCourses()
+        {
+            return View();
+        }
     }
 }
