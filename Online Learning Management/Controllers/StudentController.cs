@@ -1,11 +1,13 @@
 ﻿using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Online_Learning_Management.Models;
 
 namespace Online_Learning_Management.Controllers
 {
+    //[Authorize(Roles = "Student")]
     public class StudentController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -27,6 +29,14 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
+
+
+        public async Task<IActionResult> Logout()
+        {
+            await userService.Logout();
+            return RedirectToAction("index", "Home");
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDto model)
         {

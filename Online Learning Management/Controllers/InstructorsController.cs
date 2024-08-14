@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Online_Learning_Management.Controllers
 {
+    //[Authorize(Roles = "Instructor")]
     public class InstructorsController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -29,6 +30,13 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> Logout()
+        {
+            await userService.Logout();
+            return RedirectToAction("index", "Home");
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDto model)
         {

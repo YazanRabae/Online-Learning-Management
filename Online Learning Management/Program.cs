@@ -3,6 +3,7 @@ using LMS.Repository.Repositories.Users;
 using LMS.Service.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace Online_Learning_Management
 {
@@ -45,7 +46,56 @@ namespace Online_Learning_Management
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                
+                
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+                    SeedRoles(roleManager);
+                    SeedUsers(userManager);
+
+            }
             app.Run();
+        }
+
+        private static void SeedRoles(RoleManager<IdentityRole> roleManager)
+        {
+            string[] roleNames = { "Admin", "Instructor", "Student" };
+            foreach (var roleName in roleNames)
+            {
+                if (!roleManager.RoleExistsAsync(roleName).Result)
+                {
+                    var role = new IdentityRole();
+                    role.Name = roleName;
+                    roleManager.CreateAsync(role).Wait();
+                }
+            }
+        }
+
+        private static void SeedUsers(UserManager<IdentityUser> userManager)
+        {
+            if (userManager.FindByNameAsync("admin@example.com").Result == null)
+            {
+                IdentityUser user = new IdentityUser
+                {
+                    UserName = "Admin",
+                    Email = "admin@example.com"
+                };
+
+                IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd%*").Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Admin").Wait();
+                }
+            }
         }
     }
 }
+

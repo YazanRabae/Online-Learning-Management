@@ -13,9 +13,13 @@ namespace LMS.Service.Services
     {
         public  Task Register(RegisterDto model);
         public  Task LogIn(LogInDto model);
+<<<<<<< Updated upstream
         public Task Logout();
 
 
 
+=======
+        public  Task Logout();
+>>>>>>> Stashed changes
     }
 }

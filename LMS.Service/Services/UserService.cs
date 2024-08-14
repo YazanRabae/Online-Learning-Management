@@ -38,6 +38,10 @@ namespace LMS.Service.Services
         {
             await signInManager.SignOutAsync();
         }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
     }
 }
