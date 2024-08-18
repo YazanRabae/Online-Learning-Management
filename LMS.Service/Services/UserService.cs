@@ -20,6 +20,7 @@ namespace LMS.Service.Services
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
+
         public  async Task Register(RegisterDto model)
         {
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };
@@ -29,11 +30,14 @@ namespace LMS.Service.Services
                 await signInManager.SignInAsync(user, isPersistent: false);
             }
         }
+
         public async Task LogIn(LogInDto model)
         {
            await signInManager.PasswordSignInAsync(
           model.Email, model.Password, model.RememberMe, false);
         }
+
+
         public async Task Logout()
         {
             await signInManager.SignOutAsync();
