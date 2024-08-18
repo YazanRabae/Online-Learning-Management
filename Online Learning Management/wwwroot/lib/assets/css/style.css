@@ -613,6 +613,17 @@ h6 {
   background-color: #fff;
 }
 
+
+sidebar-hidden .sidebar {
+    display: none;
+}
+
+.sidebar-hidden .main-content {
+    width: 100%;
+    margin-left: 0;
+}
+
+
 @media (max-width: 1199px) {
   .sidebar {
     left: -300px;
@@ -756,6 +767,8 @@ h6 {
 .sidebar-nav .nav-content a.active i {
   background-color: #4154f1;
 }
+ Sidebar styles 
+
 
 /*--------------------------------------------------------------
 # Dashboard

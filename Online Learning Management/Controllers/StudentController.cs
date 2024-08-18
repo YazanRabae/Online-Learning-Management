@@ -58,7 +58,7 @@ namespace Online_Learning_Management.Controllers
             if (ModelState.IsValid)
             {
                 await userService.LogIn(model);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("GetAllCourses", "Instructors");
             }
 
             return View(model);
@@ -85,7 +85,7 @@ namespace Online_Learning_Management.Controllers
         //    await userService.Logout();
         //    return RedirectToAction("index", "Home");
         //}
-
+   
 
     }
 }
