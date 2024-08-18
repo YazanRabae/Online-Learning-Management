@@ -6,6 +6,8 @@
 
     // List of actions where the sidebar and navbar should be hidden
     var actionsToHideLayout = new List<string> { "Register", "LogIn" };
+
+    var showSidebar = ViewBag.ShowSidebar ?? false; // Default to true if not set
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -44,37 +46,25 @@
 
     <!-- Template Main CSS File -->
     <link href="~/lib/assets/css/style.css" rel="stylesheet">
+
 </head>
-<body>
+<body class="@(showSidebar ? "" : "sidebar-hidden")">
   @*   @if (!(actionsToHideLayout.Contains(currentAction)) && currentController != "Instructors" || currentController != "Student") *@
     @if (!(actionsToHideLayout.Contains(currentAction) && (currentController == "Instructors" || currentController == "Student")))
     {
         <!-- ======= Header ======= -->
         <header id="header" class="header fixed-top d-flex align-items-center">
 
-            @*    <div class="d-flex align-items-center justify-content-between">
-            <a href="index.html" class="logo d-flex align-items-center">
-                <img src="~/photo/feras.png" />
-                <span class="d-none d-lg-block">LMS</span>
-            </a>
-            <i class="bi bi-list toggle-sidebar-btn"></i>
-        </div><!-- End Logo --> *@
+           
             <div class="d-flex align-items-center justify-content-between">
                 <a asp-controller="Home"  asp-action="Index" class="logo d-flex align-items-center">
                     <img src="~/photo/feras.png" />
                 </a>
-                @if (User.IsInRole("Admin"))
+                @if (User.IsInRole("Admin") || showSidebar == true)
                 {
-                <i class="bi bi-list toggle-sidebar-btn"></i>  
+                    <i class="bi bi-list toggle-sidebar-btn"></i>  
                 }
-            </div><!-- End Logo -->
-
-            @* <div class="search-bar">
-            <form class="search-form d-flex align-items-center" method="POST" action="#">
-                <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-            </form>
-        </div><!-- End Search Bar --> *@
+            </div>
 
             <nav class="header-nav ms-auto">
                 <ul class="d-flex align-items-center">
@@ -85,7 +75,7 @@
                         </a>
                     </li><!-- End Search Icon--> 
 
-                    <li class="nav-item dropdown">
+                    @* <li class="nav-item dropdown">
 
                         <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                             <i class="bi bi-bell"></i>
@@ -156,11 +146,11 @@
                                 <a href="#">Show all notifications</a>
                             </li>
 
-                        </ul><!-- End Notification Dropdown Items -->
+                        </ul>
 
-                    </li><!-- End Notification Nav -->
+                    </li> *@
 
-                    <li class="nav-item dropdown">
+                    @* <li class="nav-item dropdown">
 
                         <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                             <i class="bi bi-chat-left-text"></i>
@@ -222,25 +212,18 @@
                                 <a href="#">Show all messages</a>
                             </li>
 
-                        </ul><!-- End Messages Dropdown Items -->
+                        </ul>
 
-                    </li><!-- End Messages Nav -->
+                    </li> *@
 
                     <li class="nav-item dropdown pe-3">
 
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                            <img src="~/lib/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+                            @* <img src="~/lib/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"> *@
                             <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-                        </a><!-- End Profile Iamge Icon -->
+                        </a>
 
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                            <li class="dropdown-header">
-                                <h6>Kevin Anderson</h6>
-                                <span>Web Designer</span>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
 
                             <li>
                                 <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
@@ -248,26 +231,7 @@
                                     <span>My Profile</span>
                                 </a>
                             </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                    <i class="bi bi-gear"></i>
-                                    <span>Account Settings</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                                    <i class="bi bi-question-circle"></i>
-                                    <span>Need Help?</span>
-                                </a>
-                            </li>
+                            
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -282,15 +246,16 @@
                         </ul><!-- End Profile Dropdown Items -->
                     </li><!-- End Profile Nav -->
 
+
                 </ul>
             </nav><!-- End Icons Navigation -->
 
         </header>
         <!-- End Header -->
         <!-- ======= Sidebar ======= -->
-        @if (User.IsInRole("Admin"))
+        @if (User.IsInRole("Admin") || showSidebar == true)
         {
-            <aside id="sidebar" class="sidebar">
+            <aside id="sidebar"class="sidebar">
 
                 <ul class="sidebar-nav" id="sidebar-nav">
 
@@ -330,7 +295,8 @@
         }
 
     }
-    <main id="main" class="main">
+    <main id="main" class="main-content ">
+     @*    @(!showSidebar ? "w-100" : "") *@
         @RenderBody()
     </main>
 
@@ -372,9 +338,10 @@
     <script src="~/lib/assets/vendor/simple-datatables/simple-datatables.js"></script>
     <script src="~/lib/assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="~/lib/assets/vendor/php-email-form/validate.js"></script>
-
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Template Main JS File -->
     <script src="~/lib/assets/js/main.js"></script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
