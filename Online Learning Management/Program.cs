@@ -43,7 +43,7 @@ namespace Online_Learning_Management
                     policy.RequireClaim("Disable Instructors", "true"));
 
                 options.AddPolicy("AdminPolicy.DisableCourses", policy =>
-                    policy.RequireClaim("Disable Courses", "true"));
+                    policy.RequireClaim("Disable Courses", "true"));jkkj
             });
 
             var app = builder.Build();
