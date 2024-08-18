@@ -25,6 +25,27 @@ namespace Online_Learning_Management
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
 
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy.ManageStudents", policy =>
+                    policy.RequireClaim("Manage Students", "true"));
+
+                options.AddPolicy("AdminPolicy.ManageInstructors", policy =>
+                    policy.RequireClaim("Manage Instructors", "true"));
+
+                options.AddPolicy("AdminPolicy.ManageCourses", policy =>
+                    policy.RequireClaim("Manage Courses", "true"));
+
+                options.AddPolicy("AdminPolicy.DisableStudents", policy =>
+                    policy.RequireClaim("Disable Students", "true"));
+
+                options.AddPolicy("AdminPolicy.DisableInstructors", policy =>
+                    policy.RequireClaim("Disable Instructors", "true"));
+
+                options.AddPolicy("AdminPolicy.DisableCourses", policy =>
+                    policy.RequireClaim("Disable Courses", "true"));
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -62,26 +83,7 @@ namespace Online_Learning_Management
 
             }
 
-            builder.Services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminPolicy.ManageStudents", policy =>
-                    policy.RequireClaim("Manage Students", "true"));
 
-                options.AddPolicy("AdminPolicy.ManageInstructors", policy =>
-                    policy.RequireClaim("Manage Instructors", "true"));
-
-                options.AddPolicy("AdminPolicy.ManageCourses", policy =>
-                    policy.RequireClaim("Manage Courses", "true"));
-
-                options.AddPolicy("AdminPolicy.DisableStudents", policy =>
-                    policy.RequireClaim("Disable Students", "true"));
-
-                options.AddPolicy("AdminPolicy.DisableInstructors", policy =>
-                    policy.RequireClaim("Disable Instructors", "true"));
-
-                options.AddPolicy("AdminPolicy.DisableCourses", policy =>
-                    policy.RequireClaim("Disable Courses", "true"));
-            });
 
 
 
