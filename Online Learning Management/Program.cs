@@ -20,7 +20,7 @@ namespace Online_Learning_Management
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DbLMS>();
 
-       
+
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
@@ -53,14 +53,38 @@ namespace Online_Learning_Management
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                
-                
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
-                    SeedRoles(roleManager);
-                    SeedUsers(userManager);
+
+
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+                SeedRoles(roleManager);
+                SeedUsers(userManager);
 
             }
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy.ManageStudents", policy =>
+                    policy.RequireClaim("Manage Students", "true"));
+
+                options.AddPolicy("AdminPolicy.ManageInstructors", policy =>
+                    policy.RequireClaim("Manage Instructors", "true"));
+
+                options.AddPolicy("AdminPolicy.ManageCourses", policy =>
+                    policy.RequireClaim("Manage Courses", "true"));
+
+                options.AddPolicy("AdminPolicy.DisableStudents", policy =>
+                    policy.RequireClaim("Disable Students", "true"));
+
+                options.AddPolicy("AdminPolicy.DisableInstructors", policy =>
+                    policy.RequireClaim("Disable Instructors", "true"));
+
+                options.AddPolicy("AdminPolicy.DisableCourses", policy =>
+                    policy.RequireClaim("Disable Courses", "true"));
+            });
+
+
+
             app.Run();
         }
 
