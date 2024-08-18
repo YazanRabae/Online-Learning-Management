@@ -95,6 +95,7 @@ namespace Online_Learning_Management
                     userManager.AddToRoleAsync(user, "Admin").Wait();
                 }
             }
+
         }
     }
 }

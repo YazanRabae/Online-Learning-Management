@@ -1,5 +1,7 @@
-﻿using LMS.Service.DTOs.UserDTOs;
+﻿using LMS.Domain.Entities.User;
+using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +28,7 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
+        [AllowAnonymous]
         public IActionResult LogIn()
         {
             return View();
@@ -34,7 +37,7 @@ namespace Online_Learning_Management.Controllers
         public async Task<IActionResult> Logout()
         {
             await userService.Logout();
-            return RedirectToAction("index", "Home");
+            return RedirectToAction("Dashboard", "Instructors");
         }
 
         [HttpPost]
@@ -43,19 +46,20 @@ namespace Online_Learning_Management.Controllers
             if (ModelState.IsValid)
             {
                 await userService.Register(model);
-                 return RedirectToAction("index", "Home"); //false is session cookies ,Ture is persistent cookies
+                 return RedirectToAction("Dashboard", "Instructors"); //false is session cookies ,Ture is persistent cookies
                 
             }
             return View(model);
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> LogIn(LogInDto model)
         {
             if (ModelState.IsValid)
             {
                 await userService.LogIn(model);
-               return RedirectToAction("Index", "Home");
+               return RedirectToAction("Dashboard", "Instructors");
             }
 
             return View(model);
@@ -66,7 +70,7 @@ namespace Online_Learning_Management.Controllers
 
             if (user == null)
             {
-                return RedirectToAction("Register");
+                return RedirectToAction("Register" , "Instructors");
             }
 
             var model = new RegisterDto
@@ -82,6 +86,30 @@ namespace Online_Learning_Management.Controllers
         //    await userService.Logout();
         //    return RedirectToAction("index", "Home");
         //}
+        [AcceptVerbs("Get", "Post")]
+        //allow how are not authintecated not login
+        [AllowAnonymous]
+        public async Task<IActionResult> IsEmailUsed(string Email)
+        {
+            var result = await userManager.FindByEmailAsync(Email);
+            if (result == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"this {Email} is already in used");
+            }
+
+        }
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+        public IActionResult GetAllCourses()
+        {
+            return View();
+        }
 
     }
 }

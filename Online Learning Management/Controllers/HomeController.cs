@@ -12,7 +12,6 @@ namespace Online_Learning_Management.Controllers
         {
             _logger = logger;
         }
-
         public IActionResult Index()
         {
             return View();
