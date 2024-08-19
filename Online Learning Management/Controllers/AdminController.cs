@@ -34,6 +34,7 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
+
         public IActionResult GetStudents()
         {
             return View();
@@ -123,52 +124,13 @@ namespace Online_Learning_Management.Controllers
             return RedirectToAction("EditUser", new { Id = model.UserId });
         }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
 
 
-        //[Authorize(Policy = "AdminPolicy.DisableStudents")]
-        //public async Task<IActionResult> DisableStudent(string studentId)
-        //{
-        //    var student = await _context.Students.FindAsync(studentId);
-        //    if (student == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    student.IsActive = false;
-        //    await _context.SaveChangesAsync();
-
-        //    return RedirectToAction(nameof(GetAllStudents));
-        //}
-
-        //[Authorize(Policy = "AdminPolicy.DisableInstructors")]
-        //public async Task<IActionResult> DisableInstructor(string instructorId)
-        //{
-        //    var instructor = await _context.Instructors.FindAsync(instructorId);
-        //    if (instructor == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    instructor.IsActive = false;
-        //    await _context.SaveChangesAsync();
-
-        //    return RedirectToAction(nameof(GetAllInstructors));
-        //}
-
-        //[Authorize(Policy = "AdminPolicy.DisableCourses")]
-        //public async Task<IActionResult> DisableCourse(int courseId)
-        //{
-        //    var course = await _context.Courses.FindAsync(courseId);
-        //    if (course == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    course.IsActive = false;
-        //    await _context.SaveChangesAsync();
-
-        //    return RedirectToAction(nameof(GetAllCourses));
-        //}
     }
 }

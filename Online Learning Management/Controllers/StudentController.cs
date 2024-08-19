@@ -42,8 +42,8 @@ namespace Online_Learning_Management.Controllers
         {
             if (ModelState.IsValid)
             {
-                await userService.Register(model);
-                return RedirectToAction("Dashboard", "Student"); //false is session cookies ,Ture is persistent cookies
+                await userService.Register(model, "Student");
+                return RedirectToAction("index", "Home"); //false is session cookies ,Ture is persistent cookies
 
             }
             return View(model);

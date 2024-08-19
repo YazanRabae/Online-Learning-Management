@@ -9,7 +9,7 @@ namespace Online_Learning_Management
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +18,9 @@ namespace Online_Learning_Management
             builder.Services.AddDbContext<DbLMS>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("DbLMS")));
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DbLMS>();
-
-
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<DbLMS>()
+                .AddDefaultTokenProviders();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
@@ -46,46 +46,39 @@ namespace Online_Learning_Management
                     policy.RequireClaim("Disable Courses", "true"));
             });
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Shared/AccessDenied"; // Change to your correct path
+            });
+
             var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+                SeedRoles(roleManager);
+                await SeedUsers(userManager); // Awaiting the Task here
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
+            app.UseAuthentication(); // Ensure this is called before UseAuthorization
             app.UseAuthorization();
-            app.UseAuthentication();
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-
-
-
-
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-
-
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
-                SeedRoles(roleManager);
-                SeedUsers(userManager);
-
-            }
-
-
-
-
 
             app.Run();
         }
@@ -104,25 +97,23 @@ namespace Online_Learning_Management
             }
         }
 
-        private static void SeedUsers(UserManager<IdentityUser> userManager)
+        private async static Task SeedUsers(UserManager<IdentityUser> userManager)
         {
-            if (userManager.FindByNameAsync("admin@example.com").Result == null)
+            // Create the admin user if it doesn't already exist
+            if (await userManager.FindByNameAsync("admin@example.com") == null)
             {
                 IdentityUser user = new IdentityUser
                 {
-                    UserName = "Admin",
+                    UserName = "admin@example.com",
                     Email = "admin@example.com"
                 };
 
-                IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd%*").Result;
-
+                var result = await userManager.CreateAsync(user, "P@ssw0rd%*");
                 if (result.Succeeded)
                 {
-                    userManager.AddToRoleAsync(user, "Admin").Wait();
+                    await userManager.AddToRoleAsync(user, "Admin");
                 }
             }
-
         }
     }
 }
-
