@@ -15,26 +15,33 @@ namespace LMS.Service.Services
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         public UserService(UserManager<IdentityUser> userManager,
-           SignInManager<IdentityUser> signInManager )
+           SignInManager<IdentityUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
 
-        public  async Task Register(RegisterDto model)
+
+        public async Task Register(RegisterDto model, string role)
         {
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-            var result =await userManager.CreateAsync(user, model.Password);
+            var result = await userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
+                // Assign the role based on the signup type
+                await userManager.AddToRoleAsync(user, role);
+
+                // Sign in the user
                 await signInManager.SignInAsync(user, isPersistent: false);
             }
         }
 
+
+
         public async Task LogIn(LogInDto model)
         {
-           await signInManager.PasswordSignInAsync(
-          model.Email, model.Password, model.RememberMe, false);
+            await signInManager.PasswordSignInAsync(
+           model.Email, model.Password, model.RememberMe, false);
         }
 
 

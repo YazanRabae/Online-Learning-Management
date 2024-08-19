@@ -20,10 +20,13 @@ namespace Online_Learning_Management.Controllers
             this.signInManager = signInManager;
             this.userService = userService;
         }
+
+     
         public IActionResult Index()
         {
             return View();
         }
+
         public IActionResult Register()
         {
             return View();
@@ -45,8 +48,8 @@ namespace Online_Learning_Management.Controllers
         {
             if (ModelState.IsValid)
             {
-                await userService.Register(model);
-                 return RedirectToAction("Dashboard", "Instructors"); //false is session cookies ,Ture is persistent cookies
+                await userService.Register(model, "Instructor");
+                return RedirectToAction("Dashboard", "Instructors"); //false is session cookies ,Ture is persistent cookies
                 
             }
             return View(model);
@@ -102,15 +105,23 @@ namespace Online_Learning_Management.Controllers
             }
 
         }
+
+        
         public IActionResult Dashboard()
         {
             return View();
         }
+
+        
         public IActionResult GetAllCourses()
         {
             return View();
         }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
     }
 }

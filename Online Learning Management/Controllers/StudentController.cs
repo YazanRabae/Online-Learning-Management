@@ -42,7 +42,7 @@ namespace Online_Learning_Management.Controllers
         {
             if (ModelState.IsValid)
             {
-                await userService.Register(model);
+                await userService.Register(model, "Student");
                 return RedirectToAction("index", "Home"); //false is session cookies ,Ture is persistent cookies
 
             }
@@ -80,12 +80,11 @@ namespace Online_Learning_Management.Controllers
 
             return View(model);
         }
-        //public async Task<IActionResult> Logout()
-        //{
-        //    await userService.Logout();
-        //    return RedirectToAction("index", "Home");
-        //}
-   
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
     }
 }
