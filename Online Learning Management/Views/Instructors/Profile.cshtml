@@ -1,17 +1,21 @@
 ﻿@using LMS.Service.DTOs.UserDTOs
 @model RegisterDto
-@{
-    ViewBag.ShowSidebar = true;
-}
+@* instructor *@
 <!DOCTYPE html>
 <html>
 <head>
     <title>Profile Page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .narrow-card {
+            max-width: 700px; /* Adjust the width as needed */
+            margin: 0 auto; /* Center the card horizontally */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <div class="card">
+        <div class="card narrow-card">
             <div class="card-header text-center">
                 <h2>Profile</h2>
             </div>
@@ -27,7 +31,7 @@
                 </div>
 
                 <div class="text-center">
-                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back</a>
+                    <a asp-controller="Instructors" asp-action="Dashboard" class="btn btn-primary">Back</a>
                 </div>
             </div>
         </div>
