@@ -38,7 +38,7 @@ namespace Online_Learning_Management.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto model)
+        public async Task<IActionResult> Register(RegisterDto model )
         {
             if (ModelState.IsValid)
             {
@@ -80,15 +80,13 @@ namespace Online_Learning_Management.Controllers
 
             return View(model);
         }
-        //public async Task<IActionResult> Logout()
-        //{
-        //    await userService.Logout();
-        //    return RedirectToAction("index", "Home");
-        //}
 
         public IActionResult Dashboard()
         {
-            return View();
+            if (signInManager.IsSignedIn(User))
+                return View();
+            
+            return RedirectToAction("LogIn", "Student");
         }
     }
 }
