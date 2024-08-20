@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace Online_Learning_Management.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -47,6 +47,7 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
+
 
 
         public IActionResult LogIn()
@@ -124,10 +125,9 @@ namespace Online_Learning_Management.Controllers
             return RedirectToAction("EditUser", new { Id = model.UserId });
         }
 
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
+
+       
+
 
 
 

@@ -22,6 +22,12 @@ namespace Online_Learning_Management
                 .AddEntityFrameworkStores<DbLMS>()
                 .AddDefaultTokenProviders();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Shared/AccessDenied"; // Set to your correct path
+            });
+
+
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
 
@@ -46,10 +52,7 @@ namespace Online_Learning_Management
                     policy.RequireClaim("Disable Courses", "true"));
             });
 
-            builder.Services.ConfigureApplicationCookie(options =>
-            {
-                options.AccessDeniedPath = "/Shared/AccessDenied"; // Change to your correct path
-            });
+
 
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
@@ -59,8 +62,11 @@ namespace Online_Learning_Management
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
                 SeedRoles(roleManager);
-                await SeedUsers(userManager); // Awaiting the Task here
+                await SeedUsers(userManager); 
             }
+
+            app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -73,7 +79,7 @@ namespace Online_Learning_Management
             app.UseStaticFiles();
             app.UseRouting();
 
-            app.UseAuthentication(); // Ensure this is called before UseAuthorization
+            app.UseAuthentication(); 
             app.UseAuthorization();
 
             app.MapControllerRoute(

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Online_Learning_Management.Controllers
 {
-    //[Authorize(Roles = "Instructor")]
+    
     public class InstructorsController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -40,7 +40,7 @@ namespace Online_Learning_Management.Controllers
         public async Task<IActionResult> Logout()
         {
             await userService.Logout();
-            return RedirectToAction("Dashboard", "Instructors");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -62,7 +62,10 @@ namespace Online_Learning_Management.Controllers
             if (ModelState.IsValid)
             {
                 await userService.LogIn(model);
-               return RedirectToAction("Dashboard", "Instructors");
+                if(User.IsInRole("Admin"))
+                    return RedirectToAction("Index", "Home");
+                else
+                    return RedirectToAction("Dashboard", "Instructors");
             }
 
             return View(model);
@@ -106,10 +109,14 @@ namespace Online_Learning_Management.Controllers
 
         }
 
-        
+        [Authorize(Roles = "Instructor")]
         public IActionResult Dashboard()
         {
-            return View();
+            if (signInManager.IsSignedIn(User))
+                return View();
+
+
+            return RedirectToAction("LogIn", "Instructors");
         }
 
         
@@ -118,10 +125,9 @@ namespace Online_Learning_Management.Controllers
             return View();
         }
 
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
+
+       
+
 
     }
 }

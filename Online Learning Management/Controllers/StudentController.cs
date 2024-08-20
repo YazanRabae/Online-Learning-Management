@@ -7,7 +7,7 @@ using Online_Learning_Management.Models;
 
 namespace Online_Learning_Management.Controllers
 {
-    //[Authorize(Roles = "Student")]
+
     public class StudentController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -34,7 +34,7 @@ namespace Online_Learning_Management.Controllers
         public async Task<IActionResult> Logout()
         {
             await userService.Logout();
-            return RedirectToAction("Dashboard", "Student");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -58,7 +58,11 @@ namespace Online_Learning_Management.Controllers
             if (ModelState.IsValid)
             {
                 await userService.LogIn(model);
-                return RedirectToAction("Dashboard", "Student");
+                if (User.IsInRole("Admin"))
+                    return RedirectToAction("Index", "Home");
+                else
+                    return RedirectToAction("Dashboard", "Student");
+
             }
 
             return View(model);
@@ -81,6 +85,7 @@ namespace Online_Learning_Management.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Student")]
         public IActionResult Dashboard()
         {
             if (signInManager.IsSignedIn(User))
@@ -88,5 +93,8 @@ namespace Online_Learning_Management.Controllers
             
             return RedirectToAction("LogIn", "Student");
         }
+
+        
+
     }
 }
