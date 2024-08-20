@@ -10,33 +10,21 @@
 
     var showSidebar = ViewBag.ShowSidebar ?? false; // Default to true if not set
 }
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Online Learning Management</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Online_Learning_Management.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    <link href="~/css/site.css" rel="stylesheet" />
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Dashboard - NiceAdmin Bootstrap Template</title>
+    <title>@ViewData["Title"] - Online Learning Management</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
-
-    <!-- Favicons -->
-    @* <link href="~/lib/assets/img/favicon.png" rel="icon">
-    <link href="~/lib/assets/img/apple-touch-icon.png" rel="apple-touch-icon"> *@
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-
 
     <!-- Vendor CSS Files -->
     <link href="~/lib/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -51,196 +39,194 @@
     <link href="~/lib/assets/css/style.css" rel="stylesheet">
 
 </head>
-<body class="@(showSidebar ? "" : "sidebar-hidden")">
-    @*   @if (!(actionsToHideLayout.Contains(currentAction)) && currentController != "Instructors" || currentController != "Student") *@
-    @if (!(actionsToHideLayout.Contains(currentAction) && (currentController == "Instructors" || currentController == "Student")))
-    {
-        <!-- ======= Header ======= -->
-        <header id="header" class="header fixed-top d-flex align-items-center">
 
+<body>
 
-            <div class="d-flex align-items-center justify-content-between">
-                <a asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center">
-                    <img src="~/photo/feras.png" />
-                </a>
-                @if (User.IsInRole("Admin") || showSidebar == true)
-                {
-                    <i class="bi bi-list toggle-sidebar-btn"></i>
-                }
-            </div>
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
 
-            <nav class="header-nav ms-auto">
-                <ul class="d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-between">
+            <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center">
+                <img src="~/photo/feras.png" style="width: 130px; height: 60px;" alt="">
+            </a>
+            @if (User.IsInRole("Admin") || showSidebar == true)
+            {
+                <i class="bi bi-list toggle-sidebar-btn"></i>
+            }
+        </div><!-- End Logo -->
 
-                    <li class="nav-item d-block d-lg-none">
-                        <a class="nav-link nav-icon search-bar-toggle " href="#">
-                            <i class="bi bi-search"></i>
-                        </a>
-                    </li><!-- End Search Icon-->
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
 
-                    <li class="nav-item dropdown pe-3">
+                <li class="nav-item dropdown pe-3">
 
-                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                            @* <img src="~/lib/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"> *@
-                            @if (signInManager.IsSignedIn(User))
-                            {
-                                <span class="d-none d-md-block dropdown-toggle ps-2">
-                                    @User.Identity.Name
-                                </span>
-                            }
-                            else{
-                                <span class="d-none d-md-block dropdown-toggle ps-2">
-                                    Account
-                                </span>
-                            }
-                        </a>
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            <span class="d-none d-md-block dropdown-toggle ps-2">
+                                @User.Identity.Name
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="d-none d-md-block dropdown-toggle ps-2">
+                                Account
+                            </span>
+                        }
+                    </a><!-- End Profile Iamge Icon -->
 
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                            @if (signInManager.IsSignedIn(User))
-                            {
-                                <li>
-                                    @if (User.IsInRole("Student"))
-                                    {
-                                        <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Profile">
-                                            <i class="bi bi-person" ></i>
-                                            <span>
-                                                My Profile
-                                            </span>
-                                            @* <a class="dropdown-item" asp-controller="Instructors" asp-action="Profile">Profile Details</a> *@
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a class="dropdown-item d-flex align-items-center" asp-controller="Instructors" asp-action="Profile">
-                                            <i class="bi bi-person"></i>
-                                            <span>
-                                                My Profile
-                                            </span>
-                                            @* <a class="dropdown-item" asp-controller="Instructors" asp-action="Profile">Profile Details</a> *@
-                                        </a>
-                                    }
-                                </li>
-
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-
-                                <li>
-                                    @if (User.IsInRole("Student"))
-                                    {
-                                        <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Logout">
-                                            <i class="bi bi-box-arrow-right"  ></i>
-                                            <span>Sign Out</span>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a class="dropdown-item d-flex align-items-center" asp-controller="Instructors" asp-action="Logout">
-                                            <i class="bi bi-box-arrow-right"></i>
-                                            <span>Sign Out</span>
-                                        </a>
-                                    }
-                                </li>
-                            }
-                            else
-                            {
-                                <li>
-
-                                    <a class="btn btn-login btn-instructor ml-2" asp-controller="Instructors" asp-action="LogIn">
-                                        <i class="bi bi-person-badge"></i> Instructor Login
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            <li>
+                                @if (User.IsInRole("Student"))
+                                {
+                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Profile">
+                                        <i class="bi bi-person"></i>
+                                        <span>
+                                            My Profile
+                                        </span>
+                                        @* <a class="dropdown-item" asp-controller="Instructors" asp-action="Profile">Profile Details</a> *@
                                     </a>
-                                </li>
+                                }
+                                else
+                                {
+                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Instructors" asp-action="Profile">
+                                        <i class="bi bi-person"></i>
+                                        <span>
+                                            My Profile
+                                        </span>
+                                        @* <a class="dropdown-item" asp-controller="Instructors" asp-action="Profile">Profile Details</a> *@
+                                    </a>
+                                }
+                            </li>
 
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
 
-                               
-                                <li>
-                                
+                            <li>
+                                @if (User.IsInRole("Student"))
+                                {
+                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Logout">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        <span>Sign Out</span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Instructors" asp-action="Logout">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        <span>Sign Out</span>
+                                    </a>
+                                }
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+
+                                <a class="btn btn-login btn-instructor ml-2" asp-controller="Instructors" asp-action="LogIn">
+                                    <i class="bi bi-person-badge"></i> Instructor Login
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+
+                            <li>
+
                                 <a class="btn btn-login btn-student ml-2" asp-controller="Student" asp-action="LogIn">
 
-                                        <i class="bi bi-person-circle"></i>  Student Login
+                                    <i class="bi bi-person-circle"></i>  Student Login
                                 </a>
-                                </li>
-                            
-                            }
+                            </li>
 
-                        </ul><!-- End Profile Dropdown Items -->
-                    </li><!-- End Profile Nav -->
+                        }
 
+                    </ul><!-- End Profile Dropdown Items -->
 
-                </ul>
-            </nav><!-- End Icons Navigation -->
+                </li><!-- End Profile Nav -->
 
-        </header>
-        <!-- End Header -->
-        <!-- ======= Sidebar ======= -->
-        @if (User.IsInRole("Admin") || showSidebar == true)
-        {
-            <aside id="sidebar" class="sidebar">
+            </ul>
+        </nav><!-- End Icons Navigation -->
 
-                <ul class="sidebar-nav" id="sidebar-nav">
+    </header><!-- End Header -->
+    <!-- ======= Sidebar ======= -->
+    @if (User.IsInRole("Admin") || showSidebar == true)
+    {
+        <aside id="sidebar" class="sidebar">
 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index">
-                            <i class="bi bi-grid"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li> <!-- End Dashboard Nav -->
+            <ul class="sidebar-nav" id="sidebar-nav">
 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Admin" asp-action="GetStudents">
-                            <i class="bi bi-people"></i> <!-- Icon for Student -->
-                            <span>Student</span>
-                        </a>
-                    </li> <!-- End Student Nav -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-grid"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Admin" asp-action="GetInstructors">
-                            <i class="bi bi-person-lines-fill"></i> <!-- Icon for Instructors -->
-                            <span>Instructors</span>
-                        </a>
-                    </li> <!-- End Instructors Nav -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" asp-controller="Admin" asp-action="GetStudents">
+                        <i class="bi bi-people"></i>
+                        <span>Student</span>
+                    </a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Admin" asp-action="GetCourses">
-                            <i class="bi bi-clipboard-data"></i> <!-- Icon for Courses -->
-                            <span>Courses</span>
-                        </a>
-                    </li>
-                    <!-- End Courses Nav -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" asp-controller="Admin" asp-action="GetInstructors">
+                        <i class="bi bi-person-lines-fill"></i>
+                        <span>Instructor</span>
+                    </a>
+                </li>
 
-                </ul>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" asp-controller="Admin" asp-action="GetCourses">
+                        <i class="bi bi-clipboard-data"></i>
+                        <span>Course</span>
+                    </a>
+                </li>
 
-            </aside>
-            <!-- End Sidebar-->
-        }
+            </ul>
 
+        </aside>
+
+        <!-- End Sidebar-->
     }
-    <main style="margin-top: 100px;">
 
-        @RenderBody()
+    @if (User.IsInRole("Admin") || showSidebar == true)
+    {
+        <main id="main" class="main">
 
-    </main>
+            @RenderBody();
 
+        </main>
+    }else
+    {
+        <main class="main" style="margin-top: 100px;">
+
+            @RenderBody();
+
+        </main>
+    }
     <!-- ======= Footer ======= -->
-    <hr />
-    <footer class="">
-        <div class="copyright text-center">
-            Copyrights © 2024, TPS All Rights Reserved
+    <footer id="footer" class="footer">
+        <div class="copyright">
+            &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
         </div>
-    </footer>
-    <!-- End Footer -->
+        <div class="credits">
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        </div>
+    </footer><!-- End Footer -->
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     <!-- Vendor JS Files -->
     <script src="~/lib/assets/vendor/apexcharts/apexcharts.min.js"></script>
     <script src="~/lib/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -250,12 +236,10 @@
     <script src="~/lib/assets/vendor/simple-datatables/simple-datatables.js"></script>
     <script src="~/lib/assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="~/lib/assets/vendor/php-email-form/validate.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- Template Main JS File -->
     <script src="~/lib/assets/js/main.js"></script>
 
-
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html>
 
+</html>
