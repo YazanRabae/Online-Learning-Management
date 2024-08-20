@@ -1,4 +1,47 @@
 ﻿@{
     ViewData["Title"] = "Courses";
 }
-<h1 class="text-center">@ViewData["Title"]</h1>
+
+<div class="container">
+
+    <h1 class="text-left">@ViewData["Title"]</h1>
+    <section class="section">
+        <div class="d-flex justify-content-center">
+            <div class="col-lg-12">
+
+                <div class="card p-4">
+                    <div class="card-body">
+                        <!-- Table with striped rows -->
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Brief</th>
+                                    <th scope="col">Created Date</th>
+                                    <th scope="col">(Active/Disactive)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Brandon Jacob</td>
+                                    <td>Brandon Jacob</td>
+                                    <td>Designer</td>
+                                    <td>Designer</td>
+                                    <td>28</td>
+                                    <td><button type="submit" value="Active" class="btn btn-primary">Active</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- End Table with striped rows -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
