@@ -1,6 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> signInManager
 
+<style>
+    .card-filter-top-right {
+        position: absolute;
+        top: 10px; /* Adjust this value to control the vertical position */
+        right: 10px; /* Adjust this value to control the horizontal position */
+    }
+
+    .card-position-relative {
+        position: relative;
+    }
+</style>
+
+
 <section class="section dashboard">
     <div class="container">
         @if (signInManager.IsSignedIn(User))
@@ -8,34 +21,54 @@
             <div class="row justify-content-center">
                 <!-- My Course Card -->
                 <div class="col-xxl-4 col-md-6">
-                    <div class="card info-card sales-card shadow-lg" style="height: 150px; width: 100%;">
+                    <div class="card info-card sales-card shadow-lg card-position-relative" style="height: 150px; width: 100%;">
                         <div class="card-body d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-primary text-white me-3" style="height: 50px; width: 50px;">
                                 <i class="bi bi-journal"></i>
                             </div>
                             <div>
-                                <a asp-controller="Instructors" asp-action="GetAllCourses" class="card-title card-link text-primary h5">
-                                    My Course
-                                </a>
+
+                                <p class="card-title  text-primary h5">My Course</p>
                                 <p class="text-muted mb-0">Number of courses</p>
                             </div>
+                        </div>
+                        <div class="filter card-filter-top-right">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+                                
+                                <li><a class="dropdown-item" asp-controller="Instructors" asp-action="GetAllCourses">My Courses</a></li>
+                                
+                                <li><a class="dropdown-item" asp-controller=" Instructors" asp-action="GetAllCourses">Add a Course</a></li>@* dont forget to make an add action *@
+                            </ul>
                         </div>
                     </div>
                 </div>
 
                 <!-- Enrollment Card -->
                 <div class="col-xxl-4 col-md-6">
-                    <div class="card info-card sales-card shadow-lg" style="height: 150px; width: 100%;">
+                    <div class="card info-card sales-card shadow-lg card-position-relative" style="height: 150px; width: 100%;">
                         <div class="card-body d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-primary text-white me-3" style="height: 50px; width: 50px;">
                                 <i class="bi bi-journal"></i>
                             </div>
                             <div>
-                                <a asp-controller="Instructors" asp-action="GetAllCourses" class="card-title card-link text-primary h5">
-                                    My Enrollment
-                                </a>
+
+                                <p class="card-title  text-primary h5"> My Enrollment</p>
                                 <p class="text-muted mb-0">Enrollment In</p>
                             </div>
+                        </div>
+                        <div class="filter card-filter-top-right">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+                                <li><a class="dropdown-item" asp-controller="Instructors" asp-action="GetAllEnrollments">My Enrollments</a></li>
+                                <li><a class="dropdown-item" asp-controller="Instructors" asp-action="GetAllEnrollments">Add an Enrollment</a></li> @* dont forget to make an add action *@
+                            </ul>
                         </div>
                     </div>
                 </div>

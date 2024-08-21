@@ -58,6 +58,8 @@
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
 
+
+
                 @if (signInManager.IsSignedIn(User))
                 {
                     <li class="nav-item dropdown pe-3">
@@ -69,7 +71,6 @@
                         </a><!-- End Profile Iamge Icon -->
 
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-
 
                             <li>
                                 @if (User.IsInRole("Student"))

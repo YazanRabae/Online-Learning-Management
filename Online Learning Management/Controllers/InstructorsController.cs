@@ -115,10 +115,17 @@ namespace Online_Learning_Management.Controllers
 
             return RedirectToAction("LogIn", "Instructors");
         }
-
+        [Authorize(Roles = "Instructor")]
         public IActionResult GetAllCourses()
         {
             return View();
         }
+
+        public IActionResult GetAllEnrollments()
+        {
+            return View();
+        }
+        
     }
 }
+
