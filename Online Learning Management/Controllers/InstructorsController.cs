@@ -31,9 +31,13 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
+
         [AllowAnonymous]
         public IActionResult LogIn()
         {
+            if (signInManager.IsSignedIn(User))
+                return RedirectToAction("Dashboard", "Instructors");
+
             return View();
         }
 

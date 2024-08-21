@@ -50,6 +50,9 @@ namespace Online_Learning_Management.Controllers
         }
         public IActionResult LogIn()
         {
+            if(signInManager.IsSignedIn(User))
+                return RedirectToAction("Dashboard", "Student");
+
             return View();
         }
         [HttpPost]
