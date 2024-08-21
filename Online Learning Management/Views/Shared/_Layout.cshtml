@@ -58,26 +58,43 @@
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
 
-                <li class="nav-item dropdown pe-3">
+                @if (signInManager.IsSignedIn(User))
+                {
+                    <li class="nav-item dropdown pe-3">
 
-                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        @if (signInManager.IsSignedIn(User))
-                        {
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                             <span class="d-none d-md-block dropdown-toggle ps-2">
                                 @User.Identity.Name
                             </span>
-                        }
-                        else
-                        {
-                            <span class="d-none d-md-block dropdown-toggle ps-2">
-                                Account
-                            </span>
-                        }
-                    </a><!-- End Profile Iamge Icon -->
+                        </a><!-- End Profile Iamge Icon -->
 
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                        @if (signInManager.IsSignedIn(User))
-                        {
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+
+
+                            <li>
+                                @if (User.IsInRole("Student"))
+                                {
+                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Dashboard">
+                                        <i class="bi bi-grid"></i>
+                                        <span>
+                                            Dashboard
+                                        </span>
+                                        @* <a class="dropdown-item" asp-controller="Instructors" asp-action="Profile">Profile Details</a> *@
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Instructors" asp-action="Dashboard">
+                                        <i class="bi bi-grid"></i>
+                                        <span>
+                                            Dashboard
+                                        </span>
+                                        @* <a class="dropdown-item" asp-controller="Instructors" asp-action="Profile">Profile Details</a> *@
+                                    </a>
+                                }
+                            </li>
+
+
                             <li>
                                 @if (User.IsInRole("Student"))
                                 {
@@ -121,35 +138,19 @@
                                     </a>
                                 }
                             </li>
-                        }
-                        else
-                        {
-                            <li>
-
-                                <a class="btn btn-login btn-instructor ml-2" asp-controller="Instructors" asp-action="LogIn">
-                                    <i class="bi bi-person-badge"></i> Instructor Login
-                                </a>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
 
 
-                            <li>
 
-                                <a class="btn btn-login btn-student ml-2" asp-controller="Student" asp-action="LogIn">
+                        </ul><!-- End Profile Dropdown Items -->
 
-                                    <i class="bi bi-person-circle"></i>  Student Login
-                                </a>
-                            </li>
+                    </li>
 
-                        }
+                    <!-- End Profile Nav -->
+                }
+                else
+                {
 
-                    </ul><!-- End Profile Dropdown Items -->
-
-                </li><!-- End Profile Nav -->
-
+                }
             </ul>
         </nav><!-- End Icons Navigation -->
 
@@ -203,7 +204,8 @@
             @RenderBody();
 
         </main>
-    }else
+    }
+    else
     {
         <main class="main" style="margin-top: 100px;">
 
