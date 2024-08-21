@@ -66,16 +66,31 @@ namespace Online_Learning_Management.Controllers
         {
             if (ModelState.IsValid)
             {
-                await userService.LogIn(model);
+                var user = await userManager.FindByEmailAsync(model.Email);
 
-                if(User.IsInRole("Admin"))
-                    return RedirectToAction("Index", "Home");
-                else
+                var roles = await userManager.GetRolesAsync(user);
+
+                var roleAssign = roles.FirstOrDefault();
+
+                if (roleAssign == "Admin")
+                {
+                    await userService.LogIn(model);
+
+                    return RedirectToAction("Index", "Home"); // replace to Dashborard admin
+                }
+                else if (roleAssign == "Instructor")
+                {
+                    await userService.LogIn(model);
+
                     return RedirectToAction("Dashboard", "Instructors");
+                }
+                else
+                    return RedirectToAction("Index", "Home");
             }
 
             return View(model);
         }
+
         public async Task<IActionResult> Profile()
         {
             var user = await userManager.GetUserAsync(User);
