@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Online_Learning_Management.Controllers
 {
-    
     public class InstructorsController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -29,6 +28,9 @@ namespace Online_Learning_Management.Controllers
 
         public IActionResult Register()
         {
+            if (signInManager.IsSignedIn(User))
+                return RedirectToAction("Dashboard", "Instructors");
+
             return View();
         }
 
@@ -53,8 +55,7 @@ namespace Online_Learning_Management.Controllers
             if (ModelState.IsValid)
             {
                 await userService.Register(model, "Instructor");
-                return RedirectToAction("Dashboard", "Instructors"); //false is session cookies ,Ture is persistent cookies
-                
+                return RedirectToAction("Dashboard", "Instructors");
             }
             return View(model);
         }
@@ -66,6 +67,7 @@ namespace Online_Learning_Management.Controllers
             if (ModelState.IsValid)
             {
                 await userService.LogIn(model);
+
                 if(User.IsInRole("Admin"))
                     return RedirectToAction("Index", "Home");
                 else
@@ -79,9 +81,7 @@ namespace Online_Learning_Management.Controllers
             var user = await userManager.GetUserAsync(User);
 
             if (user == null)
-            {
                 return RedirectToAction("Register" , "Instructors");
-            }
 
             var model = new RegisterDto
             {
@@ -91,27 +91,6 @@ namespace Online_Learning_Management.Controllers
 
             return View(model);
         }
-        //public async Task<IActionResult> Logout()
-        //{
-        //    await userService.Logout();
-        //    return RedirectToAction("index", "Home");
-        //}
-        [AcceptVerbs("Get", "Post")]
-        //allow how are not authintecated not login
-        [AllowAnonymous]
-        public async Task<IActionResult> IsEmailUsed(string Email)
-        {
-            var result = await userManager.FindByEmailAsync(Email);
-            if (result == null)
-            {
-                return Json(true);
-            }
-            else
-            {
-                return Json($"this {Email} is already in used");
-            }
-
-        }
 
         [Authorize(Roles = "Instructor")]
         public IActionResult Dashboard()
@@ -119,19 +98,12 @@ namespace Online_Learning_Management.Controllers
             if (signInManager.IsSignedIn(User))
                 return View();
 
-
             return RedirectToAction("LogIn", "Instructors");
         }
 
-        
         public IActionResult GetAllCourses()
         {
             return View();
         }
-
-
-       
-
-
     }
 }

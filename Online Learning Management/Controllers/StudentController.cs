@@ -27,10 +27,11 @@ namespace Online_Learning_Management.Controllers
         }
         public IActionResult Register()
         {
+            if (signInManager.IsSignedIn(User))
+                return RedirectToAction("Dashboard", "Student");
+
             return View();
         }
-
-
         public async Task<IActionResult> Logout()
         {
             await userService.Logout();
@@ -43,7 +44,7 @@ namespace Online_Learning_Management.Controllers
             if (ModelState.IsValid)
             {
                 await userService.Register(model, "Student");
-                return RedirectToAction("Dashboard", "Student"); //false is session cookies ,Ture is persistent cookies
+                return RedirectToAction("Dashboard", "Student");
 
             }
             return View(model);
@@ -65,8 +66,6 @@ namespace Online_Learning_Management.Controllers
                     return RedirectToAction("Index", "Home");
                 else
                     return RedirectToAction("Dashboard", "Student");
-
-
             }
 
             return View(model);
@@ -79,9 +78,7 @@ namespace Online_Learning_Management.Controllers
             var user = await userManager.GetUserAsync(User);
 
             if (user == null)
-            {
                 return RedirectToAction("Register");
-            }
 
             var model = new RegisterDto
             {
@@ -100,8 +97,5 @@ namespace Online_Learning_Management.Controllers
             
             return RedirectToAction("LogIn", "Student");
         }
-
-        
-
     }
 }
