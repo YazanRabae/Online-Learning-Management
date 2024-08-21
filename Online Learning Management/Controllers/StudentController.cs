@@ -43,7 +43,7 @@ namespace Online_Learning_Management.Controllers
             if (ModelState.IsValid)
             {
                 await userService.Register(model, "Student");
-                return RedirectToAction("index", "Home"); //false is session cookies ,Ture is persistent cookies
+                return RedirectToAction("Dashboard", "Student"); //false is session cookies ,Ture is persistent cookies
 
             }
             return View(model);
@@ -66,10 +66,14 @@ namespace Online_Learning_Management.Controllers
                 else
                     return RedirectToAction("Dashboard", "Student");
 
+
             }
 
             return View(model);
         }
+
+
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> Profile()
         {
             var user = await userManager.GetUserAsync(User);
