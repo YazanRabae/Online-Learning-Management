@@ -18,14 +18,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.7" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LMS.Service\LMS.Service.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Admin\" />
   </ItemGroup>
 
 </Project>

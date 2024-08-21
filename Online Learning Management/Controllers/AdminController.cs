@@ -125,12 +125,9 @@ namespace Online_Learning_Management.Controllers
             return RedirectToAction("EditUser", new { Id = model.UserId });
         }
 
-
-       
-
-
-
-
-
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
     }
 }

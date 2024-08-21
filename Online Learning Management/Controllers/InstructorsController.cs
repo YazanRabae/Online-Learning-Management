@@ -76,7 +76,7 @@ namespace Online_Learning_Management.Controllers
                 {
                     await userService.LogIn(model);
 
-                    return RedirectToAction("Index", "Home"); // replace to Dashborard admin
+                    return RedirectToAction("Dashboard", "Admin");
                 }
                 else if (roleAssign == "Instructor")
                 {
