@@ -13,6 +13,7 @@ namespace Online_Learning_Management.Controllers
     public class AdminController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
+        
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IUserService _userService;
         private readonly DbLMS _context; // Inject DbContext
