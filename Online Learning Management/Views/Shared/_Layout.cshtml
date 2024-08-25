@@ -50,7 +50,6 @@
     </style>
 
 </head>
-
 <body>
 
     <!-- ======= Header ======= -->
@@ -58,7 +57,7 @@
 
         <div class="d-flex align-items-center justify-content-between">
             <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center">
-
+    
                 <img src="~/photo/images.png" style="width: 150px; height: 60px;" alt="">
             </a>
             @if (User.IsInRole("Admin") || showSidebar == true)
@@ -201,7 +200,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" asp-controller="Admin" asp-action="GetInstructors">
+                    <a class="nav-link collapsed" asp-controller="Admin" asp-action="Instructors">
                         <i class="bi bi-person-lines-fill"></i>
                         <span>Instructor</span>
                     </a>

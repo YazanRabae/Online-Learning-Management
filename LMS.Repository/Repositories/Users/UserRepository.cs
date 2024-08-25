@@ -1,21 +1,26 @@
-﻿using LMS.Repository.Context;
+﻿using LMS.Domain.Entities.User;
+using LMS.Repository.Context;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LMS.Repository.Repositories.Users
 {
     public class UserRepository : IUserRepository
     {
-        private readonly DbLMS _context;
+        //private readonly DbLMS _context;
+        //private readonly UserManager<User> _userManager;
+        //private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserRepository(DbLMS context)
-        {
-            _context = context;
-        }
+        //public UserRepository(DbLMS context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        //{
+        //    _context = context;
+        //    _userManager = userManager;
+        //    _roleManager = roleManager;
+        //}
+
+   
     }
 }

@@ -39,15 +39,29 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
+        public IActionResult Students()
+        {
+            return View();
+        }
+        public async Task<IActionResult> GetStudents()
+        {
+            var Student = await _userService.GetStudents();
+            return Json(Student);
+        }
 
-        public IActionResult GetStudents()
+        public IActionResult Instructors()
         {
             return View();
         }
-        public IActionResult GetInstructors()
+        [HttpGet]
+        public async Task<IActionResult> GetInstructors()
         {
-            return View();
+            var Instructors = await _userService.GetInstructors();
+            return Json(Instructors);
         }
+
+
+
         public IActionResult Courses()
         {
             return View();
@@ -58,9 +72,6 @@ namespace Online_Learning_Management.Controllers
             var courses = await  _courseService.GetAllCourses();
             return Json(courses);
         }
-
-
-
 
         public IActionResult LogIn()
         {
