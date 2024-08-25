@@ -1,4 +1,5 @@
-﻿using LMS.Repository.Context;
+﻿using LMS.Domain.Entities.Users;
+using LMS.Repository.Context;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
 using LMS.Service.Services.Courses;
@@ -13,15 +14,15 @@ namespace Online_Learning_Management.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
         
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IUserService _userService;
         private readonly DbLMS _context; // Inject DbContext
         private readonly ICourseService _courseService;
 
-        public AdminController(UserManager<IdentityUser> userManager,
-           SignInManager<IdentityUser> signInManager,
+        public AdminController(UserManager<User> userManager,
+           SignInManager<User> signInManager,
            IUserService userService,
            DbLMS context , ICourseService courseService) // Add DbContext parameter
         {

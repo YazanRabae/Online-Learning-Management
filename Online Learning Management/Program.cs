@@ -1,3 +1,4 @@
+using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
 using LMS.Repository.Repositories.Courses;
 using LMS.Repository.Repositories.Users;
@@ -21,9 +22,10 @@ namespace Online_Learning_Management
             builder.Services.AddDbContext<DbLMS>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("DbLMS")));
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            builder.Services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<DbLMS>()
                 .AddDefaultTokenProviders();
+
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -33,6 +35,7 @@ namespace Online_Learning_Management
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+
 
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<ICourseService, CourseService>();
@@ -67,10 +70,11 @@ namespace Online_Learning_Management
                 var services = scope.ServiceProvider;
 
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+                var userManager = services.GetRequiredService<UserManager<User>>(); // Change to UserManager<User>
                 SeedRoles(roleManager);
-                await SeedUsers(userManager); 
+                await SeedUsers(userManager); // Ensure this method also uses UserManager<User>
             }
+
 
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
 
@@ -86,7 +90,7 @@ namespace Online_Learning_Management
             app.UseStaticFiles();
             app.UseRouting();
 
-            app.UseAuthentication(); 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -109,13 +113,15 @@ namespace Online_Learning_Management
                 }
             }
         }
-
-        private async static Task SeedUsers(UserManager<IdentityUser> userManager)
+        private async static Task SeedUsers(UserManager<User> userManager)
         {
-            // Create the admin user if it doesn't already exist
-            if (await userManager.FindByNameAsync("admin@example.com") == null)
+            // Check if the admin user already exists by their email or username
+            var existingUser = await userManager.FindByEmailAsync("admin@example.com");
+
+            if (existingUser == null)
             {
-                IdentityUser user = new IdentityUser
+                // Create the admin user if it doesn't already exist
+                User user = new User
                 {
                     UserName = "admin@example.com",
                     Email = "admin@example.com"
@@ -127,6 +133,15 @@ namespace Online_Learning_Management
                     await userManager.AddToRoleAsync(user, "Admin");
                 }
             }
+            else
+            {
+                // Optionally, you could update the user's role or other information here
+                if (!await userManager.IsInRoleAsync(existingUser, "Admin"))
+                {
+                    await userManager.AddToRoleAsync(existingUser, "Admin");
+                }
+            }
         }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LMS.Domain.Entities.Instructors;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,5 +21,10 @@ namespace LMS.Domain.Entities.Courses
 
         public decimal Price { get; set; }
         public int CourseTime { get; set; }
+
+        public int InstructorId { get; set; }
+
+        // Navigation property
+        public Instructor Instructor { get; set; }
     }
 }

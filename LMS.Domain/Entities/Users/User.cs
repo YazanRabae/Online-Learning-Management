@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LMS.Domain.Entities.User
-{
+namespace LMS.Domain.Entities.Users;
+
     public class User : IdentityUser
     {
 
     }
-}
+

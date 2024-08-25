@@ -1,4 +1,5 @@
-﻿using LMS.Repository.Repositories.Users;
+﻿using LMS.Domain.Entities.Users;
+using LMS.Repository.Repositories.Users;
 using LMS.Service.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,10 @@ namespace LMS.Service.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
-        public UserService(UserManager<IdentityUser> userManager,
-           SignInManager<IdentityUser> signInManager)
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
+        public UserService(UserManager<User> userManager,
+           SignInManager<User> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -24,7 +25,7 @@ namespace LMS.Service.Services
 
         public async Task Register(RegisterDto model, string role)
         {
-            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+            var user = new User { UserName = model.Email, Email = model.Email };
             var result = await userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {

@@ -1,4 +1,4 @@
-﻿using LMS.Domain.Entities.User;
+﻿using LMS.Domain.Entities.Users;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -9,11 +9,11 @@ namespace Online_Learning_Management.Controllers
 {
     public class InstructorsController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
         private readonly IUserService userService;
-        public InstructorsController(UserManager<IdentityUser> userManager,
-           SignInManager<IdentityUser> signInManager , IUserService userService)
+        public InstructorsController(UserManager<User> userManager,
+           SignInManager<User> signInManager , IUserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -85,7 +85,7 @@ namespace Online_Learning_Management.Controllers
                     return RedirectToAction("Dashboard", "Instructors");
                 }
                 else
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("AccessDenied", "Shared");
             }
 
             return View(model);

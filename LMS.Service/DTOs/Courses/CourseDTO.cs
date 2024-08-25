@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LMS.Domain.Entities.Instructors;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -38,5 +39,10 @@ namespace LMS.Service.DTOs.Courses
 
         [Required(ErrorMessage = "Course Time is required.")]
         public int CourseTime { get; set; }
+
+        public int InstructorId { get; set; }
+
+        
+        public Instructor Instructor { get; set; }
     }
 }
