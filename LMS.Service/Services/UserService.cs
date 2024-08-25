@@ -1,4 +1,5 @@
-﻿using LMS.Repository.Repositories.Users;
+﻿using LMS.Domain.Entities.User;
+using LMS.Repository.Repositories.Users;
 using LMS.Service.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,14 @@ namespace LMS.Service.Services
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         public UserService(UserManager<IdentityUser> userManager,
-           SignInManager<IdentityUser> signInManager)
+           SignInManager<IdentityUser> signInManager,
+           RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
 
@@ -48,6 +52,21 @@ namespace LMS.Service.Services
         public async Task Logout()
         {
             await signInManager.SignOutAsync();
+        }
+   
+        public async Task<List<IdentityUser>> GetInstructors()
+        {
+            var instructors = await userManager.GetUsersInRoleAsync("Instructor");
+            var lista = instructors.ToList();
+            return lista;
+
+        }
+        public async Task<List<IdentityUser>> GetStudents()
+        {
+            var Students = await userManager.GetUsersInRoleAsync("Student");
+            var lista = Students.ToList();
+            return lista;
+
         }
 
     }

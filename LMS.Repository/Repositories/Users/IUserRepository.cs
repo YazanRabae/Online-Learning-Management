@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LMS.Domain.Entities.Courses;
+using LMS.Domain.Entities.User;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +11,6 @@ namespace LMS.Repository.Repositories.Users
 {
     public interface IUserRepository 
     {
+      
     }
 }
