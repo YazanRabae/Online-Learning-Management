@@ -1,6 +1,7 @@
 ﻿using LMS.Repository.Context;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
+using LMS.Service.Services.Courses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,16 +18,18 @@ namespace Online_Learning_Management.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IUserService _userService;
         private readonly DbLMS _context; // Inject DbContext
+        private readonly ICourseService _courseService;
 
         public AdminController(UserManager<IdentityUser> userManager,
            SignInManager<IdentityUser> signInManager,
            IUserService userService,
-           DbLMS context) // Add DbContext parameter
+           DbLMS context , ICourseService courseService) // Add DbContext parameter
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userService = userService;
             _context = context; // Assign DbContext
+            _courseService = courseService;
         }
 
 
@@ -44,10 +47,17 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
-        public IActionResult GetCourses()
+        public IActionResult Courses()
         {
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> GetCourses()
+        {
+            var courses = await  _courseService.GetAllCourses();
+            return Json(courses);
+        }
+
 
 
 

@@ -1,6 +1,9 @@
 using LMS.Repository.Context;
+using LMS.Repository.Repositories.Courses;
 using LMS.Repository.Repositories.Users;
+using LMS.Service.Mapper.Courses;
 using LMS.Service.Services;
+using LMS.Service.Services.Courses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -30,6 +33,10 @@ namespace Online_Learning_Management
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<ICourseMapper, CourseMapper>();
 
             builder.Services.AddAuthorization(options =>
             {

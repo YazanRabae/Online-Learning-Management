@@ -26,6 +26,9 @@
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
+    
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
     <!-- Vendor CSS Files -->
     <link href="~/lib/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/lib/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -54,7 +57,8 @@
 
         <div class="d-flex align-items-center justify-content-between">
             <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center">
-                <img src="~/photo/1724269194500-e5442695-cdbe-44c4-903e-7e8847840b2d_1.png" style="width: 150px; height: 60px;" alt="">
+    
+                <img src="~/photo/images.png" style="width: 150px; height: 60px;" alt="">
             </a>
             @if (User.IsInRole("Admin") || showSidebar == true)
             {
@@ -192,7 +196,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" asp-controller="Admin" asp-action="GetCourses">
+                    <a class="nav-link collapsed" asp-controller="Admin" asp-action="Courses">
                         <i class="bi bi-clipboard-data"></i>
                         <span>Course</span>
                     </a>
@@ -209,7 +213,7 @@
     {
         <main id="main" class="main">
 
-            @RenderBody();
+            @RenderBody()
 
         </main>
     }
@@ -217,7 +221,7 @@
     {
         <main  class="main" style="margin-top: 100px;">
 
-            @RenderBody();
+            @RenderBody()
 
         </main>
     }
@@ -240,7 +244,10 @@
     <script src="~/lib/assets/vendor/simple-datatables/simple-datatables.js"></script>
     <script src="~/lib/assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="~/lib/assets/vendor/php-email-form/validate.js"></script>
-
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <!-- Template Main JS File -->
     <script src="~/lib/assets/js/main.js"></script>
 
