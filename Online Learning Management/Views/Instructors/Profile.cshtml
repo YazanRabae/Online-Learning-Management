@@ -21,8 +21,12 @@
             </div>
             <div class="card-body">
                 <div class="form-group">
+                    @{
+                        var name = Model?.Name;
+                        var displayName = name?.Substring(0, name.IndexOf('@')) ?? string.Empty;
+                    }
                     <label for="Name">Username:</label>
-                    <input type="text" id="Name" class="form-control" value="@Model?.Name" disabled />
+                    <input type="text" id="Name" class="form-control" value="@displayName" disabled />
                 </div>
 
                 <div class="form-group">
