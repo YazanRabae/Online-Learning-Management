@@ -1,6 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Student";
 }
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/assets/js/getstudent.js"></script>
 <div class="container">
 
     <h1 class="text-left">@ViewData["Title"]</h1>
@@ -8,19 +10,19 @@
     <div class="col">
         <div class="card p-4">
             <h4>Search by</h4>
-            <form action="#" method="post" class="php-email-form">
+            <form id="searchForm" action="#" method="post" class="php-email-form">
                 <div class="row gy-4">
 
                     <div class="col-md-3">
-                        <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                        <input type="text" id="filterName" name="name" class="form-control" placeholder="Your Name" required>
                     </div>
 
                     <div class="col-md-3">
-                        <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                        <input type="email" id="filterEmail" class="form-control" name="email" placeholder="Your Email" required>
                     </div>
 
                     <div class="col-md-3 text-center">
-                        <button type="submit" class="btn btn-primary">Search</button>
+                        <button type="submit" class="btn btn-primary" id="applyFilters" >Search</button>
                     </div>
 
                 </div>
@@ -45,42 +47,8 @@
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Brandon Jacob</td>
-                                    <td>Designer</td>
-                                    <td>28</td>
-                                    <td><button type="submit" value="Active" class="btn btn-primary">Active</button></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Bridie Kessler</td>
-                                    <td>Developer</td>
-                                    <td>35</td>
-                                    <td><button type="submit" value="Active" class="btn btn-primary">Active</button></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Ashleigh Langosh</td>
-                                    <td>Finance</td>
-                                    <td>45</td>
-                                    <td><button type="submit" value="Active" class="btn btn-primary">Active</button></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">4</th>
-                                    <td>Angus Grady</td>
-                                    <td>HR</td>
-                                    <td>34</td>
-                                    <td><button type="submit" value="Active" class="btn btn-primary">Active</button></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">5</th>
-                                    <td>Raheem Lehner</td>
-                                    <td>Dynamic Division Officer</td>
-                                    <td>47</td>
-                                    <td><button type="submit" value="Active" class="btn btn-primary">Active</button></td>
-                                </tr>
+                            <tbody id="StudentsTableBody">
+                          
                             </tbody>
                         </table>
                         <!-- End Table with striped rows -->
@@ -92,3 +60,9 @@
         </div>
     </section>
 </div>
+<script>
+    $(document).ready(function () {
+        console.log("ready!");
+        GetStudents.OnStart();
+    });
+</script>
