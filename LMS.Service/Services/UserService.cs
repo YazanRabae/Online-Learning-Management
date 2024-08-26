@@ -19,7 +19,7 @@ namespace LMS.Service.Services
         private readonly SignInManager<User> signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         public UserService(UserManager<User> userManager,
-           SignInManager<User> signInManager,RoleManager<IdentityRole>roleManager)
+           SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -29,8 +29,16 @@ namespace LMS.Service.Services
 
         public async Task Register(RegisterDto model, string role)
         {
-            var user = new User { UserName = model.Email, Email = model.Email };
+            var user = new User
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                // Any additional properties
+            };
+
             var result = await userManager.CreateAsync(user, model.Password);
+
+
             if (result.Succeeded)
             {
                 // Assign the role based on the signup type
@@ -54,7 +62,7 @@ namespace LMS.Service.Services
         {
             await signInManager.SignOutAsync();
         }
-   
+
         public async Task<List<User>> GetInstructors()
         {
             var instructors = await userManager.GetUsersInRoleAsync("Instructor");

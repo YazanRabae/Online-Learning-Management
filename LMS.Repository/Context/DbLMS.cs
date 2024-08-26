@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using LMS.Domain.Entities.Users;
-using LMS.Domain.Entities.Courses; // Assuming you have a Course class in this namespace
+using LMS.Domain.Entities.Courses;
+using Microsoft.AspNetCore.Identity; // Assuming you have a Course class in this namespace
 
 namespace LMS.Repository.Context
 {

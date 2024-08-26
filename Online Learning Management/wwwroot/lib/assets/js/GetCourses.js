@@ -1,18 +1,30 @@
 ﻿var GetCourses = {
     OnStart: function () {
         GetCourses.GetData();
+        $('#searchButton').on('click', function () {
+            GetCourses.GetData();
+        });
     },
     GetData: function () {
+        var courseName = $('#courseName').val();
+        var instructorId = $('#instructorId').val();
         $.ajax({
             url: window.origin + '/Admin/GetCourses',
             type: 'GET',
             dataType: 'json',
+            data: {
+                courseName: courseName,
+                instructorId: instructorId
+            },
             success: function (data) {
+
                 var tbody = $('#courseTableBody'); // Target the table body
                 tbody.empty(); // Clear any existing content
 
                 // Iterate over the returned JSON data array
                 $.each(data, function (index, course) {
+
+
                     // Parse dates if necessary
                     var startDate = new Date(course.startDate).toLocaleDateString();
                     var endDate = new Date(course.endDate).toLocaleDateString();
@@ -39,4 +51,6 @@
             }
         });
     }
+
 }
+

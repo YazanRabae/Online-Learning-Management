@@ -17,7 +17,7 @@ namespace Online_Learning_Management.Controllers
     public class AdminController : Controller
     {
         private readonly UserManager<User> _userManager;
-        
+
         private readonly SignInManager<User> _signInManager;
         private readonly IUserService _userService;
         private readonly DbLMS _context; // Inject DbContext
@@ -26,7 +26,7 @@ namespace Online_Learning_Management.Controllers
         public AdminController(UserManager<User> userManager,
            SignInManager<User> signInManager,
            IUserService userService,
-           DbLMS context , ICourseService courseService) // Add DbContext parameter
+           DbLMS context, ICourseService courseService) // Add DbContext parameter
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -45,10 +45,10 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
-    
+
         public async Task<IActionResult> GetStudentsAsync(string userName, string email)
         {
-       
+
             var Students = await _userService.GetStudents();
 
             if (!string.IsNullOrEmpty(userName))
@@ -74,10 +74,10 @@ namespace Online_Learning_Management.Controllers
         [HttpGet]
         public async Task<IActionResult> GetInstructorsAsync(string userName, string email)
         {
- 
+
             var instructors = await _userService.GetInstructors(); // Assuming this returns a Task<List<Instructor>>
 
-      
+
             if (!string.IsNullOrEmpty(userName))
             {
                 instructors = instructors.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -87,7 +87,7 @@ namespace Online_Learning_Management.Controllers
                 instructors = instructors.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-  
+
             return Ok(instructors);
         }
 
@@ -96,27 +96,77 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
-        public IActionResult GetCourses()
+        //public IActionResult GetCourses()
+        //{
+        //    var courses = _context.Courses
+        //        .Include(c => c.Instructor)  // Include the related Instructor data
+        //        .Select(c => new
+        //        {
+        //            c.Id,
+        //            c.Title,
+        //            c.Description,
+        //            InstructorName = c.Instructor.UserName,  // Assuming UserName is the name you want to display
+        //            c.StartDate,
+        //            c.EndDate,
+        //            c.MaxStudents,
+        //            c.Price,
+        //            c.CourseTime
+        //        })
+        //        .ToList();
+
+        //    return Json(courses);
+        //}
+
+        [HttpGet]
+        public async Task<IActionResult> GetCourses(string courseName, string instructorId)
         {
+
             var courses = _context.Courses
-                .Include(c => c.Instructor)  // Include the related Instructor data
-                .Select(c => new
-                {
-                    c.Id,
-                    c.Title,
-                    c.Description,
-                    InstructorName = c.Instructor.UserName,  // Assuming UserName is the name you want to display
-                    c.StartDate,
-                    c.EndDate,
-                    c.MaxStudents,
-                    c.Price,
-                    c.CourseTime
-                })
-                .ToList();
+               .Include(c => c.Instructor)  // Include the related Instructor data
+               .Select(c => new
+               {
+                   c.Id,
+                   c.Title,
+                   c.Description,
+                   InstructorName = c.Instructor.UserName,  // Assuming UserName is the name you want to display
+                   c.StartDate,
+                   c.EndDate,
+                   c.MaxStudents,
+                   c.Price,
+                   c.CourseTime
+               })
+               .ToList();
 
-            return Json(courses);
+
+            //if (!string.IsNullOrEmpty(courseName))
+            //{
+            //    courses = courses.Where(i => i.Title.Contains(courseName, StringComparison.OrdinalIgnoreCase)).ToList();
+            //}
+            //if (!string.IsNullOrEmpty(instructorId))
+            //{
+            //    courses = courses.Where(i => i.InstructorName.Contains(instructorId, StringComparison.OrdinalIgnoreCase)).ToList();
+            //}
+
+            if (string.IsNullOrEmpty(courseName) && !string.IsNullOrEmpty(instructorId))
+            {
+                // Retrieve all courses taught by the specified instructor.
+                courses = courses.Where(i => i.InstructorName.Contains(instructorId, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            else if (!string.IsNullOrEmpty(courseName) && !string.IsNullOrEmpty(instructorId))
+            {
+                // Retrieve all courses taught by the specified instructor with the specified course name.
+                courses = courses.Where(i => i.Title.Contains(courseName, StringComparison.OrdinalIgnoreCase)
+                                            && i.InstructorName.Contains(instructorId, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            else if (!string.IsNullOrEmpty(courseName) && string.IsNullOrEmpty(instructorId))
+            {
+                // Retrieve all courses with the specified course name.
+                courses = courses.Where(i => i.Title.Contains(courseName, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+
+            return Ok(courses);
         }
-
 
         public IActionResult LogIn()
         {

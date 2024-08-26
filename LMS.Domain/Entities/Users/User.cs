@@ -12,8 +12,6 @@ public class User : IdentityUser
 {
 
 
-
-
     public ICollection<Course> Courses { get; set; }
 }
 

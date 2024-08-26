@@ -20,23 +20,19 @@ namespace Online_Learning_Management
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<DbLMS>(options =>
-               options.UseSqlServer(builder.Configuration.GetConnectionString("DbLMS")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DbLMS")));
 
             builder.Services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<DbLMS>()
                 .AddDefaultTokenProviders();
-
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = "/Shared/AccessDenied"; // Set to your correct path
             });
 
-
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
-
-
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<ICourseService, CourseService>();
             builder.Services.AddScoped<ICourseMapper, CourseMapper>();
@@ -45,39 +41,31 @@ namespace Online_Learning_Management
             {
                 options.AddPolicy("AdminPolicy.ManageStudents", policy =>
                     policy.RequireClaim("Manage Students", "true"));
-
                 options.AddPolicy("AdminPolicy.ManageInstructors", policy =>
                     policy.RequireClaim("Manage Instructors", "true"));
-
                 options.AddPolicy("AdminPolicy.ManageCourses", policy =>
                     policy.RequireClaim("Manage Courses", "true"));
-
                 options.AddPolicy("AdminPolicy.DisableStudents", policy =>
                     policy.RequireClaim("Disable Students", "true"));
-
                 options.AddPolicy("AdminPolicy.DisableInstructors", policy =>
                     policy.RequireClaim("Disable Instructors", "true"));
-
                 options.AddPolicy("AdminPolicy.DisableCourses", policy =>
                     policy.RequireClaim("Disable Courses", "true"));
             });
 
-
-
             var app = builder.Build();
+
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
 
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = services.GetRequiredService<UserManager<User>>(); // Change to UserManager<User>
+                var userManager = services.GetRequiredService<UserManager<User>>();
                 SeedRoles(roleManager);
-                await SeedUsers(userManager); // Ensure this method also uses UserManager<User>
+                await SeedUsers(userManager);
             }
 
-
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
-
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -107,21 +95,19 @@ namespace Online_Learning_Management
             {
                 if (!roleManager.RoleExistsAsync(roleName).Result)
                 {
-                    var role = new IdentityRole();
-                    role.Name = roleName;
+                    var role = new IdentityRole { Name = roleName };
                     roleManager.CreateAsync(role).Wait();
                 }
             }
         }
+
         private async static Task SeedUsers(UserManager<User> userManager)
         {
-            // Check if the admin user already exists by their email or username
             var existingUser = await userManager.FindByEmailAsync("admin@example.com");
 
             if (existingUser == null)
             {
-                // Create the admin user if it doesn't already exist
-                User user = new User
+                var user = new User
                 {
                     UserName = "admin@example.com",
                     Email = "admin@example.com"
@@ -135,13 +121,11 @@ namespace Online_Learning_Management
             }
             else
             {
-                // Optionally, you could update the user's role or other information here
                 if (!await userManager.IsInRoleAsync(existingUser, "Admin"))
                 {
                     await userManager.AddToRoleAsync(existingUser, "Admin");
                 }
             }
         }
-
     }
 }
