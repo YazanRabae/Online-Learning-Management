@@ -1,4 +1,4 @@
-﻿<style>
+﻿@* <style>
     h1{
         color:red;
         margin-left:20px;
@@ -13,3 +13,46 @@
 
 <h1>Access Denied</h1>
 <h2>You do not have permission to access this page.</h2>
+ *@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Access Denied</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+        .access-denied-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 100px;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container access-denied-container" style="margin-top=-100;">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i> <!-- Font Awesome Error Icon -->
+        </div>
+        <h1 class="display-4">Access Denied</h1>
+        <p class="lead">You do not have permission to view this page.</p>
+  
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Go to Home</a>
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
