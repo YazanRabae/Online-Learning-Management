@@ -17,13 +17,13 @@ namespace LMS.Service.Services
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
-        private readonly RoleManager<User> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         public UserService(UserManager<User> userManager,
-           SignInManager<User> signInManager,RoleManager<User>roleManager)
+           SignInManager<User> signInManager,RoleManager<IdentityRole>roleManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.roleManager = roleManager;
+            _roleManager = roleManager;
         }
 
 
