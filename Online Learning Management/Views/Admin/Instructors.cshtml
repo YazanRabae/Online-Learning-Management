@@ -9,19 +9,19 @@
     <div class="col">
         <div class="card p-4">
             <h4>Search by</h4>
-            <form action="#" method="post" class="php-email-form">
+            <form id="searchForm" action="#" method="post" class="php-email-form">
                 <div class="row gy-4">
 
                     <div class="col-md-3">
-                        <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                        <input type="text" id="filterName" name="name" class="form-control" placeholder="Your Name" id="filterEmail" required>
                     </div>
 
                     <div class="col-md-3">
-                        <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                        <input type="email" id="filterEmail" class="form-control" name="email" placeholder="Your Email" id="filterUserName" required>
                     </div>
 
                     <div class="col-md-3 text-center">
-                        <button type="submit" class="btn btn-primary">Search</button>
+                        <button type="submit" class="btn btn-primary" id="applyFilters" >Search</button>
                     </div>
 
                 </div>
