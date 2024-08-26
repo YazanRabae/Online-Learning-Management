@@ -1,4 +1,5 @@
-﻿using LMS.Domain.Entities.Users;
+﻿using LMS.Domain.Entities.Courses;
+using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
@@ -6,6 +7,7 @@ using LMS.Service.Services.Courses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Web.WebPages.Html;
@@ -51,13 +53,27 @@ namespace Online_Learning_Management.Controllers
 
             var Students = await _userService.GetStudents();
 
-            if (!string.IsNullOrEmpty(userName))
+            //if (!string.IsNullOrEmpty(userName))
+            //{
+            //    Students = Students.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
+            //}
+            //if (!string.IsNullOrEmpty(email))
+            //{
+            //    Students = Students.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
+            //}
+
+            if (!string.IsNullOrEmpty(userName) && string.IsNullOrEmpty(email))
             {
                 Students = Students.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
             }
-            if (!string.IsNullOrEmpty(email))
+            else if (!string.IsNullOrEmpty(email) && string.IsNullOrEmpty(userName))
             {
                 Students = Students.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            else if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(email))
+            {
+                Students = Students.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)
+                                                      && i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
             return Ok(Students);
@@ -75,48 +91,45 @@ namespace Online_Learning_Management.Controllers
         public async Task<IActionResult> GetInstructorsAsync(string userName, string email)
         {
 
-            var instructors = await _userService.GetInstructors(); // Assuming this returns a Task<List<Instructor>>
+            var instructors = await _userService.GetInstructors(); 
 
 
-            if (!string.IsNullOrEmpty(userName))
-            {
-                instructors = instructors.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
+            //    if (!string.IsNullOrEmpty(userName) )
+            //    {
+            //        instructors = instructors.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
+            //    }
+            //    if (!string.IsNullOrEmpty(email))
+            //    {
+            //        instructors = instructors.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
+            //    }
+
+
+
+                if (!string.IsNullOrEmpty(userName) && string.IsNullOrEmpty(email))
+                {
+                    instructors = instructors.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(email) && string.IsNullOrEmpty(userName))
+                {
+                    instructors = instructors.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(email))
+                {
+                    instructors = instructors.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)
+                                                          && i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+
+                return Ok(instructors);
             }
-            if (!string.IsNullOrEmpty(email))
-            {
-                instructors = instructors.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
 
 
-            return Ok(instructors);
-        }
 
 
         public IActionResult Courses()
         {
             return View();
         }
-        //public IActionResult GetCourses()
-        //{
-        //    var courses = _context.Courses
-        //        .Include(c => c.Instructor)  // Include the related Instructor data
-        //        .Select(c => new
-        //        {
-        //            c.Id,
-        //            c.Title,
-        //            c.Description,
-        //            InstructorName = c.Instructor.UserName,  // Assuming UserName is the name you want to display
-        //            c.StartDate,
-        //            c.EndDate,
-        //            c.MaxStudents,
-        //            c.Price,
-        //            c.CourseTime
-        //        })
-        //        .ToList();
-
-        //    return Json(courses);
-        //}
-
+      
         [HttpGet]
         public async Task<IActionResult> GetCourses(string courseName, string instructorId)
         {
