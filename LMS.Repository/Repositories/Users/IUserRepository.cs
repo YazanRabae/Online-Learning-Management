@@ -1,5 +1,5 @@
 ﻿using LMS.Domain.Entities.Courses;
-using LMS.Domain.Entities.User;
+using LMS.Domain.Entities.Users;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

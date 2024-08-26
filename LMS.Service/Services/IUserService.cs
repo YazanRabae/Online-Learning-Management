@@ -1,4 +1,5 @@
-﻿using LMS.Domain.Entities.User;
+﻿
+using LMS.Domain.Entities.Users;
 using LMS.Service.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,9 @@ namespace LMS.Service.Services
         public  Task Register(RegisterDto model,string role);
         public  Task LogIn(LogInDto model);
         public Task Logout();
-        public Task<List<IdentityUser>> GetInstructors();
+        public Task<List<User>> GetInstructors();
 
-        public Task<List<IdentityUser>> GetStudents();
+        public Task<List<User>> GetStudents();
 
     }
 }

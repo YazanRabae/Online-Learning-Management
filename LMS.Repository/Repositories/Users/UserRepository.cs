@@ -1,4 +1,4 @@
-﻿using LMS.Domain.Entities.User;
+﻿using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

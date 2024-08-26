@@ -15,8 +15,9 @@ namespace LMS.Service.Services
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly RoleManager<User> _roleManager;
         public UserService(UserManager<User> userManager,
-           SignInManager<User> signInManager)
+           SignInManager<User> signInManager,RoleManager<User>roleManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -52,18 +53,18 @@ namespace LMS.Service.Services
             await signInManager.SignOutAsync();
         }
    
-        public async Task<List<IdentityUser>> GetInstructors()
+        public async Task<List<User>> GetInstructors()
         {
             var instructors = await userManager.GetUsersInRoleAsync("Instructor");
-            var lista = instructors.ToList();
-            return lista;
+            var list = instructors.ToList();
+            return list;
 
         }
-        public async Task<List<IdentityUser>> GetStudents()
+        public async Task<List<User>> GetStudents()
         {
             var Students = await userManager.GetUsersInRoleAsync("Student");
-            var lista = Students.ToList();
-            return lista;
+            var list = Students.ToList();
+            return list;
 
         }
 
