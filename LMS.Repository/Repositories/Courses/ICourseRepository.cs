@@ -10,5 +10,6 @@ namespace LMS.Repository.Repositories.Courses
     public interface ICourseRepository
     {
         public  Task<List<Course>> GetAll();
+        
     }
 }

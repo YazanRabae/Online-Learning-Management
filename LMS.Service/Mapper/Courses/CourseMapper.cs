@@ -19,6 +19,7 @@ namespace LMS.Service.Mapper.Courses
                 Description = b.Description,
                 StartDate = b.StartDate,
                 EndDate = b.EndDate,
+                InstructorName = b.Instructor.UserName,
                 MaxStudents = b.MaxStudents,
                 Price = b.Price,
                 CourseTime = b.CourseTime

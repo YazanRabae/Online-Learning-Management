@@ -3,6 +3,7 @@
 }
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/lib/assets/js/GetCourses.js"></script>
+<script src="~/lib/assets/js/GetInstructorsDrop.js"></script>
 
 <div class="container">
     <h1 class="text-left">@ViewData["Title"]</h1>
@@ -13,16 +14,14 @@
             <form action="#" method="post" class="php-email-form">
                 <div class="row gy-4">
                     <div class="col-md-3">
-                        <input type="text" name="name" class="form-control" placeholder="Course Name" required>
+                        <input type="text" name="courseName" class="form-control" placeholder="Course Name" required>
                     </div>
                     <div class="col-md-3">
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Instructor Name</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select" name="instructorId" aria-label="Instructor Name">
+                                <option selected>Select Instructor</option>
                             </select>
+
                         </div>
                     </div>
                     <div class="col-md-3 text-center">
@@ -45,6 +44,7 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Title</th>
                                     <th scope="col">Description</th>
+                                    <th scope="col">Instructor</th>
                                     <th scope="col">Start Date</th>
                                     <th scope="col">End Date</th>
                                     <th scope="col">Max Students</th>
@@ -68,4 +68,9 @@
         console.log("ready!");
         GetCourses.OnStart();
     });
+
+    $(document).ready(function () {
+        GetInstructorsDrop.OnStart();
+    });;
+
 </script>

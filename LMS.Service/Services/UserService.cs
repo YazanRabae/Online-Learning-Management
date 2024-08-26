@@ -1,8 +1,10 @@
 ﻿using LMS.Domain.Entities.Users;
 using LMS.Repository.Repositories.Users;
+using LMS.Service.DTOs.Courses;
 using LMS.Service.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,7 @@ namespace LMS.Service.Services
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            _roleManager = roleManager;
+            this.roleManager = roleManager;
         }
 
 
@@ -67,6 +69,9 @@ namespace LMS.Service.Services
             return list;
 
         }
+
+
+
 
     }
 }

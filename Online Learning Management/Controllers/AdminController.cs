@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Web.WebPages.Html;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Online_Learning_Management.Controllers
 {
@@ -94,12 +96,27 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
-        [HttpGet]
-        public async Task<IActionResult> GetCourses()
+        public IActionResult GetCourses()
         {
-            var courses = await  _courseService.GetAllCourses();
+            var courses = _context.Courses
+                .Include(c => c.Instructor)  // Include the related Instructor data
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Title,
+                    c.Description,
+                    InstructorName = c.Instructor.UserName,  // Assuming UserName is the name you want to display
+                    c.StartDate,
+                    c.EndDate,
+                    c.MaxStudents,
+                    c.Price,
+                    c.CourseTime
+                })
+                .ToList();
+
             return Json(courses);
         }
+
 
         public IActionResult LogIn()
         {
@@ -180,5 +197,8 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
+
+
+
     }
 }

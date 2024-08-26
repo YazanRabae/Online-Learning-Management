@@ -22,6 +22,7 @@
                         '<td scope="row">' + (index + 1) + '</td>' +  // Row number
                         '<td>' + course.title + '</td>' +             // Course Title
                         '<td>' + course.description + '</td>' +       // Course Description
+                        '<td>' + course.instructorName + '</td>' +    // Instructor Name
                         '<td>' + startDate + '</td>' +                // Start Date
                         '<td>' + endDate + '</td>' +                  // End Date
                         '<td>' + course.maxStudents + '</td>' +       // Max Students

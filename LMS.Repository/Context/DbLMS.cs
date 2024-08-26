@@ -1,26 +1,28 @@
-﻿using LMS.Domain.Entities.Courses;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LMS.Domain.Entities.Users;
+using LMS.Domain.Entities.Courses; // Assuming you have a Course class in this namespace
 
 namespace LMS.Repository.Context
 {
-    public class DbLMS : IdentityDbContext
+    public class DbLMS : IdentityDbContext<User> // Use your custom User class here
     {
-        public DbLMS(DbContextOptions<DbLMS> option) : base(option) { }
-        public DbSet<Course> Courses { get; set; }
+        public DbLMS(DbContextOptions<DbLMS> options) : base(options) { }
+
+        public DbSet<Course> Courses { get; set; } // Register your Course entity here
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Configure your entities here
             modelBuilder.Entity<Course>(entity =>
             {
-                entity.ToTable("Course");
+                entity.ToTable("Course"); // Ensure your Course table is configured properly
+                // Add any additional configurations here
             });
+
+            // Additional configurations for the User entity can also be added here
         }
     }
 }

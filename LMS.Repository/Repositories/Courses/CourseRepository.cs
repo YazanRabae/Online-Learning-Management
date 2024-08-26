@@ -12,10 +12,14 @@ namespace LMS.Repository.Repositories.Courses
 {
     public class CourseRepository(DbLMS _context) : ICourseRepository
     {
-      
+
         public async Task<List<Course>> GetAll()
         {
             return await _context.Courses.ToListAsync();
         }
+
+
+
+
     }
 }
