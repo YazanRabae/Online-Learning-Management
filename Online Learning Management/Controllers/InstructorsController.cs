@@ -1,9 +1,12 @@
 ﻿using LMS.Domain.Entities.Users;
+using LMS.Repository.Context;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
+using LMS.Service.Services.Courses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Online_Learning_Management.Controllers
 {
@@ -12,12 +15,16 @@ namespace Online_Learning_Management.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly IUserService userService;
+        private readonly ICourseService _courseService;
+        private readonly DbLMS _context;
         public InstructorsController(UserManager<User> userManager,
-           SignInManager<User> signInManager, IUserService userService)
+           SignInManager<User> signInManager , IUserService userService , ICourseService courseService, DbLMS context)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.userService = userService;
+            _courseService = courseService;
+            _context = context;
         }
 
 
@@ -117,12 +124,14 @@ namespace Online_Learning_Management.Controllers
         }
 
         [Authorize(Roles = "Instructor")]
-        public IActionResult GetAllCourses()
+        public IActionResult GetAllEnrollments()
         {
             return View();
         }
 
-        public IActionResult GetAllEnrollments()
+
+        [Authorize(Roles = "Instructor")]
+        public IActionResult Courses()
         {
             return View();
         }
@@ -135,4 +144,69 @@ namespace Online_Learning_Management.Controllers
         }
     }
 }
+        //[HttpGet]   
+        //public IActionResult GetAllCourses()
+        //{
 
+        //    var courses = _context.Courses
+        //    .Include(c => c.Instructor)  // Include the related Instructor data
+        //    .Select(c => new
+        //    {
+        //        c.Id,
+        //        c.Title,
+        //        c.Description,
+        //        InstructorName = c.Instructor.UserName,  // Assuming UserName is the name you want to display
+        //        c.StartDate,
+        //        c.EndDate,
+        //        c.MaxStudents,
+        //        c.Price,
+        //        c.CourseTime
+        //    })
+        //    .ToList();
+        //    if (courses == null || !courses.Any())
+        //    {
+
+        //     }
+        //    return Ok(courses);
+        //}
+        [HttpGet]
+        public IActionResult GetAllCourses()
+        {
+            // Get the currently logged-in instructor's username
+            var instructorUsername = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(instructorUsername))
+            {
+                return Unauthorized(); // Or handle the unauthorized case as needed
+            }
+
+            // Fetch courses related to the logged-in instructor
+            var courses = _context.Courses
+                .Include(c => c.Instructor)  // Include the related Instructor data
+                .Where(c => c.Instructor.UserName == instructorUsername) // Filter by logged-in instructor
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Title,
+                    c.Description,
+                    InstructorName = c.Instructor.UserName,  // Assuming UserName is the name you want to display
+                    c.StartDate,
+                    c.EndDate,
+                    c.MaxStudents,
+                    c.Price,
+                    c.CourseTime
+                })
+                .ToList();
+
+            if (courses == null || !courses.Any())
+            {
+                return NotFound("No courses found for the current instructor.");
+            }
+
+            return Ok(courses);
+        }
+
+
+
+    }
+}

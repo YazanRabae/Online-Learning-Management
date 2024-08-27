@@ -1,0 +1,80 @@
+﻿<script src="~/js/CoursesIns.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+@* <section class="section dashboard">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1>My Courses</h1>
+            </div>
+            <div class="col-auto">
+                <a class="btn btn-primary" asp-action="Add">Add a Course</a>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Instructor</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Max Students</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Course Time (hrs)</th>
+                    </tr>
+                </thead>
+                <tbody id="courseInsTableBody">
+                 
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section> *@
+
+
+<section class="section dashboard">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1>My Courses</h1>
+            </div>
+            <div class="col-auto">
+                <a class="btn btn-primary" asp-action="Add">Add a Course</a>
+            </div>
+        </div>
+
+        <div class="card mt-4 p-3">
+            <!-- Added padding inside the card -->
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Instructor</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Max Students</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Course Time (hrs)</th>
+                    </tr>
+                </thead>
+                <tbody id="courseInsTableBody">
+                    <!-- Content will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+    $(document).ready(function () {
+        console.log("ready!");
+        GetCoursesIns.OnStart();
+    });
+</script>
