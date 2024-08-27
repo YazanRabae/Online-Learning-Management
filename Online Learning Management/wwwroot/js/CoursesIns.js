@@ -3,7 +3,6 @@
         GetCoursesIns.GetData();
     },
     GetData: function () {
-        debugger
         $.ajax({
             url: window.origin + '/Instructors/GetAllCourses',
             type: 'GET',

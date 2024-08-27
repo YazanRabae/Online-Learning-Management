@@ -31,7 +31,7 @@
                             <div>
 
                                 <p class="card-title  text-primary h5">My Course</p>
-                                <p class="text-muted mb-0">Number of courses</p>
+                                <p class="text-muted mb-0">Number of courses : @ViewBag.CourseCount</p>
                             </div>
                         </div>
                         <div class="filter card-filter-top-right">
@@ -40,8 +40,8 @@
                                 <li class="dropdown-header text-start">
                                     <h6>Filter</h6>
                                 </li>
-                                
-                                <li><a class="dropdown-item" asp-controller="Instructors" asp-action="GetAllCourses">My Courses</a></li>
+
+                                <li><a class="dropdown-item" asp-controller="Instructors" asp-action="Courses">My Courses</a></li>
 
                                 <li><a class="dropdown-item" asp-controller="Instructors" asp-action="AddCourses">Add a Course</a></li>@* dont forget to make an add action *@
                             </ul>
