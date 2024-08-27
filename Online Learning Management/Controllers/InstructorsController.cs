@@ -117,8 +117,17 @@ namespace Online_Learning_Management.Controllers
         [Authorize(Roles = "Instructor")]
         public IActionResult Dashboard()
         {
-            if (signInManager.IsSignedIn(User))
-                return View();
+            if (signInManager.IsSignedIn(User)) { 
+            var instructorUsername = User.Identity.Name;
+            var courseCount = _context.Courses.Count(c => c.Instructor.UserName == instructorUsername);
+
+            //var model = new DashboardViewModel
+            //{
+            //    CourseCount = courseCount
+            //};
+            ViewBag.CourseCount = courseCount;  
+            return View();
+        }
 
             return RedirectToAction("LogIn", "Instructors");
         }
@@ -136,40 +145,12 @@ namespace Online_Learning_Management.Controllers
             return View();
         }
 
-
-
         public IActionResult AddCourses()
         {
             return View(); 
         }
-    }
-}
-        //[HttpGet]   
-        //public IActionResult GetAllCourses()
-        //{
-
-        //    var courses = _context.Courses
-        //    .Include(c => c.Instructor)  // Include the related Instructor data
-        //    .Select(c => new
-        //    {
-        //        c.Id,
-        //        c.Title,
-        //        c.Description,
-        //        InstructorName = c.Instructor.UserName,  // Assuming UserName is the name you want to display
-        //        c.StartDate,
-        //        c.EndDate,
-        //        c.MaxStudents,
-        //        c.Price,
-        //        c.CourseTime
-        //    })
-        //    .ToList();
-        //    if (courses == null || !courses.Any())
-        //    {
-
-        //     }
-        //    return Ok(courses);
-        //}
         [HttpGet]
+   
         public IActionResult GetAllCourses()
         {
             // Get the currently logged-in instructor's username
@@ -206,7 +187,6 @@ namespace Online_Learning_Management.Controllers
             return Ok(courses);
         }
 
-
-
     }
 }
+     
