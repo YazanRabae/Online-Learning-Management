@@ -150,6 +150,9 @@ namespace Online_Learning_Management.Controllers
         {
             return View(); 
         }
+
+
+
         [HttpGet]
    
         public IActionResult GetAllCourses()
@@ -188,6 +191,25 @@ namespace Online_Learning_Management.Controllers
             return Ok(courses);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCourses([Bind("Title,Description,StartDate,EndDate,Price,CourseTime,ImageFile,MaxStudents")] CourseDTO courseDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                // Get the currently logged-in user's ID
+                var instructorId = userManager.GetUserId(User);
+
+                // Call the service to create the course, passing the instructor ID
+                await _courseService.CreateCourse(courseDTO, instructorId);
+
+                return RedirectToAction("Courses", "Instructors"); ;
+            }
+
+            return View(courseDTO);
+        }
     }
+
 }
+
      
