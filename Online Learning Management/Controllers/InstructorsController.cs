@@ -13,14 +13,14 @@ namespace Online_Learning_Management.Controllers
         private readonly SignInManager<User> signInManager;
         private readonly IUserService userService;
         public InstructorsController(UserManager<User> userManager,
-           SignInManager<User> signInManager , IUserService userService)
+           SignInManager<User> signInManager, IUserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.userService = userService;
         }
 
-     
+
         public IActionResult Index()
         {
             return View();
@@ -96,7 +96,7 @@ namespace Online_Learning_Management.Controllers
             var user = await userManager.GetUserAsync(User);
 
             if (user == null)
-                return RedirectToAction("Register" , "Instructors");
+                return RedirectToAction("Register", "Instructors");
 
             var model = new RegisterDto
             {
@@ -115,6 +115,7 @@ namespace Online_Learning_Management.Controllers
 
             return RedirectToAction("LogIn", "Instructors");
         }
+
         [Authorize(Roles = "Instructor")]
         public IActionResult GetAllCourses()
         {
@@ -125,7 +126,13 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
-        
+
+
+
+        public IActionResult AddCourses()
+        {
+            return View(); 
+        }
     }
 }
 

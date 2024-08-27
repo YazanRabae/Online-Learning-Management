@@ -17,13 +17,15 @@ namespace LMS.Domain.Entities.Courses
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public int MaxStudents { get; set; }
 
         public decimal Price { get; set; }
         public int CourseTime { get; set; }
 
-        
+        public byte[] ImageData { get; set; }
+
 
         // Navigation property
         public string InstructorId { get; set; }

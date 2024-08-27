@@ -52,6 +52,7 @@ namespace Online_Learning_Management
                 options.AddPolicy("AdminPolicy.DisableCourses", policy =>
                     policy.RequireClaim("Disable Courses", "true"));
             });
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 

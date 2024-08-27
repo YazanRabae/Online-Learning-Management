@@ -1,0 +1,51 @@
+﻿
+
+@{
+    ViewData["Title"] = "Add Course";
+}
+
+<div class="container mt-5">
+    <h1 >Create a New Course</h1>
+    <br />
+    <div class="card">
+        <div class="card-body pt-3">
+
+            <form asp-action="CreateCourse" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="Title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="Title" name="Title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Description" class="form-label">Description</label>
+                            <textarea class="form-control" id="Description" name="Description" rows="4" required></textarea>
+                        </div>
+@*                         <div class="mb-3">
+                            <label for="Price" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="Price" name="Price" required>
+                        </div> *@
+                    </div>
+                    <!-- Right Column -->
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="Price" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="Price" name="Price" required>
+                        </div>
+@*                         <div class="mb-3">
+                            <label for="Description" class="form-label">Description</label>
+                            <textarea class="form-control" id="Description" name="Description" rows="4" required></textarea>
+                        </div> *@
+                        <div class="mb-3">
+                            <label for="Image" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="Image" name="Image" accept="image/*" required>
+                            <small class="form-text text-muted">Upload an image for the course (JPEG, PNG, etc.).</small>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Course</button>
+            </form>
+        </div>
+    </div>
+</div>
