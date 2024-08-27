@@ -1,7 +1,9 @@
 ﻿using LMS.Domain.Entities.Users;
+using LMS.Repository.Repositories.Courses;
 using LMS.Repository.Repositories.Users;
 using LMS.Service.DTOs.Courses;
 using LMS.Service.DTOs.UserDTOs;
+using LMS.Service.Mapper.Courses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +20,16 @@ namespace LMS.Service.Services
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ICourseMapper courseMapper;
+        private readonly ICourseRepository courseRepository;
         public UserService(UserManager<User> userManager,
-           SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
+           SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager,ICourseMapper courseMapper, ICourseRepository courseRepository)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             _roleManager = roleManager;
+            this.courseMapper = courseMapper;
+            this.courseRepository = courseRepository;
         }
 
 
@@ -77,6 +83,9 @@ namespace LMS.Service.Services
             return list;
 
         }
+
+
+
 
 
 

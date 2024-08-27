@@ -1,16 +1,15 @@
-﻿
+﻿@model LMS.Service.DTOs.Courses.CourseDTO 
 
 @{
     ViewData["Title"] = "Add Course";
 }
 
 <div class="container mt-5">
-    <h1 >Create a New Course</h1>
+    <h1>Create a New Course</h1>
     <br />
     <div class="card">
         <div class="card-body pt-3">
-
-            <form asp-action="CreateCourse" method="POST" enctype="multipart/form-data">
+            <form asp-action="AddCourses" method="POST" enctype="multipart/form-data">
                 <div class="row">
                     <!-- Left Column -->
                     <div class="col-6">
@@ -18,33 +17,58 @@
                             <label for="Title" class="form-label">Title</label>
                             <input type="text" class="form-control" id="Title" name="Title" required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="Description" class="form-label">Description</label>
-                            <textarea class="form-control" id="Description" name="Description" rows="4" required></textarea>
+                            <label for="CourseTime" class="form-label">Course Time</label>
+                            <input type="number" class="form-control" id="CourseTime" name="CourseTime" required>
                         </div>
-@*                         <div class="mb-3">
-                            <label for="Price" class="form-label">Price</label>
-                            <input type="number" class="form-control" id="Price" name="Price" required>
-                        </div> *@
+
+                        <div class="mb-3">
+                            <label for="StartDate" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="StartDate" name="StartDate" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="EndDate" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="EndDate" name="EndDate" required>
+                        </div>
+
+
                     </div>
+
                     <!-- Right Column -->
                     <div class="col-6">
                         <div class="mb-3">
                             <label for="Price" class="form-label">Price</label>
                             <input type="number" class="form-control" id="Price" name="Price" required>
                         </div>
-@*                         <div class="mb-3">
-                            <label for="Description" class="form-label">Description</label>
-                            <textarea class="form-control" id="Description" name="Description" rows="4" required></textarea>
-                        </div> *@
+
                         <div class="mb-3">
-                            <label for="Image" class="form-label">Image</label>
-                            <input type="file" class="form-control" id="Image" name="Image" accept="image/*" required>
+                            <label for="MaxStudents" class="form-label">Max Students</label>
+                            <input type="number" class="form-control" id="MaxStudents" name="MaxStudents" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ImageFile" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" >
                             <small class="form-text text-muted">Upload an image for the course (JPEG, PNG, etc.).</small>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="Description" class="form-label">Description</label>
+                            <textarea class="form-control" id="Description" name="Description" rows="4" required></textarea>
+                        </div>
+
+
+
+
+
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Create Course</button>
+
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary">Create Course</button>
+                </div>
             </form>
         </div>
     </div>

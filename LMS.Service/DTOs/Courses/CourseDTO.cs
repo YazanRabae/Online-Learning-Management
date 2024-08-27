@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace LMS.Service.DTOs.Courses;
 
-    public class CourseDTO
+public class CourseDTO
 {
     [Key]
     public int Id { get; set; }
@@ -41,7 +42,13 @@ namespace LMS.Service.DTOs.Courses;
     [Required(ErrorMessage = "Course Time is required.")]
     public int CourseTime { get; set; }
 
-    [Required(ErrorMessage = "Instructor ID is required.")]
+
+    public byte[] ImageData { get; set; }
+
+    
+    public IFormFile ImageFile { get; set; }
+
+
     public string InstructorId { get; set; }
 
     public string InstructorName { get; set; }

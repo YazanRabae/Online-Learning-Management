@@ -21,7 +21,33 @@ namespace LMS.Service.Services.Courses
             //Map
             List<CourseDTO> CoursesDTO = courseMapper.MapFromCourseToCourseDTO( Courses );
 
+
             return CoursesDTO;
+        }
+
+        public async Task CreateCourse(CourseDTO courseDTO, string instructorId)
+        {
+            byte[] imageData = null;
+
+            // Ensure the Image is an IFormFile and convert it to a byte array
+            if (courseDTO.ImageFile != null && courseDTO.ImageFile.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await courseDTO.ImageFile.CopyToAsync(memoryStream); // Correct usage of CopyToAsync with Stream
+                    imageData = memoryStream.ToArray(); // Convert the Stream to a byte array
+                }
+            }
+
+            courseDTO.ImageData = imageData;
+            
+
+            var course = courseMapper.MapFromCourseDTOToCourse(courseDTO);
+
+            course.InstructorId = instructorId;
+            course.ImageData = imageData;
+
+            await courseRepository.Create(course);
         }
     }
 }

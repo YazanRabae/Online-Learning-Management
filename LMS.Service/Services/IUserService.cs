@@ -1,5 +1,6 @@
 ﻿
 using LMS.Domain.Entities.Users;
+using LMS.Service.DTOs.Courses;
 using LMS.Service.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,9 @@ namespace LMS.Service.Services
         public Task<List<User>> GetInstructors();
 
         public Task<List<User>> GetStudents();
+
+        
+
 
     }
 }

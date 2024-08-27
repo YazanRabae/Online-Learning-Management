@@ -9,7 +9,9 @@ namespace LMS.Repository.Repositories.Courses
 {
     public interface ICourseRepository
     {
-        public  Task<List<Course>> GetAll();
-        
+        Task<List<Course>> GetAll();
+        Task Create(Course course);
+        Task SaveChangesAsync();
+
     }
 }

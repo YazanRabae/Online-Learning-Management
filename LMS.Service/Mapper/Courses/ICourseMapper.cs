@@ -12,5 +12,6 @@ namespace LMS.Service.Mapper.Courses
     public interface ICourseMapper
     {
         public List<CourseDTO> MapFromCourseToCourseDTO(List<Course> Courses);
+        Course MapFromCourseDTOToCourse(CourseDTO courseDTO);
     }
 }

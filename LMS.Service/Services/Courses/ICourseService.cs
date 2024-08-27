@@ -10,5 +10,7 @@ namespace LMS.Service.Services.Courses
    public interface  ICourseService
     {
         public Task<List<CourseDTO>> GetAllCourses();
+        Task CreateCourse(CourseDTO courseDTO, string instructorId);
     }
+
 }

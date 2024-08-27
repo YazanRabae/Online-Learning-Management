@@ -1,12 +1,6 @@
 ﻿using LMS.Domain.Entities.Courses;
 using LMS.Repository.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LMS.Repository.Repositories.Courses
 {
@@ -18,8 +12,17 @@ namespace LMS.Repository.Repositories.Courses
             return await _context.Courses.ToListAsync();
         }
 
+        public async Task Create(Course course)
+        {
+            course.CreatedAt = DateTime.Now;
+            await _context.Courses.AddAsync(course);
+            await SaveChangesAsync();
+        }
 
-
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
 
     }
 }

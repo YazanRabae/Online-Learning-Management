@@ -1,5 +1,6 @@
 ﻿using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
+using LMS.Service.DTOs.Courses;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
 using LMS.Service.Services.Courses;
