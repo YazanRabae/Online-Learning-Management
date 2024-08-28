@@ -42,11 +42,26 @@
     <!-- Template Main CSS File -->
     <link href="~/lib/assets/css/style.css" rel="stylesheet">
 
+
     <style>
-        .custom-footer {
-            color: dodgerblue; /* Ensure text is readable */
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
         }
 
+        main {
+            flex: 1;
+        }
+
+        .custom-footer {
+            
+            bottom: 0;
+            width: 100%;
+             
+            color: dodgerblue; 
+        }
     </style>
 
 </head>
@@ -233,16 +248,16 @@
         <main class="main" style="margin-top: 100px;">
 
             @RenderBody()
-
+            
         </main>
     }
+    
     <!-- ======= Footer ======= -->
-    <footer class="custom-footer text-center py-3 mt-auto border-top ">
+    <footer class="custom-footer text-center py-4 border-top">
         <div class="container py-0">
-            Copyrights © 2024, TPS All Rights Reserved
+            Copyrights © 2024, All Rights Reserved
         </div>
     </footer>
-
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
