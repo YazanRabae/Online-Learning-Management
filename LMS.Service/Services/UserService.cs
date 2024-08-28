@@ -39,18 +39,17 @@ namespace LMS.Service.Services
             {
                 UserName = model.Email,
                 Email = model.Email,
-                // Any additional properties
+     
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
 
 
             if (result.Succeeded)
-            {
-                // Assign the role based on the signup type
+            { 
+
                 await userManager.AddToRoleAsync(user, role);
 
-                // Sign in the user
                 await signInManager.SignInAsync(user, isPersistent: false);
             }
         }

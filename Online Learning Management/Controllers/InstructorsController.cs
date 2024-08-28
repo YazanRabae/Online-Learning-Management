@@ -121,11 +121,6 @@ namespace Online_Learning_Management.Controllers
             if (signInManager.IsSignedIn(User)) { 
             var instructorUsername = User.Identity.Name;
             var courseCount = _context.Courses.Count(c => c.Instructor.UserName == instructorUsername);
-
-            //var model = new DashboardViewModel
-            //{
-            //    CourseCount = courseCount
-            //};
             ViewBag.CourseCount = courseCount;  
             return View();
         }
@@ -157,24 +152,24 @@ namespace Online_Learning_Management.Controllers
    
         public IActionResult GetAllCourses()
         {
-            // Get the currently logged-in instructor's username
+      
             var instructorUsername = User.Identity.Name;
 
             if (string.IsNullOrEmpty(instructorUsername))
             {
-                return Unauthorized(); // Or handle the unauthorized case as needed
+                return Unauthorized(); 
             }
 
-            // Fetch courses related to the logged-in instructor
+       
             var courses = _context.Courses
-                .Include(c => c.Instructor)  // Include the related Instructor data
-                .Where(c => c.Instructor.UserName == instructorUsername) // Filter by logged-in instructor
+                .Include(c => c.Instructor) 
+                .Where(c => c.Instructor.UserName == instructorUsername) 
                 .Select(c => new
                 {
                     c.Id,
                     c.Title,
                     c.Description,
-                    InstructorName = c.Instructor.UserName,  // Assuming UserName is the name you want to display
+                    InstructorName = c.Instructor.UserName, 
                     c.StartDate,
                     c.EndDate,
                     c.MaxStudents,
@@ -197,10 +192,8 @@ namespace Online_Learning_Management.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Get the currently logged-in user's ID
                 var instructorId = userManager.GetUserId(User);
 
-                // Call the service to create the course, passing the instructor ID
                 await _courseService.CreateCourse(courseDTO, instructorId);
 
                 return RedirectToAction("Courses", "Instructors"); ;

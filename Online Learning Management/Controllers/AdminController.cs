@@ -22,18 +22,18 @@ namespace Online_Learning_Management.Controllers
 
         private readonly SignInManager<User> _signInManager;
         private readonly IUserService _userService;
-        private readonly DbLMS _context; // Inject DbContext
+        private readonly DbLMS _context; 
         private readonly ICourseService _courseService;
 
         public AdminController(UserManager<User> userManager,
            SignInManager<User> signInManager,
            IUserService userService,
-           DbLMS context, ICourseService courseService) // Add DbContext parameter
+           DbLMS context, ICourseService courseService) 
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userService = userService;
-            _context = context; // Assign DbContext
+            _context = context;
             _courseService = courseService;
         }
 
@@ -52,15 +52,6 @@ namespace Online_Learning_Management.Controllers
         {
 
             var Students = await _userService.GetStudents();
-
-            //if (!string.IsNullOrEmpty(userName))
-            //{
-            //    Students = Students.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
-            //}
-            //if (!string.IsNullOrEmpty(email))
-            //{
-            //    Students = Students.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
-            //}
 
             if (!string.IsNullOrEmpty(userName) && string.IsNullOrEmpty(email))
             {
@@ -93,18 +84,6 @@ namespace Online_Learning_Management.Controllers
 
             var instructors = await _userService.GetInstructors(); 
 
-
-            //    if (!string.IsNullOrEmpty(userName) )
-            //    {
-            //        instructors = instructors.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
-            //    }
-            //    if (!string.IsNullOrEmpty(email))
-            //    {
-            //        instructors = instructors.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
-            //    }
-
-
-
                 if (!string.IsNullOrEmpty(userName) && string.IsNullOrEmpty(email))
                 {
                     instructors = instructors.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -135,13 +114,13 @@ namespace Online_Learning_Management.Controllers
         {
 
             var courses = _context.Courses
-               .Include(c => c.Instructor)  // Include the related Instructor data
+               .Include(c => c.Instructor)  
                .Select(c => new
                {
                    c.Id,
                    c.Title,
                    c.Description,
-                   InstructorName = c.Instructor.UserName,  // Assuming UserName is the name you want to display
+                   InstructorName = c.Instructor.UserName,  
                    c.StartDate,
                    c.EndDate,
                    c.MaxStudents,
@@ -150,30 +129,19 @@ namespace Online_Learning_Management.Controllers
                })
                .ToList();
 
-
-            //if (!string.IsNullOrEmpty(courseName))
-            //{
-            //    courses = courses.Where(i => i.Title.Contains(courseName, StringComparison.OrdinalIgnoreCase)).ToList();
-            //}
-            //if (!string.IsNullOrEmpty(instructorId))
-            //{
-            //    courses = courses.Where(i => i.InstructorName.Contains(instructorId, StringComparison.OrdinalIgnoreCase)).ToList();
-            //}
-
             if (string.IsNullOrEmpty(courseName) && !string.IsNullOrEmpty(instructorId))
             {
-                // Retrieve all courses taught by the specified instructor.
+      
                 courses = courses.Where(i => i.InstructorName.Contains(instructorId, StringComparison.OrdinalIgnoreCase)).ToList();
             }
             else if (!string.IsNullOrEmpty(courseName) && !string.IsNullOrEmpty(instructorId))
             {
-                // Retrieve all courses taught by the specified instructor with the specified course name.
+         
                 courses = courses.Where(i => i.Title.Contains(courseName, StringComparison.OrdinalIgnoreCase)
                                             && i.InstructorName.Contains(instructorId, StringComparison.OrdinalIgnoreCase)).ToList();
             }
             else if (!string.IsNullOrEmpty(courseName) && string.IsNullOrEmpty(instructorId))
             {
-                // Retrieve all courses with the specified course name.
                 courses = courses.Where(i => i.Title.Contains(courseName, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
@@ -260,7 +228,6 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
-
 
 
     }
