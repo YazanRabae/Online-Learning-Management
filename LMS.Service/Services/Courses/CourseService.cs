@@ -1,17 +1,18 @@
 ﻿using LMS.Domain.Entities.Courses;
+using LMS.Domain.Entities.Enrollments;
 using LMS.Repository.Repositories.Courses;
 using LMS.Service.DTOs.Courses;
 using LMS.Service.Mapper.Courses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using LMS.Domain.Entities.Users;
 
 namespace LMS.Service.Services.Courses
 {
     public class CourseService(ICourseRepository courseRepository ,
-         ICourseMapper courseMapper ) : ICourseService
+         ICourseMapper courseMapper,
+         UserManager<User> userManager) : ICourseService
     {
         public async Task<List<CourseDTO>> GetAllCourses()
         {
@@ -19,12 +20,10 @@ namespace LMS.Service.Services.Courses
             List<Course> Courses = await courseRepository.GetAll();
 
             //Map
-            List<CourseDTO> CoursesDTO = courseMapper.MapFromCourseToCourseDTO( Courses );
-
+            List<CourseDTO> CoursesDTO = courseMapper.MapFromCourseToCourseDTO(Courses);
 
             return CoursesDTO;
         }
-
         public async Task CreateCourse(CourseDTO courseDTO, string instructorId)
         {
             byte[] imageData = null;
@@ -48,6 +47,24 @@ namespace LMS.Service.Services.Courses
             course.ImageData = imageData;
 
             await courseRepository.Create(course);
+        }
+
+
+        public async Task AddEnrollment(string userId, int courseId)
+        {
+            var viewModel = new Enrollment
+            {
+                AddDate = DateTime.Now,
+                CourseId = courseId,
+                InstructorId = await courseRepository.GetInstructorIdByCourseIdAsync(courseId),
+                StudentId = userId
+            };
+
+            await courseRepository.AddEnrollment(viewModel);
+        }
+        public async Task<bool> IsEnrolled(string userId, int courseId)
+        {
+            return await courseRepository.IsEnrolled(userId, courseId);
         }
     }
 }

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
 namespace LMS.Service.DTOs.Courses;
@@ -52,6 +51,8 @@ public class CourseDTO
     public string InstructorId { get; set; }
 
     public string InstructorName { get; set; }
+
+    public DateTime CreatedAt { get; set; }
 }
 
 

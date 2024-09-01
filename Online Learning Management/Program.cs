@@ -1,10 +1,13 @@
 using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
 using LMS.Repository.Repositories.Courses;
+using LMS.Repository.Repositories.Enrollments;
 using LMS.Repository.Repositories.Users;
 using LMS.Service.Mapper.Courses;
+using LMS.Service.Mapper.Enrollments;
 using LMS.Service.Services;
 using LMS.Service.Services.Courses;
+using LMS.Service.Services.Enrollments;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -36,6 +39,10 @@ namespace Online_Learning_Management
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<ICourseService, CourseService>();
             builder.Services.AddScoped<ICourseMapper, CourseMapper>();
+            builder.Services.AddScoped<IEnrollmentMapper, EnrollmentMapper>();
+            builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+            builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
+
 
             builder.Services.AddAuthorization(options =>
             {
@@ -62,8 +69,8 @@ namespace Online_Learning_Management
 
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = services.GetRequiredService<UserManager<User>>();
-                SeedRoles(roleManager);
-                await SeedUsers(userManager);
+                //SeedRoles(roleManager);
+                //await SeedUsers(userManager);
             }
 
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");

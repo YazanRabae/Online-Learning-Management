@@ -1,6 +1,7 @@
 ﻿using LMS.Domain.Entities.Courses;
 using LMS.Domain.Entities.Users;
 using LMS.Service.DTOs.Courses;
+using Microsoft.AspNetCore.Http.HttpResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,11 @@ namespace LMS.Service.Mapper.Courses
                 InstructorName = b.Instructor.UserName,
                 MaxStudents = b.MaxStudents,
                 Price = b.Price,
-                CourseTime = b.CourseTime
+                CourseTime = b.CourseTime ,
+                ImageData = b.ImageData,
+                CreatedAt = b.CreatedAt,
+                InstructorId = b.InstructorId
+
             }).ToList();
         }
 
@@ -42,8 +47,8 @@ namespace LMS.Service.Mapper.Courses
                 CreatedAt = DateTime.UtcNow,
                 MaxStudents= courseDTO.MaxStudents,
 
-
             };
         }
+
     }
 }

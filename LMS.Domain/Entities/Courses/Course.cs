@@ -1,5 +1,6 @@
-﻿
+﻿using LMS.Domain.Entities.Enrollments;
 using LMS.Domain.Entities.Users;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,5 +31,8 @@ namespace LMS.Domain.Entities.Courses
         // Navigation property
         public string InstructorId { get; set; }
         public User Instructor { get; set; }
+
+
+        public ICollection<Enrollment> Enrollments { get; set; }
     }
 }

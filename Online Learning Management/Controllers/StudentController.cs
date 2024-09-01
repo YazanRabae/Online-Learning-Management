@@ -1,26 +1,27 @@
 ﻿using LMS.Domain.Entities.Users;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
+using LMS.Service.Services.Courses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Online_Learning_Management.Models;
 
 namespace Online_Learning_Management.Controllers
 {
-
     public class StudentController : Controller
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly IUserService userService;
+        private readonly ICourseService courseService;
         public StudentController(UserManager<User> userManager,
-           SignInManager<User> signInManager ,
-           IUserService userService)
+           SignInManager<User> signInManager,
+           IUserService userService, ICourseService courseService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.userService = userService; 
+            this.userService = userService;
+            this.courseService = courseService;
         }
         public IActionResult Index()
         {
@@ -38,9 +39,8 @@ namespace Online_Learning_Management.Controllers
             await userService.Logout();
             return RedirectToAction("Index", "Home");
         }
-
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto model )
+        public async Task<IActionResult> Register(RegisterDto model)
         {
             if (ModelState.IsValid)
             {
@@ -52,7 +52,7 @@ namespace Online_Learning_Management.Controllers
         }
         public IActionResult LogIn()
         {
-            if(signInManager.IsSignedIn(User))
+            if (signInManager.IsSignedIn(User))
                 return RedirectToAction("Dashboard", "Student");
 
             return View();
@@ -63,6 +63,9 @@ namespace Online_Learning_Management.Controllers
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByEmailAsync(model.Email);
+
+                if (user == null)
+                    return RedirectToAction("AccessDenied", "Shared");
 
                 var roles = await userManager.GetRolesAsync(user);
 
@@ -79,8 +82,6 @@ namespace Online_Learning_Management.Controllers
 
             return View(model);
         }
-
-
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Profile()
         {
@@ -97,14 +98,31 @@ namespace Online_Learning_Management.Controllers
 
             return View(model);
         }
-
         [Authorize(Roles = "Student")]
         public IActionResult Dashboard()
         {
+
             if (signInManager.IsSignedIn(User))
                 return View();
-            
+
             return RedirectToAction("LogIn", "Student");
+        }
+        public async Task<IActionResult> GetAllCourses()
+        {
+            var allCourses = await courseService.GetAllCourses();
+
+            return Ok(allCourses);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddEnrollment(int courseId)
+        {
+            var isEnrolled = await courseService.IsEnrolled(userManager.GetUserId(User), courseId);
+
+            if (isEnrolled)
+                return BadRequest();
+
+            await courseService.AddEnrollment(userManager.GetUserId(User), courseId);
+            return Ok();
         }
     }
 }

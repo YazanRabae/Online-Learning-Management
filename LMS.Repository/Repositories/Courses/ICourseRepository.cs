@@ -1,4 +1,5 @@
 ﻿using LMS.Domain.Entities.Courses;
+using LMS.Domain.Entities.Enrollments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace LMS.Repository.Repositories.Courses
         Task<List<Course>> GetAll();
         Task Create(Course course);
         Task SaveChangesAsync();
-
+        Task<string> GetInstructorIdByCourseIdAsync(int courseId);
+        Task AddEnrollment(Enrollment enrollment);
+        Task<bool> IsEnrolled(string userId, int courseId);
     }
 }

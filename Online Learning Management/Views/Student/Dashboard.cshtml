@@ -1,87 +1,54 @@
-﻿<div class="container">
-    <div class="row">
-        <!-- First Row of Cards -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm border-0 rounded">
-                <img src="~/photo/feras.png" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Name of Course</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <p class="card-text">Date: 25/8/2024</p>
-                    <div class="d-flex justify-content-center">
-                        <a href="#" class="btn btn-primary">Enrollment</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm border-0 rounded">
-                <img src="~/photo/feras.png" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Name of Course</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <p class="card-text">Date: 25/8/2024</p>
-                    <div class="d-flex justify-content-center">
-                        <a href="#" class="btn btn-primary">Enrollment</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm border-0 rounded">
-                <img src="~/photo/feras.png" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Name of Course</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <p class="card-text">Date: 25/8/2024</p>
-                    <div class="d-flex justify-content-center">
-                        <a href="#" class="btn btn-primary">Enrollment</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+﻿@{
+    ViewBag.Title = "Student Dashboard";
+}
 
-    <div class="row">
-        <!-- Second Row of Cards -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm border-0 rounded">
-                <img src="~/photo/feras.png" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Name of Course</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <p class="card-text">Date: 25/8/2024</p>
-                    <div class="d-flex justify-content-center">
-                        <a href="#" class="btn btn-primary">Enrollment</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm border-0 rounded">
-                <img src="~/photo/feras.png" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Name of Course</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <p class="card-text">Date: 25/8/2024</p>
-                    <div class="d-flex justify-content-center">
-                        <a href="#" class="btn btn-primary">Enrollment</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm border-0 rounded">
-                <img src="~/photo/feras.png" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Name of Course</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <p class="card-text">Date: 25/8/2024</p>
-                    <div class="d-flex justify-content-center">
-                        <a href="#" class="btn btn-primary">Enrollment</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+<style>
+
+    .card-img-top {
+        height: 200px; /* Set a fixed height for the images */
+        object-fit: fill; /* Ensures images cover the area without distortion */
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .card-body {
+        flex: 1; /* Allows the card body to fill the available space */
+    }
+
+    .alert {
+        position: fixed;
+        top: 70px; /* Adjust as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050; /* Higher z-index to ensure the alert is above other content */
+        width: 90%;
+        max-width: 600px; /* Adjust based on your design */
+    }
+
+</style>
+
+<div class="container mt-4">
+    <div id="failEnrollAlert" class="alert alert-danger d-none" role="alert">
+        Fail enrollment!
+    </div>
+    <div id="successEnrollAlert" class="alert alert-secondary d-none" role="alert">
+        Success enrollment!
+    </div>
+    <div class="row" id="coursesContainer">
+        <!-- Courses will be dynamically loaded here by AJAX -->
     </div>
 </div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/Dashboard.js"></script>
+
+<script>
+    $(document).ready(function () {
+        console.log("ready!");
+        Dashboard.OnStart();
+    });
+</script>
+

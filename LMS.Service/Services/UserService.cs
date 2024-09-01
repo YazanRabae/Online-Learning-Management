@@ -32,7 +32,6 @@ namespace LMS.Service.Services
             this.courseRepository = courseRepository;
         }
 
-
         public async Task Register(RegisterDto model, string role)
         {
             var user = new User
@@ -53,21 +52,15 @@ namespace LMS.Service.Services
                 await signInManager.SignInAsync(user, isPersistent: false);
             }
         }
-
-
-
         public async Task LogIn(LogInDto model)
         {
             await signInManager.PasswordSignInAsync(
            model.Email, model.Password, model.RememberMe, false);
         }
-
-
         public async Task Logout()
         {
             await signInManager.SignOutAsync();
         }
-
         public async Task<List<User>> GetInstructors()
         {
             var instructors = await userManager.GetUsersInRoleAsync("Instructor");
@@ -82,12 +75,5 @@ namespace LMS.Service.Services
             return list;
 
         }
-
-
-
-
-
-
-
     }
 }
