@@ -1,6 +1,148 @@
-﻿@{
+﻿<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        height: 150px;
+        background: #fff;
+    }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            filter: brightness(1.05);
+        }
+
+    .card-body {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+        color: #ffffff;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .card-text {
+        font-size: 1.1rem;
+        color: #e0e0e0;
+    }
+
+    .card-icon {
+        font-size: 2.5rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+        transition: color 0.3s ease;
+    }
+
+    .card:hover .card-icon {
+        color: #ffffff;
+    }
+
+    .bg-primary {
+        background: linear-gradient(145deg, cornflowerblue, cornflowerblue);
+    }
+
+    .bg-success {
+        background: linear-gradient(145deg, #4caf50, #388e3c);
+    }
+
+    .bg-danger {
+        background: linear-gradient(145deg, #f44336, #c62828);
+    }
+
+    .container {
+        max-width: 1200px;
+    }
+
+    /* Additional styles */
+    .card-icon i {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-icon i {
+        transform: scale(1.1);
+    }
+
+    .card-title a {
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .card-title a:hover {
+            color: white;
+        }
+</style>
+
+@{
     ViewData["Title"] = "Dashboard";
 }
 
-<h1>Dashboard</h1>
+<h4 class="text-center mb-4 text-black">Online Learning Management System </h4>
 
+<div class="container">
+    <div class="row justify-content-center">
+
+        <div class="col-xxl-4 col-md-6 mb-3">
+            <div class="card bg-primary text-white shadow-lg">
+                <div class="card-body d-flex align-items-center">
+                    <div class="card-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div>
+                        <p class="card-title"><a asp-controller="Admin" asp-action="Instructors">Courses</a></p>
+                        <p style="color:black;" class="card-text">Total Instructors: @ViewBag.CourseCount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- Card for Total Instructors -->
+        <div class="col-xxl-4 col-md-6 mb-3">
+            <div class="card bg-primary text-white shadow-lg">
+                <div class="card-body d-flex align-items-center">
+                    <div class="card-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div>
+                        <p class="card-title"><a asp-controller="Admin" asp-action="Instructors">Instructors</a></p>
+                        <p style="color:black;" class="card-text">Total Instructors: @ViewBag.InstructorCount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card for Total Students -->
+        <div class="col-xxl-4 col-md-6 mb-3">
+            <div class="card bg-primary text-white shadow-lg">
+                <div class="card-body d-flex align-items-center">
+                    <div class="card-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <p class="card-title"><a asp-controller="Admin" asp-action="Students">Students</a></p>
+                        <p class="card-text" style="color:black;">Total Students: @ViewBag.StudentCount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

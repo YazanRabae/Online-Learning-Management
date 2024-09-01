@@ -37,10 +37,7 @@ var GetInstructors = {
                         '<td scope="row">' + (index + 1) + '</td>' +  // Row number
                         '<td>' + instructor.userName + '</td>' +         // Instructor Name
                         '<td>' + instructor.email + '</td>' +        // Instructor Email
-                        '<td>' + (instructor.isActive ? 'Yes' : 'No') + '</td>' +  // IsActive
-                        '<td><button class="btn btn-warning">Active</button></td>' + // Action button
                         '</tr>';
-
                     // Append the constructed row to the table body
                     tbody.append(row);
                 });

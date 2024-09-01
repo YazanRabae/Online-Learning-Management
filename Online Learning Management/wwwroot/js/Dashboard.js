@@ -10,7 +10,14 @@
             success: function (data) {
                 var coursesContainer = $('#coursesContainer'); // Corrected ID
                 coursesContainer.empty();
+                debugger
                 $.each(data, function (index, course) {
+
+                    if (course.instructorName.includes('@')) {
+                        // Extract the substring before '@'
+                        var atIndex = course.instructorName.indexOf('@');
+                        course.instructorName = course.instructorName.substring(0, atIndex);
+                    }
                     var courseCard = `
                         <div class="col-lg-4 col-md-6 mb-4">
                             <div class="card shadow-sm border-0 rounded">
@@ -18,9 +25,11 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${course.title}</h5>
                                     <p class="card-text">${course.description}</p>
+                                         <p class="card-text">instructorName :${course.instructorName}</p>
+                                         <p class="card-text">Price: ${course.price}JD</p>
                                     <p class="card-text">Date: ${new Date(course.startDate).toLocaleDateString()}</p>
                                     <div class="d-flex justify-content-center">
-                                        <button class="btn btn-primary enroll-btn" data-course-id="${course.id}" onclick="Dashboard.Enrolle(${course.id})">Enroll</button>
+                                    <button class="btn btn-primary enroll-btn" data-course-id="${course.id}" onclick="Dashboard.Enrolle(${course.id})">Enroll</button>
                                     </div>
                                 </div>
                             </div>

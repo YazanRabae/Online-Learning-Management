@@ -224,8 +224,23 @@ namespace Online_Learning_Management.Controllers
             return RedirectToAction("EditUser", new { Id = model.UserId });
         }
 
-        public IActionResult Dashboard()
+        public async Task<IActionResult> DashboardAsync()
         {
+            // Get the counts
+            var courses = await _courseService.GetAllCourses();
+            var students = await _userService.GetStudents();
+            var instructors = await _userService.GetInstructors();
+
+            // Getting the counts
+            int courseCount = courses.Count();
+            int studentCount = students.Count();
+            int instructorCount = instructors.Count();
+            // Store the counts in ViewBag
+            ViewBag.CourseCount = courseCount;
+            ViewBag.StudentCount = studentCount;
+            ViewBag.InstructorCount = instructorCount;
+
+            // Return the view
             return View();
         }
 

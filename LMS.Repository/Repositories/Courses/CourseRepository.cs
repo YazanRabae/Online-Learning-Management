@@ -48,7 +48,9 @@ namespace LMS.Repository.Repositories.Courses
         {
             return await _context.Enrollments
                 .AnyAsync(e => e.StudentId == userId && e.CourseId == courseId);
-        }
+        } 
+
+ 
 
     }
 }

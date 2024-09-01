@@ -113,6 +113,7 @@ namespace Online_Learning_Management.Controllers
 
             return Ok(allCourses);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddEnrollment(int courseId)
         {

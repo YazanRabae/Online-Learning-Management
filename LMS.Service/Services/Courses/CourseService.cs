@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using LMS.Domain.Entities.Users;
+using LMS.Service.DTOs.Enrollments;
+using LMS.Repository.Context;
 
 namespace LMS.Service.Services.Courses
 {
     public class CourseService(ICourseRepository courseRepository ,
          ICourseMapper courseMapper,
-         UserManager<User> userManager) : ICourseService
+         UserManager<User> userManager , DbLMS _context) : ICourseService
     {
         public async Task<List<CourseDTO>> GetAllCourses()
         {
@@ -66,5 +68,8 @@ namespace LMS.Service.Services.Courses
         {
             return await courseRepository.IsEnrolled(userId, courseId);
         }
+
+    
     }
 }
+

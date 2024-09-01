@@ -1,9 +1,9 @@
 ﻿
 var GetStudents = {
     OnStart: function () {
-        GetStudents.GetData(); 
+        GetStudents.GetData();
         $('#applyFilters').on('click', function () {
-            GetStudents.GetData(); 
+            GetStudents.GetData();
         });
     },
     GetData: function () {
@@ -20,12 +20,12 @@ var GetStudents = {
                 email: emailFilter
             },
             success: function (data) {
-                var tbody = $('#StudentsTableBody'); 
-                tbody.empty(); 
+                var tbody = $('#StudentsTableBody');
+                tbody.empty();
 
-         
+
                 $.each(data, function (index, Students) {
-                  
+
                     if (Students.userName.includes('@')) {
                         var atIndex = Students.userName.indexOf('@');
                         Students.userName = Students.userName.substring(0, atIndex);
@@ -33,19 +33,17 @@ var GetStudents = {
 
                     // Construct each table row
                     var row = '<tr>' +
-                        '<td scope="row">' + (index + 1) + '</td>' +  
-                        '<td>' + Students.userName + '</td>' +         
-                        '<td>' + Students.email + '</td>' +      
-                        '<td>' + (Students.isActive ? 'Yes' : 'No') + '</td>' +  
-                        '<td><button class="btn btn-warning">Active</button></td>' + 
+                        '<td scope="row">' + (index + 1) + '</td>' +
+                        '<td>' + Students.userName + '</td>' +
+                        '<td>' + Students.email + '</td>' +
                         '</tr>';
 
-      
+
                     tbody.append(row);
                 });
             },
             error: function (xhr, status, error) {
-                console.error('Error fetching Students:', error);  
+                console.error('Error fetching Students:', error);
             }
         });
     }
