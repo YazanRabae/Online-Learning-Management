@@ -226,8 +226,9 @@ namespace Online_Learning_Management.Controllers
 
         public async Task<IActionResult> DashboardAsync()
         {
+            var UserId = _userManager.GetUserId(User);
             // Get the counts
-            var courses = await _courseService.GetAllCourses();
+            var courses = await _courseService.GetAllCourses(UserId);
             var students = await _userService.GetStudents();
             var instructors = await _userService.GetInstructors();
 

@@ -1,4 +1,5 @@
-﻿using LMS.Domain.Entities.Users;
+﻿using LMS.Domain.Entities.Courses;
+using LMS.Domain.Entities.Users;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
 using LMS.Service.Services.Courses;
@@ -109,7 +110,9 @@ namespace Online_Learning_Management.Controllers
         }
         public async Task<IActionResult> GetAllCourses()
         {
-            var allCourses = await courseService.GetAllCourses();
+            var UserId = userManager.GetUserId(User);
+
+            var allCourses = await courseService.GetAllCourses(UserId);
 
             return Ok(allCourses);
         }

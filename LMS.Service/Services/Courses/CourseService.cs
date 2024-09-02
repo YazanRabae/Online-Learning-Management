@@ -16,16 +16,45 @@ namespace LMS.Service.Services.Courses
          ICourseMapper courseMapper,
          UserManager<User> userManager , DbLMS _context) : ICourseService
     {
-        public async Task<List<CourseDTO>> GetAllCourses()
+
+        //List<CourseDTO> CoursesDTO = courseMapper.MapFromCourseToCourseDTO(Courses);
+        public async Task<List<CourseDTO>> GetAllCourses(string userId)
         {
-            //Get 
-            List<Course> Courses = await courseRepository.GetAll();
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentException("User ID cannot be null or empty.", nameof(userId));
+            }
 
-            //Map
-            List<CourseDTO> CoursesDTO = courseMapper.MapFromCourseToCourseDTO(Courses);
+            //List<Course> userCourses = await courseRepository.GetAll(userId);
+        var courses = await _context.Courses
+       .Include(course => course.Instructor)
+       .Include(course => course.Enrollments)
+       .Select(course => new CourseDTO
+       {
+           Id = course.Id,
+           Title = course.Title,
+           Description = course.Description,
+           Price = course.Price,
+           StartDate = course.StartDate,
+           InstructorName = course.Instructor.UserName,
+           ImageData = course.ImageData,
+           IsEnrolled = course.Enrollments.Any(enrollment => enrollment.StudentId == userId)
+       })
+       .ToListAsync();
 
-            return CoursesDTO;
+         return courses;
         }
+
+        public async Task<bool> Enroll(string userId, int courseId)
+        {
+            var enrol =  await courseRepository.Enroll(userId, courseId);
+            if (enrol)
+            {
+                return true;  
+            }
+            return false; /*The result(enrol) will be true if the student is already enrolled in the course, or false if not.*/
+        }
+
         public async Task CreateCourse(CourseDTO courseDTO, string instructorId)
         {
             byte[] imageData = null;

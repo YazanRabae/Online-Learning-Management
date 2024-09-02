@@ -9,7 +9,7 @@
         position: relative;
         overflow: hidden;
         height: 150px;
-        background: #fff;
+        background: #fff; /* Background is white */
     }
 
         .card:hover {
@@ -25,7 +25,7 @@
         padding: 20px;
         position: relative;
         z-index: 1;
-        color: #ffffff;
+        color: #333; /* Text color set to dark */
     }
 
     .card-title {
@@ -33,16 +33,17 @@
         font-weight: 700;
         margin-bottom: 0.5rem;
         transition: color 0.3s ease;
+        color: #333; /* Title color set to dark */
     }
 
     .card-text {
         font-size: 1.1rem;
-        color: #e0e0e0;
+        color: #555; /* Text color adjusted */
     }
 
     .card-icon {
         font-size: 2.5rem;
-        color: #333;
+        color: #007bff; /* Icon color updated to blue */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -51,20 +52,18 @@
     }
 
     .card:hover .card-icon {
-        color: #ffffff;
+        color: #0056b3; /* Darker blue on hover */
     }
 
-    .bg-primary {
-        background: linear-gradient(145deg, cornflowerblue, cornflowerblue);
+    .card-title a {
+        text-decoration: none;
+        transition: color 0.3s ease;
+        color: #007bff; /* Link color updated */
     }
 
-    .bg-success {
-        background: linear-gradient(145deg, #4caf50, #388e3c);
-    }
-
-    .bg-danger {
-        background: linear-gradient(145deg, #f44336, #c62828);
-    }
+        .card-title a:hover {
+            color: #0056b3; /* Darker blue on hover */
+        }
 
     .container {
         max-width: 1200px;
@@ -78,68 +77,56 @@
     .card:hover .card-icon i {
         transform: scale(1.1);
     }
-
-    .card-title a {
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-
-        .card-title a:hover {
-            color: white;
-        }
 </style>
 
 @{
     ViewData["Title"] = "Dashboard";
 }
 
-<h4 class="text-center mb-4 text-black">Online Learning Management System </h4>
+<h4 class="text-center mb-4 text-black">Online Learning Management System</h4>
 
 <div class="container">
     <div class="row justify-content-center">
 
+        <!-- Card for Total Courses -->
         <div class="col-xxl-4 col-md-6 mb-3">
-            <div class="card bg-primary text-white shadow-lg">
+            <div class="card text-dark shadow-lg">
                 <div class="card-body d-flex align-items-center">
                     <div class="card-icon">
                         <i class="fas fa-book"></i>
                     </div>
                     <div>
-                        <p class="card-title"><a asp-controller="Admin" asp-action="Instructors">Courses</a></p>
-                        <p style="color:black;" class="card-text">Total Instructors: @ViewBag.CourseCount</p>
+                        <p class="card-title"><a asp-controller="Admin" asp-action="Courses">Courses</a></p>
+                        <p class="card-text">Total Courses: @ViewBag.CourseCount</p>
                     </div>
                 </div>
             </div>
         </div>
 
-
-
-
         <!-- Card for Total Instructors -->
         <div class="col-xxl-4 col-md-6 mb-3">
-            <div class="card bg-primary text-white shadow-lg">
+            <div class="card text-dark shadow-lg">
                 <div class="card-body d-flex align-items-center">
                     <div class="card-icon">
                         <i class="fas fa-chalkboard-teacher"></i>
                     </div>
                     <div>
                         <p class="card-title"><a asp-controller="Admin" asp-action="Instructors">Instructors</a></p>
-                        <p style="color:black;" class="card-text">Total Instructors: @ViewBag.InstructorCount</p>
+                        <p class="card-text">Total Instructors: @ViewBag.InstructorCount</p>
                     </div>
                 </div>
             </div>
         </div>
-
         <!-- Card for Total Students -->
         <div class="col-xxl-4 col-md-6 mb-3">
-            <div class="card bg-primary text-white shadow-lg">
+            <div class="card text-dark shadow-lg">
                 <div class="card-body d-flex align-items-center">
                     <div class="card-icon">
                         <i class="fas fa-user-graduate"></i>
                     </div>
                     <div>
                         <p class="card-title"><a asp-controller="Admin" asp-action="Students">Students</a></p>
-                        <p class="card-text" style="color:black;">Total Students: @ViewBag.StudentCount</p>
+                        <p class="card-text">Total Students: @ViewBag.StudentCount</p>
                     </div>
                 </div>
             </div>

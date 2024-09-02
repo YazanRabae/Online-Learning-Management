@@ -12,7 +12,8 @@ namespace LMS.Service.Services.Courses
 {
     public interface ICourseService
     {
-        Task<List<CourseDTO>> GetAllCourses();
+        Task<List<CourseDTO>> GetAllCourses(string? UserId);
+        Task<bool> Enroll(string userId, int courseId);
         Task CreateCourse(CourseDTO courseDTO, string instructorId);
         Task AddEnrollment(string userId, int courseId);
         Task<bool> IsEnrolled(string userId, int courseId);
