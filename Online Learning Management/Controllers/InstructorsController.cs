@@ -1,9 +1,11 @@
-﻿using LMS.Domain.Entities.Users;
+﻿using LMS.Domain.Entities.Enrollments;
+using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
 using LMS.Service.DTOs.Courses;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
 using LMS.Service.Services.Courses;
+using LMS.Service.Services.Enrollments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +20,16 @@ namespace Online_Learning_Management.Controllers
         private readonly IUserService userService;
         private readonly ICourseService _courseService;
         private readonly DbLMS _context;
+        private readonly IEnrollmentService _enrollmentService;
         public InstructorsController(UserManager<User> userManager,
-           SignInManager<User> signInManager , IUserService userService , ICourseService courseService, DbLMS context)
+           SignInManager<User> signInManager , IUserService userService , ICourseService courseService, DbLMS context,IEnrollmentService enrollmentService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.userService = userService;
             _courseService = courseService;
             _context = context;
+            _enrollmentService = enrollmentService;
         }
 
 
@@ -202,6 +206,57 @@ namespace Online_Learning_Management.Controllers
             }
 
             return View(courseDTO);
+        }
+
+        [HttpGet]
+        public IActionResult GetAllPendingEnrollments()
+        {
+            // Get the currently authenticated instructor's username
+            var instructorUsername = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(instructorUsername))
+            {
+                return Unauthorized();
+            }
+
+            
+            var enrollments = _context.Enrollments
+                .Include(e => e.Course)              
+                .Include(e => e.Student)             
+                .Include(e => e.Course.Instructor)   
+                .Where(e => (e.Course.Instructor.UserName == instructorUsername && e.Status == EnrollmentStatus.Pending) || (e.Course.Instructor.UserName == instructorUsername && e.Status == EnrollmentStatus.Accepted))
+                .Select(e => new
+                {
+                    e.Id,
+                    StudentName = e.Student.UserName,   
+                    CourseName = e.Course.Title,         
+                    e.AddDate,                           
+                    e.Course.Price,  
+                    status=e.Status,
+                })
+                .ToList();
+
+            if (enrollments == null || !enrollments.Any())
+            {
+                return NotFound("No pending enrollments found for the current instructor.");
+            }
+
+            return Ok(enrollments);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Accept(int id)
+        {
+            await _enrollmentService.AcceptEnrollmentAsync(id);
+            return RedirectToAction("GetAllEnrollments", "Instructors");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Reject(int id)
+        {
+
+            await _enrollmentService.RejectEnrollmentAsync(id);
+            return RedirectToAction("GetAllEnrollments", "Instructors");
         }
     }
 

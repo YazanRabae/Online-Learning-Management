@@ -67,6 +67,40 @@ namespace LMS.Repository.Migrations
                     b.ToTable("Course", (string)null);
                 });
 
+            modelBuilder.Entity("LMS.Domain.Entities.Enrollments.Enrollment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("InstructorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("InstructorId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Enrollment", (string)null);
+                });
+
             modelBuilder.Entity("LMS.Domain.Entities.Users.User", b =>
                 {
                     b.Property<string>("Id")
@@ -274,6 +308,30 @@ namespace LMS.Repository.Migrations
                     b.Navigation("Instructor");
                 });
 
+            modelBuilder.Entity("LMS.Domain.Entities.Enrollments.Enrollment", b =>
+                {
+                    b.HasOne("LMS.Domain.Entities.Courses.Course", "Course")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LMS.Domain.Entities.Users.User", "Instructor")
+                        .WithMany("EnrollmentsAsInstructor")
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("LMS.Domain.Entities.Users.User", "Student")
+                        .WithMany("EnrollmentsAsStudent")
+                        .HasForeignKey("StudentId");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Instructor");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -325,9 +383,18 @@ namespace LMS.Repository.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LMS.Domain.Entities.Courses.Course", b =>
+                {
+                    b.Navigation("Enrollments");
+                });
+
             modelBuilder.Entity("LMS.Domain.Entities.Users.User", b =>
                 {
                     b.Navigation("Courses");
+
+                    b.Navigation("EnrollmentsAsInstructor");
+
+                    b.Navigation("EnrollmentsAsStudent");
                 });
 #pragma warning restore 612, 618
         }

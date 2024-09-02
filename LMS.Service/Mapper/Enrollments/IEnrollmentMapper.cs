@@ -1,4 +1,6 @@
-﻿using LMS.Domain.Entities.Enrollments;
+﻿using LMS.Domain.Entities.Courses;
+using LMS.Domain.Entities.Enrollments;
+using LMS.Service.DTOs.Courses;
 using LMS.Service.DTOs.Enrollments;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ namespace LMS.Service.Mapper.Enrollments
 {
     public interface  IEnrollmentMapper
     {
-        public Enrollment MapFromBookDTOoBook(EnrollmentDTO enrollmentDTO);
+        public Enrollment MapFromEnrollmentDTOtoEnrollment(EnrollmentDTO enrollmentDTO);
+        public List<EnrollmentDTO> MapFromEnrollmentToEnrollmentDTO(List<Enrollment> Entrollments);
     }
 }

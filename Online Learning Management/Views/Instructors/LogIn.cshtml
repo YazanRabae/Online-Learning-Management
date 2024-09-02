@@ -9,7 +9,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-                  
+
                         <div class="d-flex justify-content-center py-4">
                             <a asp-controller="Home" asp-action="Index" class="text-decoration-none fw-bold"
                                style="font-size: 24px; color: black; font-family: 'Georgia', serif;">
@@ -28,24 +28,26 @@
                                 <form class="row g-3 needs-validation" novalidate asp-controller="Instructors" asp-action="LogIn" method="post">
 
                                     <div class="col-12">
-                                        <label for="yourUsername" class="form-label">Email</label>
-                                        <div class="input-group has-validation">
-                                            <span class="input-group-text" id="inputGroupPrepend">@@</span>
-                                            <input type="text" name="Email" class="form-control" id="Email" required>
-                                            @* <div  class="invalid-feedback">Please enter your Email.</div> *@
-                                            <span asp-validation-for="Email" class="invalid-feedback"></span>
-                                        </div>
+                                        <label for="Email" class="form-label">Email</label>
+
+
+                                        <input asp-for="Email" type="email" name="Email" class="form-control" id="Email" required>
+
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+
                                     </div>
 
                                     <div class="col-12">
                                         <label for="Password" class="form-label">Password</label>
-                                        <input type="Password" name="Password" class="form-control" id="Password" required>
+                                        <input asp-for="Password" type="Password" name="Password" class="form-control" id="Password" required>
                                         <div class="invalid-feedback">Please enter your password!</div>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+
                                     </div>
 
                                     <div class="col-12">
                                         <div class="form-check text-start">
-                                            <input class="form-check-input" type="checkbox" name="RememberMe" value="true" id="RememberMe">
+                                            <input asp-for="RememberMe" class="form-check-input" type="checkbox" name="RememberMe" value="true" id="RememberMe">
                                             <label class="form-check-label" for="RememberMe">Remember me</label>
                                         </div>
                                     </div>
@@ -67,6 +69,3 @@
 
     </div>
 </main><!-- End #main -->
-
-
-

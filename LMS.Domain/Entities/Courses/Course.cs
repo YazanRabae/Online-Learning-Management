@@ -32,6 +32,9 @@ namespace LMS.Domain.Entities.Courses
         public string InstructorId { get; set; }
         public User Instructor { get; set; }
 
+        
+
+
 
         public ICollection<Enrollment> Enrollments { get; set; }
     }

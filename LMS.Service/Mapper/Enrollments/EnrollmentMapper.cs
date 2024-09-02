@@ -1,5 +1,6 @@
 ﻿using LMS.Domain.Entities.Courses;
 using LMS.Domain.Entities.Enrollments;
+using LMS.Service.DTOs.Courses;
 using LMS.Service.DTOs.Enrollments;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace LMS.Service.Mapper.Enrollments
 {
     public class EnrollmentMapper : IEnrollmentMapper
     {
-        public Enrollment MapFromBookDTOoBook(EnrollmentDTO enrollmentDTO)
+        public Enrollment MapFromEnrollmentDTOtoEnrollment(EnrollmentDTO enrollmentDTO)
         {
             return new Enrollment
             {
@@ -22,6 +23,18 @@ namespace LMS.Service.Mapper.Enrollments
                 //StudentId = enrollmentDTO.StudentId 
 
             };
+        }
+        public List<EnrollmentDTO> MapFromEnrollmentToEnrollmentDTO(List<Enrollment> Enrollments)
+        {
+            return Enrollments.Select(b => new EnrollmentDTO
+            {
+                Id = b.Id,
+                CourseId = b.CourseId,
+                StudentId = b.StudentId,
+                InstructorId = b.InstructorId,
+                Status = b.Status,
+                AddDate = b.AddDate,
+            }).ToList();
         }
     }
 }

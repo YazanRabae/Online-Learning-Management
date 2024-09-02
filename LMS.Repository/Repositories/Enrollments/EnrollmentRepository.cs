@@ -16,6 +16,42 @@ namespace LMS.Repository.Repositories.Enrollments
             await _context.Enrollments.AddAsync(enrollment);
             await _context.SaveChangesAsync();
         }
-  
+        public async Task<List<Enrollment>> GetPendingEnrollments()
+        {
+            return await _context.Enrollments
+                                 .Include(e => e.Student)
+                                 .Include(e => e.Instructor)
+                                 .Include(e => e.Course)
+                                 .Where(e => e.Status == EnrollmentStatus.Pending)
+                                 .ToListAsync();
+        }
+
+        public async Task Update(Enrollment enrollment)
+        {
+            _context.Enrollments.Update(enrollment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AcceptEnrollmentAsync(int enrollmentId)
+        {
+            var enrollment = await _context.Enrollments.FindAsync(enrollmentId);
+            if (enrollment != null && enrollment.Status == EnrollmentStatus.Pending)
+            {
+                enrollment.Status = EnrollmentStatus.Accepted;
+                _context.Enrollments.Update(enrollment);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task RejectEnrollmentAsync(int enrollmentId)
+        {
+            var enrollment = await _context.Enrollments.FindAsync(enrollmentId);
+            if (enrollment != null)
+            {
+                enrollment.Status = EnrollmentStatus.Rejected;
+                _context.Enrollments.Update(enrollment);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

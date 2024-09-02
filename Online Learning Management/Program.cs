@@ -69,8 +69,8 @@ namespace Online_Learning_Management
 
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = services.GetRequiredService<UserManager<User>>();
-                //SeedRoles(roleManager);
-                //await SeedUsers(userManager);
+                SeedRoles(roleManager);
+                await SeedUsers(userManager);
             }
 
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");

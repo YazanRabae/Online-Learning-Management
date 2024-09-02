@@ -10,6 +10,8 @@ namespace LMS.Domain.Entities.Enrollments
         public int Id { get; set; }
         public DateTime AddDate { get; set; }
 
+        public EnrollmentStatus Status { get; set; } = EnrollmentStatus.Pending;
+
         // Foreign Key for Instructor
         public string InstructorId { get; set; }
         public User Instructor { get; set; } 

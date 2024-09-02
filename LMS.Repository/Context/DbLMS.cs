@@ -37,6 +37,8 @@ namespace LMS.Repository.Context
 
 
 
+
+
             modelBuilder.Entity<Course>(entity =>
             {
                 entity.ToTable("Course"); // Ensure your Course table is configured properly

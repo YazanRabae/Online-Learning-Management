@@ -10,6 +10,10 @@ namespace LMS.Repository.Repositories.Enrollments
     public interface IEnrollmentRepository
     {
         public Task Create(Enrollment enrollment);
+        public Task<List<Enrollment>> GetPendingEnrollments();
+        public Task Update(Enrollment enrollment);
+        public Task AcceptEnrollmentAsync(int enrollmentId);
+        public Task RejectEnrollmentAsync(int enrollmentId);
 
     }
 }

@@ -26,21 +26,25 @@
                                     <p class="text-center small">Enter your Email & password to login</p>
                                 </div>
 
-                                <form class="row g-3 needs-validation" novalidate asp-controller="Student" asp-action="LogIn" method="post">
+                                <form class="row g-3 needs-validation"  asp-controller="Student" asp-action="LogIn" method="post">
 
                                     <div class="col-12">
-                                        <label for="yourUsername" class="form-label">Email</label>
-                                        <div class="input-group has-validation">
-                                            <span class="input-group-text" id="inputGroupPrepend">@@</span>
-                                            <input asp-for="Email" type="text" name="Email" class="form-control" id="Email" required>
-                                            <div class="invalid-feedback">Please enter your Email.</div>
-                                        </div>
+                                        <label for="Email" class="form-label">Email</label>
+                                        
+                                            
+                                            <input asp-for="Email" type="email" name="Email" class="form-control" id="Email" required>
+                                            
+                                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                                       
                                     </div>
 
                                     <div class="col-12">
                                         <label for="Password" class="form-label">Password</label>
                                         <input asp-for="Password" type="Password" name="Password" class="form-control" id="Password" required>
                                         <div class="invalid-feedback">Please enter your password!</div>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+
                                     </div>
 
                                     <div class="col-12">
