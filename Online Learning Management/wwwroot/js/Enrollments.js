@@ -15,7 +15,10 @@
                 $.each(data, function (index, enrollment) {
 
                     var enrollmentDate = new Date(enrollment.addDate).toLocaleDateString();
-
+                    if (enrollment.studentName.includes('@')) {
+                        var atIndex = enrollment.studentName.indexOf('@');
+                        enrollment.studentName = enrollment.studentName.substring(0, atIndex);
+                    }
                     // Construct each table row
                     var row = '<tr>' +
                         '<td scope="row">' + (index + 1) + '</td>' +  // Row number
