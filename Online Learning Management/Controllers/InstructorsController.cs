@@ -80,7 +80,7 @@ namespace Online_Learning_Management.Controllers
             {
                 var user = await userManager.FindByEmailAsync(model.Email);
                 if (user == null)
-                    return RedirectToAction("AccessDenied", "Shared");
+                    return RedirectToAction("Index", "Home");
 
                 var roles = await userManager.GetRolesAsync(user);
 
@@ -224,7 +224,7 @@ namespace Online_Learning_Management.Controllers
                 .Include(e => e.Course)              
                 .Include(e => e.Student)             
                 .Include(e => e.Course.Instructor)   
-                .Where(e => (e.Course.Instructor.UserName == instructorUsername && e.Status == EnrollmentStatus.Pending) || (e.Course.Instructor.UserName == instructorUsername && e.Status == EnrollmentStatus.Accepted))
+                .Where(e => (e.Course.Instructor.UserName == instructorUsername ))
                 .Select(e => new
                 {
                     e.Id,

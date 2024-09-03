@@ -12,7 +12,7 @@ namespace LMS.Service.DTOs.UserDTOs
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email address format.")]
         [StringLength(100, ErrorMessage = "Email can't be longer than 100 characters.")]
-        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@(gmail|yahoo|outlook|hotmail)\.com$", ErrorMessage = "Email must be a valid address and from @gmail.com, @yahoo.com, @outlook.com, or @hotmail.com.")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@(gmail|yahoo|outlook|hotmail|example)\.com$", ErrorMessage = "Email must be a valid address and from @gmail.com, @yahoo.com, @outlook.com, or @hotmail.com.")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required.")]

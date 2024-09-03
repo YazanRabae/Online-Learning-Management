@@ -35,7 +35,7 @@ namespace LMS.Repository.Repositories.Enrollments
         public async Task AcceptEnrollmentAsync(int enrollmentId)
         {
             var enrollment = await _context.Enrollments.FindAsync(enrollmentId);
-            if (enrollment != null && enrollment.Status == EnrollmentStatus.Pending)
+            if (enrollment != null)
             {
                 enrollment.Status = EnrollmentStatus.Accepted;
                 _context.Enrollments.Update(enrollment);

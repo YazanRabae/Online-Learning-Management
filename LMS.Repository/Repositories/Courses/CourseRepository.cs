@@ -65,9 +65,19 @@ namespace LMS.Repository.Repositories.Courses
         {
             return await _context.Enrollments
                 .AnyAsync(e => e.StudentId == userId && e.CourseId == courseId);
-        } 
+        }
 
- 
-
+        public async Task<List<Course>> GetAllByUserIdAsync(string userId)
+        {
+            return await _context.Courses
+                .Include(course => course.Instructor)
+                .Include(course => course.Enrollments)
+                .Where(course => course.Enrollments.Any(enrollment => enrollment.StudentId == userId))
+                .ToListAsync();
+        }
     }
+
+
+
 }
+

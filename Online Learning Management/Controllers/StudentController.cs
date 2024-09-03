@@ -66,7 +66,7 @@ namespace Online_Learning_Management.Controllers
                 var user = await userManager.FindByEmailAsync(model.Email);
 
                 if (user == null)
-                    return RedirectToAction("AccessDenied", "Shared");
+                        return RedirectToAction("Index", "Home");
 
                 var roles = await userManager.GetRolesAsync(user);
 
