@@ -11,14 +11,18 @@ namespace LMS.Repository.Repositories.Courses
 {
     public interface ICourseRepository
     {
-        Task<List<Course>> GetAll(string? userId);
-        Task<bool> Enroll(string userId, int courseId);
-        Task Create(Course course);
+        Task<List<Course>> GetCoursesByStudentIdAsync(int studentId);
+        Task<List<Course>> GetCoursesByInstructorIdAsync(int instructorId);
+        Task<bool> IsStudentEnrolledAsync(int studentId, int courseId);
+        Task AddEnrollmentAsync(Enrollment enrollment);
+        Task CreateCourseAsync(Course course);
+        Task<int> GetInstructorIdByCourseIdAsync(int courseId);
         Task SaveChangesAsync();
-        Task<string> GetInstructorIdByCourseIdAsync(int courseId);
-        Task AddEnrollment(Enrollment enrollment);
-        Task<bool> IsEnrolled(string userId, int courseId);
 
-      
+        Task<IEnumerable<Course>> GetCoursesByInstructorAsync(int instructorId);
+        Task<int> GetCourseCountByInstructorAsync(string userId);
+        Task AddCourseAsync(Course course);
+        Task<List<Course>> GetAllWithInstructorAndEnrollmentsAsync();
+        Task<List<Course>> GetCoursesByUserId(string userId);
     }
 }

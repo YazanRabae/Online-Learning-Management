@@ -1,63 +1,97 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace LMS.Service.DTOs.Courses;
-
-public class CourseDTO
+namespace LMS.Service.DTOs.Courses
 {
-    [Key]
-    public int Id { get; set; }
+    public class CourseDTO
+    {
+        [Key]
+        public int Id { get; set; }
 
-    [Required(ErrorMessage = "Course title is required.")]
-    [StringLength(100, ErrorMessage = "Course title cannot exceed 100 characters.")]
-    public string Title { get; set; }
+        [Required(ErrorMessage = "Course title is required.")]
+        [StringLength(100, MinimumLength = 1, ErrorMessage = "Course title must be between 5 and 100 characters.")]
+        public string Title { get; set; }
 
-    [Required(ErrorMessage = "Course description is required.")]
-    [StringLength(1000, ErrorMessage = "Course description cannot exceed 1000 characters.")]
-    public string Description { get; set; }
+        [Required(ErrorMessage = "Course description is required.")]
+        [StringLength(1000, MinimumLength = 1, ErrorMessage = "Course description must be between 20 and 1000 characters.")]
+        public string Description { get; set; }
 
-    [Required(ErrorMessage = "Start date is required.")]
-    [DataType(DataType.Date, ErrorMessage = "Invalid date format.")]
-    public DateTime StartDate { get; set; }
+        [Required(ErrorMessage = "Start date is required.")]
+        [DataType(DataType.Date, ErrorMessage = "Invalid date format.")]
+        [Display(Name = "Start Date")]
+        public DateTime StartDate { get; set; }
 
-    [Required(ErrorMessage = "End date is required.")]
-    [DataType(DataType.Date, ErrorMessage = "Invalid date format.")]
-    public DateTime EndDate { get; set; }
+        [Required(ErrorMessage = "End date is required.")]
+        [DataType(DataType.Date, ErrorMessage = "Invalid date format.")]
+        [Display(Name = "End Date")]
+        [DateGreaterThan(nameof(StartDate), ErrorMessage = "End date must be after the start date.")]
+        public DateTime EndDate { get; set; }
 
-    [Range(0, int.MaxValue, ErrorMessage = "Maximum number of students must be a non-negative integer.")]
-    public int MaxStudents { get; set; }
+        [Required(ErrorMessage = "Maximum number of students is required.")]
+        [Range(1, 1000, ErrorMessage = "Maximum students must be between 1 and 1000.")]
+        public int MaxStudents { get; set; }
 
-    [Required(ErrorMessage = "Price is required.")]
-    [Range(0.01, double.MaxValue, ErrorMessage = "Price must be a positive value.")]
-    public decimal Price { get; set; }
+        [Required(ErrorMessage = "Price is required.")]
+        [Range(0.01, 10000, ErrorMessage = "Price must be a positive value between 0.01 and 10,000.")]
+        public decimal Price { get; set; }
 
-    [Required(ErrorMessage = "Course Time is required.")]
-    public int CourseTime { get; set; }
+        [Required(ErrorMessage = "Course duration (in hours) is required.")]
+        [Range(1, 1000, ErrorMessage = "Course time must be between 1 and 1000 hours.")]
+        [Display(Name = "Course Time (hours)")]
+        public int CourseTime { get; set; }
 
+        // For displaying an uploaded image
+        public byte[] ImageData { get; set; }
 
-    public byte[] ImageData { get; set; }
+        // For receiving an image file from form
+        [Display(Name = "Course Image")]
+        public IFormFile ImageFile { get; set; }
 
-    
-    public IFormFile ImageFile { get; set; }
+        // Instructor Information
+        public int InstructorId { get; set; }
 
+        public string InstructorName { get; set; }
 
-    public string InstructorId { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    public string InstructorName { get; set; }
+        // Indicates whether the current user is enrolled
+        public bool IsEnrolled { get; set; }
+    }
 
-    public DateTime CreatedAt { get; set; }
-    public bool IsEnrolled { get; set; }
+    /// <summary>
+    /// Custom validation attribute to ensure EndDate is greater than StartDate.
+    /// </summary>
+    public class DateGreaterThanAttribute : ValidationAttribute
+    {
+        private readonly string _comparisonProperty;
 
+        public DateGreaterThanAttribute(string comparisonProperty)
+        {
+            _comparisonProperty = comparisonProperty;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (value is not DateTime endDate)
+                return new ValidationResult("Invalid date value.");
+
+            var property = validationContext.ObjectType.GetProperty(_comparisonProperty);
+            if (property == null)
+                return new ValidationResult($"Unknown property: {_comparisonProperty}");
+
+            var startDateObj = property.GetValue(validationContext.ObjectInstance);
+            if (startDateObj is not DateTime startDate)
+                return new ValidationResult("Invalid comparison date.");
+
+            if (endDate <= startDate)
+                return new ValidationResult(ErrorMessage ?? "End date must be after the start date.");
+
+            return ValidationResult.Success;
+        }
+    }
 }
-
-
 
 
 

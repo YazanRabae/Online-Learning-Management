@@ -1,39 +1,37 @@
-﻿using LMS.Domain.Entities.Courses;
-using LMS.Domain.Entities.Enrollments;
-using LMS.Service.DTOs.Courses;
+﻿using LMS.Domain.Entities.Enrollments;
 using LMS.Service.DTOs.Enrollments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace LMS.Service.Mapper.Enrollments
 {
     public class EnrollmentMapper : IEnrollmentMapper
     {
-        public Enrollment MapFromEnrollmentDTOtoEnrollment(EnrollmentDTO enrollmentDTO)
+        public Enrollment MapFromEnrollmentDTOtoEnrollment(EnrollmentDTO dto)
         {
             return new Enrollment
             {
-                 Id = enrollmentDTO.Id,
-                AddDate = enrollmentDTO.AddDate,
-                CourseId = enrollmentDTO.CourseId,
-                //InstructorId = enrollmentDTO.InstructorId ,
-                //StudentId = enrollmentDTO.StudentId 
-
+                Id = dto.Id,
+                AddDate = dto.AddDate,
+                Status = dto.Status,
+                InstructorId = dto.InstructorId,
+                StudentId = dto.StudentId,
+                CourseId = dto.CourseId
             };
         }
-        public List<EnrollmentDTO> MapFromEnrollmentToEnrollmentDTO(List<Enrollment> Enrollments)
+
+        public List<EnrollmentDTO> MapFromEnrollmentToEnrollmentDTO(List<Enrollment> enrollments)
         {
-            return Enrollments.Select(b => new EnrollmentDTO
+            return enrollments.Select(e => new EnrollmentDTO
             {
-                Id = b.Id,
-                CourseId = b.CourseId,
-                StudentId = b.StudentId,
-                InstructorId = b.InstructorId,
-                Status = b.Status,
-                AddDate = b.AddDate,
+                Id = e.Id,
+                AddDate = e.AddDate,
+                Status = e.Status,
+                InstructorId = e.InstructorId,
+                StudentId = e.StudentId,
+                CourseId = e.CourseId,
+                Instructor = e.Instructor,
+                Student = e.Student,
+                Course = e.Course
             }).ToList();
         }
     }

@@ -16,7 +16,7 @@
                         course.instructorName = course.instructorName.substring(0, atIndex);
                     }
                     var enrollButton = course.isEnrolled
-                        ? `<button class="btn btn-secondary" disabled>Already Enrolled</button>`
+                        ? `<button class="btn btn-secondary" disabled>Enrolled</button>`
                         : `<button class="btn btn-primary enroll-btn" data-course-id="${course.id}" onclick="Dashboard.Enrolle(${course.id})">Enroll</button>`;
 
                     var courseCard = `

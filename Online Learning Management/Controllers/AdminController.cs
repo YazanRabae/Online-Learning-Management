@@ -1,9 +1,15 @@
 ﻿using LMS.Domain.Entities.Courses;
 using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
+using LMS.Service.Common.Constants;
+using LMS.Service.DTOs.Courses;
+using LMS.Service.DTOs.Students;
 using LMS.Service.DTOs.UserDTOs;
+using LMS.Service.Mapper.Students;
 using LMS.Service.Services;
 using LMS.Service.Services.Courses;
+using LMS.Service.Services.Instructors;
+using LMS.Service.Services.Students;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,17 +30,27 @@ namespace Online_Learning_Management.Controllers
         private readonly IUserService _userService;
         private readonly DbLMS _context;
         private readonly ICourseService _courseService;
+        private readonly IStudentMapper _studentMapper;
+        private readonly IStudentService _studentService;
+        private readonly IInstructorService _instructorService;
 
         public AdminController(UserManager<User> userManager,
            SignInManager<User> signInManager,
            IUserService userService,
-           DbLMS context, ICourseService courseService)
+           DbLMS context,
+           ICourseService courseService,
+           IStudentMapper studentMapper,
+           IStudentService studentService,
+           IInstructorService instructorService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userService = userService;
             _context = context;
             _courseService = courseService;
+            _studentMapper = studentMapper;
+            _studentService = studentService;
+            _instructorService = instructorService;
         }
 
 
@@ -70,6 +86,52 @@ namespace Online_Learning_Management.Controllers
             return Ok(Students);
         }
 
+        public IActionResult CreateUser(string roleName)
+        {
+            return View(new CreateUserDto()
+            {
+                RoleName = roleName
+            });
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser([Bind("Name,Email,Password,ConfirmPassword,RoleName")] CreateUserDto createUserDto)
+        {
+            if (ModelState.IsValid)
+            {
+                //Regiser Student
+                var result = await _userService.Register(_studentMapper.MapFromCreateStudentDtoToRegiserModel(createUserDto), createUserDto.RoleName);
+
+                if (!result.IsSuccess)
+                {
+                    TempData["Password"] = createUserDto.Password;
+                    TempData["ConfirmPassword"] = createUserDto.ConfirmPassword;
+                    TempData["Error"] = result.MessageError;
+                    return View(createUserDto);
+                }
+
+                createUserDto.UserId = result.UserId;
+
+                if (createUserDto.RoleName == RoleConstants.Student)
+                {
+                    await _studentService.CreateStudent(createUserDto);
+                    TempData["Success"] = createUserDto.RoleName + " Created Successfully";
+                    return RedirectToAction("Students", "Admin");
+                }
+                else
+                {
+                    await _instructorService.CreateInstructor(createUserDto);
+                    TempData["Success"] = createUserDto.RoleName + " Created Successfully";
+                    return RedirectToAction("Instructors", "Admin");
+                }
+            }
+
+            TempData["Password"] = createUserDto.Password;
+            TempData["ConfirmPassword"] = createUserDto.ConfirmPassword;
+            return View(createUserDto);
+        }
 
         public IActionResult Instructors()
         {
@@ -120,7 +182,7 @@ namespace Online_Learning_Management.Controllers
                    c.Id,
                    c.Title,
                    c.Description,
-                   InstructorName = c.Instructor.UserName,
+                   InstructorName = c.Instructor.Name,
                    c.StartDate,
                    c.EndDate,
                    c.MaxStudents,
@@ -246,8 +308,8 @@ namespace Online_Learning_Management.Controllers
             var courseData = _context.Courses
                              .Select(course => new
                              {
-                               course.Title,
-                               EnrollmentCount = course.Enrollments.Count()
+                                 course.Title,
+                                 EnrollmentCount = course.Enrollments.Count()
                              }).ToList();
 
             ViewBag.CourseTitles = courseData.Select(c => c.Title).ToArray();

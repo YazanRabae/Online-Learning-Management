@@ -1,6 +1,4 @@
-﻿using LMS.Domain.Entities.Courses;
-using LMS.Domain.Entities.Users;
-using Microsoft.AspNetCore.Mvc;
+﻿using LMS.Domain.Entities.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace LMS.Repository.Repositories.Users
 {
-    public interface IUserRepository 
+    public interface IUserRepository
     {
-      
+        Task<User> GetByUsernameAsync(string username);
+
+        Task<IEnumerable<User>> GetStudentsAsync();
+        Task<IEnumerable<User>> GetInstructorsAsync();
     }
 }

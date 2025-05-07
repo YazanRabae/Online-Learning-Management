@@ -1,22 +1,15 @@
 ﻿using LMS.Domain.Entities.Courses;
-using LMS.Domain.Entities.Users;
 using LMS.Service.DTOs.Courses;
-using LMS.Service.DTOs.Enrollments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LMS.Service.Services.Courses
 {
     public interface ICourseService
     {
-        Task<List<CourseDTO>> GetAllCourses(string? UserId);
-        Task<bool> Enroll(string userId, int courseId);
-        Task CreateCourse(CourseDTO courseDTO, string instructorId);
+        Task<List<CourseDTO>> GetAllCourses(string userId);
+        Task CreateCourse(CourseDTO courseDTO, string userId);
         Task AddEnrollment(string userId, int courseId);
         Task<bool> IsEnrolled(string userId, int courseId);
+        Task<int> NumberOfCourses(string userId);
+        Task<List<Course>> GetCoursesByUserId(string userId);
     }
-
 }

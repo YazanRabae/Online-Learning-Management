@@ -1,10 +1,13 @@
-﻿@{
-    ViewData["Title"] = "Instructors";
+﻿@using LMS.Service.Common.Constants
+@{
+    ViewData["Title"] = "Instructor";
 }
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/js/instructoradmin.js"></script>
 <div class="container">
     <h1 class="text-left">@ViewData["Title"]</h1>
+
+    <a type="button" asp-action="CreateUser" asp-controller="Admin" asp-route-roleName="@RoleConstants.Instructor" class="btn btn-secondary">Create Instructor</a>
 
     <div class="col">
         <div class="card p-4">

@@ -1,54 +1,64 @@
 ﻿using LMS.Domain.Entities.Courses;
-using LMS.Domain.Entities.Users;
 using LMS.Service.DTOs.Courses;
-using Microsoft.AspNetCore.Http.HttpResults;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LMS.Service.Mapper.Courses
 {
     public class CourseMapper : ICourseMapper
     {
-        public List<CourseDTO> MapFromCourseToCourseDTO(List<Course> Courses)
+        public IEnumerable<CourseDTO> MapFromCourseToCourseDTO(IEnumerable<Course> courses)
         {
-            return Courses.Select(b => new CourseDTO
+            return courses.Select(course => new CourseDTO
             {
-                Id = b.Id,
-                Title = b.Title,
-                Description = b.Description,
-                StartDate = b.StartDate,
-                EndDate = b.EndDate,
-                InstructorName = b.Instructor.UserName,
-                MaxStudents = b.MaxStudents,
-                Price = b.Price,
-                CourseTime = b.CourseTime ,
-                ImageData = b.ImageData,
-                CreatedAt = b.CreatedAt,
-                InstructorId = b.InstructorId
-
+                Id = course.Id,
+                Title = course.Title,
+                Description = course.Description,
+                StartDate = course.StartDate,
+                EndDate = course.EndDate,
+                InstructorId = course.InstructorId,
+                InstructorName = course.Instructor?.Name,
+                MaxStudents = course.MaxStudents,
+                Price = course.Price,
+                CourseTime = course.CourseTime,
+                ImageData = course.ImageData,
+                CreatedAt = course.CreatedAt,
             }).ToList();
         }
 
         public Course MapFromCourseDTOToCourse(CourseDTO courseDTO)
         {
-            return new Course
+            var course = new Course
             {
                 Id = courseDTO.Id,
                 Title = courseDTO.Title,
                 Description = courseDTO.Description,
-                ImageData = courseDTO.ImageData,
                 StartDate = courseDTO.StartDate,
                 EndDate = courseDTO.EndDate,
+                MaxStudents = courseDTO.MaxStudents,
                 Price = courseDTO.Price,
                 CourseTime = courseDTO.CourseTime,
-                CreatedAt = DateTime.UtcNow,
-                MaxStudents= courseDTO.MaxStudents,
-
+                CreatedAt = courseDTO.CreatedAt == default ? DateTime.UtcNow : courseDTO.CreatedAt,
+                InstructorId = courseDTO.InstructorId,
             };
-        }
 
+            if (courseDTO.ImageFile != null && courseDTO.ImageFile.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    courseDTO.ImageFile.CopyTo(ms);
+                    course.ImageData = ms.ToArray();
+                }
+            }
+            else
+            {
+                course.ImageData = courseDTO.ImageData; // retain existing image if not updating
+            }
+
+            return course;
+        }
     }
 }

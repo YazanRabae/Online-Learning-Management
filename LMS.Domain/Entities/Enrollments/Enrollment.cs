@@ -1,4 +1,6 @@
 ﻿using LMS.Domain.Entities.Courses;
+using LMS.Domain.Entities.Instructors;
+using LMS.Domain.Entities.Students;
 using LMS.Domain.Entities.Users;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,15 +15,15 @@ namespace LMS.Domain.Entities.Enrollments
         public EnrollmentStatus Status { get; set; } = EnrollmentStatus.Pending;
 
         // Foreign Key for Instructor
-        public string InstructorId { get; set; }
-        public User Instructor { get; set; } 
+        public int InstructorId { get; set; }
+        public Instructor Instructor { get; set; } 
 
         // Foreign Key for Course
         public int CourseId { get; set; }
         public Course Course { get; set; } 
 
         // Foreign Key for Student
-        public string StudentId { get; set; }
-        public User Student { get; set; } 
+        public int StudentId { get; set; }
+        public Student Student { get; set; } 
     }
 }

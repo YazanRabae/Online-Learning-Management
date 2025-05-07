@@ -2,12 +2,19 @@ using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
 using LMS.Repository.Repositories.Courses;
 using LMS.Repository.Repositories.Enrollments;
+using LMS.Repository.Repositories.Instructors;
+using LMS.Repository.Repositories.Students;
 using LMS.Repository.Repositories.Users;
+using LMS.Service.Common.Constants;
 using LMS.Service.Mapper.Courses;
 using LMS.Service.Mapper.Enrollments;
+using LMS.Service.Mapper.Instructors;
+using LMS.Service.Mapper.Students;
 using LMS.Service.Services;
 using LMS.Service.Services.Courses;
 using LMS.Service.Services.Enrollments;
+using LMS.Service.Services.Instructors;
+using LMS.Service.Services.Students;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -34,11 +41,22 @@ namespace Online_Learning_Management
                 options.AccessDeniedPath = "/Shared/AccessDenied"; // Set to your correct path
             });
 
+            builder.Services.AddControllersWithViews()
+           .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true);
+
+
+
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
             builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
+            builder.Services.AddScoped<IInstructorService, InstructorService>();
             builder.Services.AddScoped<ICourseMapper, CourseMapper>();
+            builder.Services.AddScoped<IStudentMapper, StudentMapper>();
+            builder.Services.AddScoped<IInstructorMapper, InstructorMapper>();
             builder.Services.AddScoped<IEnrollmentMapper, EnrollmentMapper>();
             builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
             builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
@@ -49,13 +67,13 @@ namespace Online_Learning_Management
                 options.AddPolicy("AdminPolicy.ManageStudents", policy =>
                     policy.RequireClaim("Manage Students", "true"));
                 options.AddPolicy("AdminPolicy.ManageInstructors", policy =>
-                    policy.RequireClaim("Manage Instructors", "true"));
+                    policy.RequireClaim("Manage Instructor", "true"));
                 options.AddPolicy("AdminPolicy.ManageCourses", policy =>
                     policy.RequireClaim("Manage Courses", "true"));
                 options.AddPolicy("AdminPolicy.DisableStudents", policy =>
                     policy.RequireClaim("Disable Students", "true"));
                 options.AddPolicy("AdminPolicy.DisableInstructors", policy =>
-                    policy.RequireClaim("Disable Instructors", "true"));
+                    policy.RequireClaim("Disable Instructor", "true"));
                 options.AddPolicy("AdminPolicy.DisableCourses", policy =>
                     policy.RequireClaim("Disable Courses", "true"));
             });
@@ -98,7 +116,7 @@ namespace Online_Learning_Management
 
         private static void SeedRoles(RoleManager<IdentityRole> roleManager)
         {
-            string[] roleNames = { "Admin", "Instructor", "Student" };
+            string[] roleNames = { RoleConstants.Admin, RoleConstants.Instructor, RoleConstants.Student };
             foreach (var roleName in roleNames)
             {
                 if (!roleManager.RoleExistsAsync(roleName).Result)
@@ -124,7 +142,7 @@ namespace Online_Learning_Management
                 var result = await userManager.CreateAsync(user, "P@ssw0rd%*");
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, "Admin");
+                    await userManager.AddToRoleAsync(user, RoleConstants.Admin);
                 }
             }
             else

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Online_Learning_Management.Controllers
 {
@@ -19,16 +20,14 @@ namespace Online_Learning_Management.Controllers
         private readonly SignInManager<User> signInManager;
         private readonly IUserService userService;
         private readonly ICourseService _courseService;
-        private readonly DbLMS _context;
         private readonly IEnrollmentService _enrollmentService;
         public InstructorsController(UserManager<User> userManager,
-           SignInManager<User> signInManager , IUserService userService , ICourseService courseService, DbLMS context,IEnrollmentService enrollmentService)
+           SignInManager<User> signInManager, IUserService userService, ICourseService courseService, IEnrollmentService enrollmentService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.userService = userService;
             _courseService = courseService;
-            _context = context;
             _enrollmentService = enrollmentService;
         }
 
@@ -38,40 +37,15 @@ namespace Online_Learning_Management.Controllers
             return View();
         }
 
-        public IActionResult Register()
-        {
-            if (signInManager.IsSignedIn(User))
-                return RedirectToAction("Dashboard", "Instructors");
-
-            return View();
-        }
 
         [AllowAnonymous]
         public IActionResult LogIn()
         {
             if (signInManager.IsSignedIn(User))
-                return RedirectToAction("Dashboard", "Instructors");
+                return RedirectToAction("Dashboard", "Instructor");
 
             return View();
         }
-
-        public async Task<IActionResult> Logout()
-        {
-            await userService.Logout();
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto model)
-        {
-            if (ModelState.IsValid)
-            {
-                await userService.Register(model, "Instructor");
-                return RedirectToAction("Dashboard", "Instructors");
-            }
-            return View(model);
-        }
-
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> LogIn(LogInDto model)
@@ -80,7 +54,7 @@ namespace Online_Learning_Management.Controllers
             {
                 var user = await userManager.FindByEmailAsync(model.Email);
                 if (user == null)
-                    return RedirectToAction("Index", "Home");
+                    return View(model);
 
                 var roles = await userManager.GetRolesAsync(user);
 
@@ -96,13 +70,45 @@ namespace Online_Learning_Management.Controllers
                 {
                     await userService.LogIn(model);
 
-                    return RedirectToAction("Dashboard", "Instructors");
+                    return RedirectToAction("Dashboard", "Instructor");
+                }
+                else if (roleAssign == "Instructor")
+                {
+                    await userService.LogIn(model);
+
+                    return RedirectToAction("Dashboard", "Instructor");
                 }
                 else
-                    return RedirectToAction("AccessDenied", "Shared");
+                    return View(model);
             }
 
             return View(model);
+        }
+  
+
+        public IActionResult Register()
+        {
+            if (signInManager.IsSignedIn(User))
+                return RedirectToAction("Dashboard", "Instructor");
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                await userService.Register(model, "Instructor");
+                return RedirectToAction("Dashboard", "Instructor");
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await userService.Logout();
+            return RedirectToAction("LogIn", "Instructor");
         }
 
         public async Task<IActionResult> Profile()
@@ -110,7 +116,7 @@ namespace Online_Learning_Management.Controllers
             var user = await userManager.GetUserAsync(User);
 
             if (user == null)
-                return RedirectToAction("Register", "Instructors");
+                return RedirectToAction("Register", "Instructor");
 
             var model = new RegisterDto
             {
@@ -122,16 +128,16 @@ namespace Online_Learning_Management.Controllers
         }
 
         [Authorize(Roles = "Instructor")]
-        public IActionResult Dashboard()
+        public async Task<IActionResult> Dashboard()
         {
-            if (signInManager.IsSignedIn(User)) { 
-            var instructorUsername = User.Identity.Name;
-            var courseCount = _context.Courses.Count(c => c.Instructor.UserName == instructorUsername);
-            ViewBag.CourseCount = courseCount;  
-            return View();
-        }
+            if (signInManager.IsSignedIn(User))
+            {
+                var userId = userManager.GetUserId(User);
+                ViewBag.CourseCount = await _courseService.NumberOfCourses(userId);
+                return View();
+            }
 
-            return RedirectToAction("LogIn", "Instructors");
+            return RedirectToAction("LogIn", "Instructor");
         }
 
         [Authorize(Roles = "Instructor")]
@@ -149,33 +155,30 @@ namespace Online_Learning_Management.Controllers
 
         public IActionResult AddCourses()
         {
-            return View(); 
+            return View();
         }
 
 
 
         [HttpGet]
-   
-        public IActionResult GetAllCourses()
-        {
-      
-            var instructorUsername = User.Identity.Name;
 
-            if (string.IsNullOrEmpty(instructorUsername))
+        public async Task<IActionResult> GetAllCourses()
+        {
+
+            var userId = userManager.GetUserId(User);
+
+            if (string.IsNullOrEmpty(userId))
             {
-                return Unauthorized(); 
+                return Unauthorized();
             }
 
-       
-            var courses = _context.Courses
-                .Include(c => c.Instructor) 
-                .Where(c => c.Instructor.UserName == instructorUsername) 
+            var courses = (await _courseService.GetCoursesByUserId(userId))
                 .Select(c => new
                 {
                     c.Id,
                     c.Title,
                     c.Description,
-                    InstructorName = c.Instructor.UserName, 
+                    InstructorName = c.Instructor.Name,
                     c.StartDate,
                     c.EndDate,
                     c.MaxStudents,
@@ -194,45 +197,42 @@ namespace Online_Learning_Management.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddCourses([Bind("Title,Description,StartDate,EndDate,Price,CourseTime,ImageFile,MaxStudents")] CourseDTO courseDTO)
+        public async Task<IActionResult> AddCourses([Bind("Title,Description,StartDate,EndDate,Price,CourseTime,ImageFile,MaxStudents,InstructorId")] CourseDTO courseDTO)
         {
             if (ModelState.IsValid)
             {
-                var instructorId = userManager.GetUserId(User);
+                var userId = userManager.GetUserId(User);
 
-                await _courseService.CreateCourse(courseDTO, instructorId);
+                await _courseService.CreateCourse(courseDTO, userId);
 
-                return RedirectToAction("Courses", "Instructors"); ;
+                return RedirectToAction("Courses", "Instructors");
             }
 
             return View(courseDTO);
         }
 
+
         [HttpGet]
-        public IActionResult GetAllPendingEnrollments()
+        public async Task<IActionResult> GetAllPendingEnrollments()
         {
             // Get the currently authenticated instructor's username
-            var instructorUsername = User.Identity.Name;
+            var userId = userManager.GetUserId(User);
 
-            if (string.IsNullOrEmpty(instructorUsername))
+            if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized();
             }
 
-            
-            var enrollments = _context.Enrollments
-                .Include(e => e.Course)              
-                .Include(e => e.Student)             
-                .Include(e => e.Course.Instructor)   
-                .Where(e => (e.Course.Instructor.UserName == instructorUsername ))
+
+            var enrollments = (await _enrollmentService.GetAllEnrollmentsByUserId(userId))
                 .Select(e => new
                 {
                     e.Id,
-                    StudentName = e.Student.UserName,   
-                    CourseName = e.Course.Title,         
-                    e.AddDate,                           
-                    e.Course.Price,  
-                    status=e.Status,
+                    StudentName = e.Student.Name,
+                    CourseName = e.Course.Title,
+                    e.AddDate,
+                    e.Course.Price,
+                    status = e.Status,
                 })
                 .ToList();
 
@@ -248,7 +248,7 @@ namespace Online_Learning_Management.Controllers
         public async Task<IActionResult> Accept(int id)
         {
             await _enrollmentService.AcceptEnrollmentAsync(id);
-            return RedirectToAction("GetAllEnrollments", "Instructors");
+            return RedirectToAction("GetAllEnrollmentsByUserId", "Instructor");
         }
 
         [HttpPost]
@@ -256,10 +256,9 @@ namespace Online_Learning_Management.Controllers
         {
 
             await _enrollmentService.RejectEnrollmentAsync(id);
-            return RedirectToAction("GetAllEnrollments", "Instructors");
+            return RedirectToAction("GetAllEnrollmentsByUserId", "Instructor");
         }
     }
 
 }
 
-     

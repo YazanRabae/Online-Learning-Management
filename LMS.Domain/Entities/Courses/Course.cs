@@ -1,12 +1,10 @@
 ﻿using LMS.Domain.Entities.Enrollments;
+using LMS.Domain.Entities.Instructors;
 using LMS.Domain.Entities.Users;
 
-using System;
-using System.Collections.Generic;
+
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace LMS.Domain.Entities.Courses
 {
@@ -18,7 +16,7 @@ namespace LMS.Domain.Entities.Courses
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public int MaxStudents { get; set; }
 
@@ -29,13 +27,8 @@ namespace LMS.Domain.Entities.Courses
 
 
         // Navigation property
-        public string InstructorId { get; set; }
-        public User Instructor { get; set; }
-
-        
-
-
-
-        public ICollection<Enrollment> Enrollments { get; set; }
+        public int InstructorId { get; set; }
+        public Instructor Instructor { get; set; }
+        public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     }
 }

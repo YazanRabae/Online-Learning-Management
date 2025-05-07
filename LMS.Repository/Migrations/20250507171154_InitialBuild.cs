@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LMS.Repository.Migrations
 {
     /// <inheritdoc />
-    public partial class Ffff : Migration
+    public partial class InitialBuild : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,8 @@ namespace LMS.Repository.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    InstructorId = table.Column<int>(type: "int", nullable: false),
+                    StudentId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -157,6 +159,46 @@ namespace LMS.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Instructor",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Instructor", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Instructor_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Student",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Student", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Student_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Course",
                 columns: table => new
                 {
@@ -171,15 +213,28 @@ namespace LMS.Repository.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CourseTime = table.Column<int>(type: "int", nullable: false),
                     ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    InstructorId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    InstructorId = table.Column<int>(type: "int", nullable: false),
+                    InstructorId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    StudentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Course", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Course_AspNetUsers_InstructorId",
-                        column: x => x.InstructorId,
+                        name: "FK_Course_AspNetUsers_InstructorId1",
+                        column: x => x.InstructorId1,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Course_Instructor_InstructorId",
+                        column: x => x.InstructorId,
+                        principalTable: "Instructor",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Course_Student_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Student",
                         principalColumn: "Id");
                 });
 
@@ -191,28 +246,29 @@ namespace LMS.Repository.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AddDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    InstructorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    InstructorId = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
-                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    StudentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Enrollment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Enrollment_AspNetUsers_InstructorId",
-                        column: x => x.InstructorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Enrollment_AspNetUsers_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Enrollment_Course_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Course",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Enrollment_Instructor_InstructorId",
+                        column: x => x.InstructorId,
+                        principalTable: "Instructor",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Enrollment_Student_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Student",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -262,6 +318,16 @@ namespace LMS.Repository.Migrations
                 column: "InstructorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Course_InstructorId1",
+                table: "Course",
+                column: "InstructorId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Course_StudentId",
+                table: "Course",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Enrollment_CourseId",
                 table: "Enrollment",
                 column: "CourseId");
@@ -275,6 +341,20 @@ namespace LMS.Repository.Migrations
                 name: "IX_Enrollment_StudentId",
                 table: "Enrollment",
                 column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Instructor_UserId",
+                table: "Instructor",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Student_UserId",
+                table: "Student",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
         }
 
         /// <inheritdoc />
@@ -303,6 +383,12 @@ namespace LMS.Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "Course");
+
+            migrationBuilder.DropTable(
+                name: "Instructor");
+
+            migrationBuilder.DropTable(
+                name: "Student");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

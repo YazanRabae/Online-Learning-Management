@@ -1,0 +1,57 @@
+﻿@model LMS.Service.DTOs.UserDTOs.LogInDto
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link href="~/css/views/home/login.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="login-container" style="margin-top: 60px;">
+        <!-- Left Panel -->
+        <div class="left-panel text-center">
+            <div class="find-your">
+                <img class="logo" src="~/photo/5931257949701915307.jpg" />
+                <p class="logo-text">Login</p>
+            </div>
+            @*           <footer class="footer">
+                <p>&copy; Transpo.Jo. All Rights Reserved 2025</p>
+                <p>|</p>
+                <p><a href="#">Terms & Conditions</a></p>
+            </footer> *@
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <form asp-action="LogIn" asp-controller="Home" method="post" class="login-form" novalidate>
+                <h3 class="text-center mb-4">Login</h3>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" value="@TempData["Password"]" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+                </div>
+
+                <button type="submit" class="btn btn-custom">LOG IN</button>
+
+                <p class="text-center mt-3">New Here? <a asp-action="Register" asp-controller="Instructors" class="highlight-text">Sign up</a></p>
+                <p class="text-center mt-3">Home Page? <a asp-action="Home" asp-controller="Index" class="highlight-text">Return</a></p>
+
+            </form>
+        </div>
+    </div>
+</body>
+</html>

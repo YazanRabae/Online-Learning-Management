@@ -12,11 +12,11 @@ public static class ClaimsStores
     public static List<Claim> AllClaims { get; set; } = new List<Claim>()
     {
         new Claim("Manage Students", "Manage Students"),
-        new Claim("Manage Instructors", "Manage Instructors"),
+        new Claim("Manage Instructor", "Manage Instructor"),
         new Claim("Manage Courses", "Manage Courses"),
         new Claim("Disable Entities", "Disable Entities"),
         new Claim("Disable Students", "Disable Students"),
-        new Claim("Disable Instructors", "Disable Instructors"),
+        new Claim("Disable Instructor", "Disable Instructor"),
         new Claim("Disable Courses", "Disable Courses")
     };
 }

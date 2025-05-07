@@ -1,0 +1,134 @@
+﻿body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, #ffffff, #cce5ff);
+    padding: 20px;
+    margin: 0;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 1200px;
+    min-height: 600px;
+    display: flex;
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.left-panel {
+    flex: 1;
+    background-color: #007bff;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+}
+
+.logo {
+    margin-top: 75px;
+    max-width: 250px;
+    height: auto;
+}
+
+.logo-text {
+    color: white;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}
+
+.footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    color: white;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+    .footer a {
+        color: white;
+        text-decoration: underline;
+    }
+
+        .footer a:hover {
+            text-decoration: none;
+        }
+
+.right-panel {
+    flex: 1;
+    padding: 60px 40px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 2px solid #007bff;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.form-label {
+    color: #0056b3;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    padding: 12px 20px;
+    border: 1px solid #ced4da;
+    border-radius: 25px;
+    margin-bottom: 1.5rem;
+}
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+    }
+
+.btn-custom {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+    .btn-custom:hover {
+        background-color: #0056b3;
+    }
+
+.highlight-text {
+    color: #007bff;
+    font-weight: bold;
+}
+
+    .highlight-text:hover {
+        color: #0056b3;
+        text-decoration: none;
+    }
+
+.text-danger {
+    font-size: 0.875rem;
+}
+
+.text-center {
+    color: #0056b3;
+}

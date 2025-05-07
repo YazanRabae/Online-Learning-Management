@@ -1,19 +1,18 @@
 ﻿using LMS.Domain.Entities.Enrollments;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LMS.Repository.Repositories.Enrollments
 {
     public interface IEnrollmentRepository
     {
-        public Task Create(Enrollment enrollment);
-        public Task<List<Enrollment>> GetPendingEnrollments();
-        public Task Update(Enrollment enrollment);
-        public Task AcceptEnrollmentAsync(int enrollmentId);
-        public Task RejectEnrollmentAsync(int enrollmentId);
+        Task CreateAsync(Enrollment enrollment);
+        Task<List<Enrollment>> GetPendingEnrollmentsAsync();
+        Task UpdateAsync(Enrollment enrollment);
+        Task AcceptEnrollmentAsync(int enrollmentId);
+        Task RejectEnrollmentAsync(int enrollmentId);
 
+        Task<IEnumerable<Enrollment>> GetEnrollmentsByInstructorUsernameAsync(string username);
+        Task<List<Enrollment>> GetAllEnrollmentsByUserId(string userId);
     }
 }

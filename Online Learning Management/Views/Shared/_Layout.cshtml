@@ -34,6 +34,10 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.6/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
 
@@ -69,6 +73,23 @@
              
             color: dodgerblue; 
         }
+
+        .toast {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            font-size: 16px;
+        }
+
+        .toast-error {
+            background-color: #f44336 !important; /* red background */
+            color: white !important;
+        }
+
+        .toast-success {
+            background-color: #4CAF50 !important; /* green background */
+            color: white !important;
+        }
+
+        
     </style>
 
 </head>
@@ -168,20 +189,10 @@
                             </li>
 
                             <li>
-                                @if (User.IsInRole("Student"))
-                                {
-                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Logout">
-                                        <i class="bi bi-box-arrow-right"></i>
-                                        <span>Sign Out</span>
-                                    </a>
-                                }
-                                else
-                                {
-                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Instructors" asp-action="Logout">
-                                        <i class="bi bi-box-arrow-right"></i>
-                                        <span>Sign Out</span>
-                                    </a>
-                                }
+                                <a class="dropdown-item d-flex align-items-center" asp-controller="Home" asp-action="Logout">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Sign Out</span>
+                                </a>
                             </li>
 
 
@@ -244,7 +255,7 @@
 
     @if (User.IsInRole("Admin") || showSidebar == true)
     {
-        <main id="main" class="main">
+        <main id="main" class="main container">
 
             @RenderBody()
 
@@ -252,7 +263,7 @@
     }
     else
     {
-        <main class="main" style="margin-top: 100px;">
+        <main class="main container" style="margin-top: 100px;">
 
             @RenderBody()
             
@@ -287,3 +298,24 @@
 </body>
 
 </html>
+
+
+<script>
+    $(function () {
+        var error = '@TempData["Error"]';
+        if (error) {
+            toastr.options = {
+                "positionClass": "toast-top-right",
+            };
+            toastr.error(error);
+        }
+
+        var success = '@TempData["Success"]';
+        if (success) {
+            toastr.options = {
+                "positionClass": "toast-top-right",
+            };
+            toastr.success(success);
+        }
+    });
+</script>

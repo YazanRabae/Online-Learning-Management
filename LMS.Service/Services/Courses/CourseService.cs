@@ -1,104 +1,109 @@
 ﻿using LMS.Domain.Entities.Courses;
 using LMS.Domain.Entities.Enrollments;
+using LMS.Domain.Entities.Users;
 using LMS.Repository.Repositories.Courses;
 using LMS.Service.DTOs.Courses;
 using LMS.Service.Mapper.Courses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using LMS.Domain.Entities.Users;
-using LMS.Service.DTOs.Enrollments;
-using LMS.Repository.Context;
+using LMS.Repository.Repositories.Students;
+using LMS.Repository.Repositories.Instructors;
+using LMS.Domain.Entities.Students;
 
 namespace LMS.Service.Services.Courses
 {
-    public class CourseService(ICourseRepository courseRepository ,
-         ICourseMapper courseMapper,
-         UserManager<User> userManager , DbLMS _context) : ICourseService
+    public class CourseService : ICourseService
     {
+        private readonly ICourseRepository _courseRepository;
+        private readonly IStudentRepository _studentRepository;
+        private readonly IInstructorRepository _instructorRepository;
+        private readonly ICourseMapper _courseMapper;
+        private readonly UserManager<User> _userManager;
 
-        //List<CourseDTO> CoursesDTO = courseMapper.MapFromCourseToCourseDTO(Courses);
+        public CourseService(
+            ICourseRepository courseRepository,
+            ICourseMapper courseMapper,
+            IStudentRepository studentRepository,
+            UserManager<User> userManager,
+            IInstructorRepository instructorRepository)
+        {
+            _courseRepository = courseRepository;
+            _courseMapper = courseMapper;
+            _userManager = userManager;
+            _studentRepository = studentRepository;
+            _instructorRepository = instructorRepository;
+        }
+
         public async Task<List<CourseDTO>> GetAllCourses(string userId)
         {
             if (string.IsNullOrEmpty(userId))
-            {
                 throw new ArgumentException("User ID cannot be null or empty.", nameof(userId));
-            }
 
-            //List<Course> userCourses = await courseRepository.GetAll(userId);
-        var courses = await _context.Courses
-       .Include(course => course.Instructor)
-       .Include(course => course.Enrollments)
-       .Select(course => new CourseDTO
-       {
-           Id = course.Id,
-           Title = course.Title,
-           Description = course.Description,
-           Price = course.Price,
-           StartDate = course.StartDate,
-           InstructorName = course.Instructor.UserName,
-           ImageData = course.ImageData,
-           IsEnrolled = course.Enrollments.Any(enrollment => enrollment.StudentId == userId)
-       })
-       .ToListAsync();
+            var courses = await _courseRepository.GetAllWithInstructorAndEnrollmentsAsync();
+            var studentId = await _studentRepository.GetStudentId(userId);
 
-         return courses;
-        }
-
-        public async Task<bool> Enroll(string userId, int courseId)
-        {
-            var enrol =  await courseRepository.Enroll(userId, courseId);
-            if (enrol)
+            var courseDTOs = courses.Select(c => new CourseDTO
             {
-                return true;  
-            }
-            return false; /*The result(enrol) will be true if the student is already enrolled in the course, or false if not.*/
+                Id = c.Id,
+                Title = c.Title,
+                Description = c.Description,
+                Price = c.Price,
+                StartDate = c.StartDate,
+                InstructorName = c.Instructor.Name,
+                ImageData = c.ImageData,
+                IsEnrolled = c.Enrollments.Any(e => e.StudentId == studentId)
+            }).ToList();
+
+            return courseDTOs;
         }
 
-        public async Task CreateCourse(CourseDTO courseDTO, string instructorId)
+        public async Task CreateCourse(CourseDTO courseDTO, string userId)
         {
-            byte[] imageData = null;
+            var instructorId = await _instructorRepository.GetInstructorId(userId);
+            courseDTO.InstructorId = instructorId;
+            byte[]? imageData = null;
 
-            // Ensure the Image is an IFormFile and convert it to a byte array
             if (courseDTO.ImageFile != null && courseDTO.ImageFile.Length > 0)
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await courseDTO.ImageFile.CopyToAsync(memoryStream); // Correct usage of CopyToAsync with Stream
-                    imageData = memoryStream.ToArray(); // Convert the Stream to a byte array
-                }
+                using var ms = new MemoryStream();
+                await courseDTO.ImageFile.CopyToAsync(ms);
+                imageData = ms.ToArray();
             }
 
             courseDTO.ImageData = imageData;
-            
-
-            var course = courseMapper.MapFromCourseDTOToCourse(courseDTO);
-
+            var course = _courseMapper.MapFromCourseDTOToCourse(courseDTO);
             course.InstructorId = instructorId;
-            course.ImageData = imageData;
 
-            await courseRepository.Create(course);
+            await _courseRepository.CreateCourseAsync(course);
         }
-
 
         public async Task AddEnrollment(string userId, int courseId)
         {
-            var viewModel = new Enrollment
+            var enrollment = new Enrollment
             {
-                AddDate = DateTime.Now,
+                AddDate = DateTime.UtcNow,
                 CourseId = courseId,
-                InstructorId = await courseRepository.GetInstructorIdByCourseIdAsync(courseId),
-                StudentId = userId
+                InstructorId = await _courseRepository.GetInstructorIdByCourseIdAsync(courseId),
+                StudentId = await _studentRepository.GetStudentId(userId),
+                Status = EnrollmentStatus.Pending
             };
 
-            await courseRepository.AddEnrollment(viewModel);
+            await _courseRepository.AddEnrollmentAsync(enrollment);
         }
+
         public async Task<bool> IsEnrolled(string userId, int courseId)
         {
-            return await courseRepository.IsEnrolled(userId, courseId);
+            return await _courseRepository.IsStudentEnrolledAsync(await _studentRepository.GetStudentId(userId), courseId);
         }
 
-    
+        public async Task<int> NumberOfCourses(string userId)
+        {
+            return await _courseRepository.GetCourseCountByInstructorAsync(userId);
+        }
+
+        public async Task<List<Course>> GetCoursesByUserId(string userId)
+        {
+            return await _courseRepository.GetCoursesByUserId(userId);
+        }
     }
 }
-

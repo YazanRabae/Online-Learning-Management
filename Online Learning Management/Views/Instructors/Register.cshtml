@@ -1,86 +1,210 @@
-﻿@using LMS.Service.DTOs.UserDTOs
-@model RegisterDto
-@* instrucor
- *@<main>
-    <div class="container" style="margin-top: -50px">
+﻿@model LMS.Service.DTOs.UserDTOs.RegisterDto
+@{
+    Layout = null;
+}
 
-        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Transpo.Jo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, #ffffff, #cce5ff);
+            padding: 20px;
+            margin: 0;
+        }
 
-                        <div class="d-flex justify-content-center py-4">
-                            <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center">
+        .login-container {
+            width: 100%;
+            max-width: 1200px;
+            min-height: 600px;
+            display: flex;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
 
-                                <img src="~/photo/Screenshot (56).png" style="width: 110px; height: 120px;" alt="">
-                            </a>
-                        </div>
+        .left-panel {
+            flex: 1;
+            background-color: #007bff;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+        }
 
+        .logo {
+            margin-top: 75px;
+            max-width: 250px;
+            height: auto;
+        }
 
-                        <div class="card mb-3">
+        .logo-text {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 1rem;
+        }
 
-                            <div class="card-body">
+        .footer {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            color: white;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
 
-                                <div class="pt-4 pb-2">
-                                    <h5 class="card-title text-center pb-0 fs-4">Create an Instructors Account</h5>
-                                    <p class="text-center small">Enter your personal details to create account</p>
-                                </div>
+            .footer a {
+                color: white;
+                text-decoration: underline;
+            }
 
-                                <form class="row g-3 needs-validation"  asp-controller="Instructors" asp-action="Register" method="post">
+                .footer a:hover {
+                    text-decoration: none;
+                }
 
+        .right-panel {
+            flex: 1;
+            padding: 60px 40px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-left: 2px solid #007bff;
+        }
 
-                                    <div class="col-12">
-                                        <label for="Name" class="form-label">User Name</label>
-                                        <input type="text" name="Name" class="form-control" id="Name" required>
-                                        <div class="invalid-feedback">Please, enter your Name!</div>
-                                        <span asp-validation-for="Name" class="invalid-feedback"></span>
+        .login-form {
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
 
-                                    </div>
+        .form-label {
+            color: #0056b3;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
 
-                                    <div class="col-12">
-                                        <label for="Email" class="form-label">Email</label>
-                                        <input asp-for="Email" type="email" name="Email" class="form-control" id="Email" required>
-                                        <div class="invalid-feedback">Please enter a valid Email address!</div>
-                                        <span asp-validation-for="Email" class="text-danger"></span>
-                                    </div>
+        .form-control {
+            padding: 12px 20px;
+            border: 1px solid #ced4da;
+            border-radius: 25px;
+            margin-bottom: 1.5rem;
+        }
 
+            .form-control:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+            }
 
-                                    <div class="col-12">
-                                        <label for="Password" class="form-label">Password</label>
-                                        <input asp-for ="Password" type="password" name="Password" class="form-control" id="Password" required>
-                                        <div class="invalid-feedback">Please enter your password!</div>
-                                        <span asp-validation-for="Password" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-12">
-                                        <label for="ConfirmPassword" class="form-label">ConfirmPassword</label>
-                                        <input asp-for="ConfirmPassword" type="Password" name="ConfirmPassword" class="form-control" id="ConfirmPassword" required>
-                                        <div class="invalid-feedback">Not Match Whith Password!</div>
-                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check">
-                                            <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
-                                            <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="#">terms and conditions</a></label>
-                                            <div class="invalid-feedback">You must agree before submitting.</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <button class="btn btn-primary w-100" type="submit">Create Account</button>
-                                    </div>
-                                    <div class="col-12">
-                                        <p class="small mb-0">Already have an account?  <a asp-controller="Instructors" asp-action="LogIn">Log in</a></p>
+        .btn-custom {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
 
-                                    </div>
-                                </form>
+            .btn-custom:hover {
+                background-color: #0056b3;
+            }
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        .highlight-text {
+            color: #007bff;
+            font-weight: bold;
+        }
+
+            .highlight-text:hover {
+                color: #0056b3;
+                text-decoration: none;
+            }
+
+        .text-danger {
+            font-size: 0.875rem;
+        }
+
+        .text-center {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Panel -->
+        <div class="left-panel text-center">
+            <div class="find-your">
+                <img class="logo" src="~/photo/845789e0-a99a-48a2-af47-6b0b167b497b.jpeg" alt="Logo" />
+                <p class="logo-text">Instrctor Register</p>
             </div>
+     @*        <footer class="footer">
+                <p>&copy; Transpo.Jo. All Rights Reserved 2025</p>
+                <p>|</p>
+                <p><a href="#">Terms & Conditions</a></p>
+            </footer> *@
+        </div>
 
-        </section>
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <form asp-action="Register" asp-controller="Instructors" method="post" class="login-form" novalidate>
+                <h3 class="text-center mb-4">Instructor Register</h3>
 
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">User Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter your name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm your password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="terms" required />
+                    <label class="form-check-label" for="terms">
+                        I agree and accept the <a href="#">terms and conditions</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-custom">CREATE ACCOUNT</button>
+
+                <p class="text-center mt-3">Already have an account? <a asp-action="LogIn" asp-controller="Instructors" class="highlight-text">Log in</a></p>
+                <p class="text-center mt-3">Home Page? <a asp-action="Home" asp-controller="Index" class="highlight-text">Return</a></p>
+
+            </form>
+        </div>
     </div>
-
-</main><!-- End #main -->
+</body>
+</html>

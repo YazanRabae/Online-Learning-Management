@@ -1,4 +1,5 @@
-﻿@{
+﻿@using LMS.Service.Common.Constants
+@{
     ViewData["Title"] = "Student";
 }
 <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -6,6 +7,9 @@
 <div class="container">
 
     <h1 class="text-left">@ViewData["Title"]</h1>
+
+    <a type="button" asp-action="CreateUser" asp-controller="Admin" asp-route-roleName="@RoleConstants.Student" class="btn btn-secondary">Create Student</a>
+
 
     <div class="col">
         <div class="card p-4">
@@ -24,7 +28,6 @@
                     <div class="col-md-3 text-center">
                         <button type="submit" class="btn btn-primary" id="applyFilters" >Search</button>
                     </div>
-
                 </div>
             </form>
         </div>

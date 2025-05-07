@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Repository.Migrations
 {
     [DbContext(typeof(DbLMS))]
-    [Migration("20240902201659_Ffff")]
-    partial class Ffff
+    [Migration("20250507171154_InitialBuild")]
+    partial class InitialBuild
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,10 @@ namespace LMS.Repository.Migrations
                     b.Property<byte[]>("ImageData")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("InstructorId")
+                    b.Property<int>("InstructorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("InstructorId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("MaxStudents")
@@ -60,12 +63,19 @@ namespace LMS.Repository.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InstructorId");
+
+                    b.HasIndex("InstructorId1");
+
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Course", (string)null);
                 });
@@ -84,14 +94,14 @@ namespace LMS.Repository.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("InstructorId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("InstructorId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("StudentId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -102,6 +112,58 @@ namespace LMS.Repository.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Enrollment", (string)null);
+                });
+
+            modelBuilder.Entity("LMS.Domain.Entities.Instructors.Instructor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("Instructor", (string)null);
+                });
+
+            modelBuilder.Entity("LMS.Domain.Entities.Students.Student", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("Student", (string)null);
                 });
 
             modelBuilder.Entity("LMS.Domain.Entities.Users.User", b =>
@@ -122,6 +184,9 @@ namespace LMS.Repository.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<int>("InstructorId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -148,6 +213,9 @@ namespace LMS.Repository.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -304,9 +372,19 @@ namespace LMS.Repository.Migrations
 
             modelBuilder.Entity("LMS.Domain.Entities.Courses.Course", b =>
                 {
-                    b.HasOne("LMS.Domain.Entities.Users.User", "Instructor")
+                    b.HasOne("LMS.Domain.Entities.Instructors.Instructor", null)
                         .WithMany("Courses")
-                        .HasForeignKey("InstructorId");
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LMS.Domain.Entities.Users.User", "Instructor")
+                        .WithMany()
+                        .HasForeignKey("InstructorId1");
+
+                    b.HasOne("LMS.Domain.Entities.Students.Student", null)
+                        .WithMany("Courses")
+                        .HasForeignKey("StudentId");
 
                     b.Navigation("Instructor");
                 });
@@ -319,20 +397,41 @@ namespace LMS.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LMS.Domain.Entities.Users.User", "Instructor")
-                        .WithMany("EnrollmentsAsInstructor")
+                    b.HasOne("LMS.Domain.Entities.Instructors.Instructor", "Instructor")
+                        .WithMany("Enrollments")
                         .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("LMS.Domain.Entities.Users.User", "Student")
-                        .WithMany("EnrollmentsAsStudent")
-                        .HasForeignKey("StudentId");
+                    b.HasOne("LMS.Domain.Entities.Students.Student", "Student")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Course");
 
                     b.Navigation("Instructor");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("LMS.Domain.Entities.Instructors.Instructor", b =>
+                {
+                    b.HasOne("LMS.Domain.Entities.Users.User", "User")
+                        .WithOne("Instructor")
+                        .HasForeignKey("LMS.Domain.Entities.Instructors.Instructor", "UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LMS.Domain.Entities.Students.Student", b =>
+                {
+                    b.HasOne("LMS.Domain.Entities.Users.User", "User")
+                        .WithOne("Student")
+                        .HasForeignKey("LMS.Domain.Entities.Students.Student", "UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -391,13 +490,25 @@ namespace LMS.Repository.Migrations
                     b.Navigation("Enrollments");
                 });
 
-            modelBuilder.Entity("LMS.Domain.Entities.Users.User", b =>
+            modelBuilder.Entity("LMS.Domain.Entities.Instructors.Instructor", b =>
                 {
                     b.Navigation("Courses");
 
-                    b.Navigation("EnrollmentsAsInstructor");
+                    b.Navigation("Enrollments");
+                });
 
-                    b.Navigation("EnrollmentsAsStudent");
+            modelBuilder.Entity("LMS.Domain.Entities.Students.Student", b =>
+                {
+                    b.Navigation("Courses");
+
+                    b.Navigation("Enrollments");
+                });
+
+            modelBuilder.Entity("LMS.Domain.Entities.Users.User", b =>
+                {
+                    b.Navigation("Instructor");
+
+                    b.Navigation("Student");
                 });
 #pragma warning restore 612, 618
         }
