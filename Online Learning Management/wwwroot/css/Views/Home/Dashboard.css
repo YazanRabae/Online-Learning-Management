@@ -1,0 +1,93 @@
+﻿.card {
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    height: 150px;
+    background: #fff;
+}
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        filter: brightness(1.05);
+    }
+
+.card-body {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+    color: #333;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+    color: #333;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    color: #007bff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    transition: color 0.3s ease;
+}
+
+.card:hover .card-icon {
+    color: #0056b3;
+}
+
+.card-title a {
+    text-decoration: none;
+    transition: color 0.3s ease;
+    color: #007bff;
+}
+
+    .card-title a:hover {
+        color: #0056b3;
+    }
+
+.container {
+    max-width: 1200px;
+}
+
+.card-icon i {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .card-icon i {
+    transform: scale(1.1);
+}
+
+/* Chart container styling to match card size */
+#courseChart {
+    height: 400px; /* Increase the height of the chart */
+    width: 100%; /* Full width */
+    display: block; /* Ensure it behaves like a block element */
+}
+
+.h1 {
+    font-size: 2.0rem;
+    font-weight: 700;
+    color: #007bff;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: -1rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.3);
+    background-color: white;
+}

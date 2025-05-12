@@ -31,5 +31,14 @@ namespace LMS.Service.Mapper.Students
                 ConfirmPassword = createStudentDto.ConfirmPassword
             };
         }
+
+        public List<StudentDto> MapFromCreateStudentEntityToDto(List<Student> students)
+        {
+            return students.Select(student => new StudentDto
+            {
+                Email = student.Email,
+                Name = student.Name
+            }).ToList();
+        }
     }
 }

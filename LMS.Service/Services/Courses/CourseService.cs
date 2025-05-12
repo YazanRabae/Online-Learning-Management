@@ -50,7 +50,7 @@ namespace LMS.Service.Services.Courses
                 Price = c.Price,
                 StartDate = c.StartDate,
                 InstructorName = c.Instructor.Name,
-                ImageData = c.ImageData,
+                ImageData = c.ImageData == null ? null : Convert.ToBase64String(c.ImageData),
                 IsEnrolled = c.Enrollments.Any(e => e.StudentId == studentId)
             }).ToList();
 
@@ -70,7 +70,7 @@ namespace LMS.Service.Services.Courses
                 imageData = ms.ToArray();
             }
 
-            courseDTO.ImageData = imageData;
+            courseDTO.ImageData = imageData == null ? null : Convert.ToBase64String(imageData);
             var course = _courseMapper.MapFromCourseDTOToCourse(courseDTO);
             course.InstructorId = instructorId;
 
@@ -104,6 +104,64 @@ namespace LMS.Service.Services.Courses
         public async Task<List<Course>> GetCoursesByUserId(string userId)
         {
             return await _courseRepository.GetCoursesByUserId(userId);
+        }
+
+        public async Task<StudentCoursesDto> GetEnrolledCoursesSplitAsync(string userId)
+        {
+            var studentId = await _studentRepository.GetStudentId(userId);
+            var courses = await _courseRepository.GetEnrolledCoursesByStudentIdAsync(studentId);
+
+            var now = DateTime.UtcNow;
+            var studentCourses = new StudentCoursesDto();
+
+            foreach (var course in courses)
+            {
+                var studentCourse = new CourseDTO
+                {
+                    Id = course.Id,
+                    Title = course.Title,
+                    Description = course.Description,
+                    Price = course.Price,
+                    StartDate = course.StartDate,
+                    InstructorName = course.Instructor?.Name,
+                    ImageData = course.ImageData == null ? null : Convert.ToBase64String(course.ImageData),
+                    IsEnrolled = true
+                };
+
+                var studentCourseStatus = course.Enrollments.First(e => e.StudentId == studentId).Status;
+
+                if (studentCourseStatus == EnrollmentStatus.Pending)
+                    studentCourses.PendingCourses.Add(studentCourse);
+                else if (studentCourseStatus == EnrollmentStatus.Rejected)
+                    studentCourses.RejectedCourses.Add(studentCourse);
+                else if (course.EndDate < now)
+                    studentCourses.FinishedCourses.Add(studentCourse);
+                else
+                    studentCourses.ActiveCourses.Add(studentCourse);
+            }
+
+            return studentCourses;
+        }
+
+        public async Task<StudentCoursesDto> GetAvailableCoursesAsync(string userId)
+        {
+            var studentId = await _studentRepository.GetStudentId(userId);
+            var availableCourses = await _courseRepository.GetAvailableCoursesAsync(studentId);
+            var studentCourses = new StudentCoursesDto();
+
+            studentCourses.AvailableCourses = availableCourses.Select(c => new CourseDTO
+            {
+                Id = c.Id,
+                Title = c.Title,
+                Description = c.Description,
+                Price = c.Price,
+                StartDate = c.StartDate,
+                InstructorName = c.Instructor?.Name,
+                ImageData = c.ImageData == null ? null : Convert.ToBase64String(c.ImageData),
+                IsEnrolled = false
+            }).ToList();
+
+            return studentCourses;
         }
     }
 }

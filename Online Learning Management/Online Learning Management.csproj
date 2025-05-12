@@ -8,15 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\InstructorAdmin.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\js\InstructorAdmin.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\js\InstructorAdmin.js" />
+    <Content Remove="wwwroot\css\Views\_Layout.cshtml.css" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,16 @@
+﻿.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.badge-active {
+    background-color: #007bff;
+}
+
+.badge-finished {
+    background-color: #6c757d;
+}
+
+.card-finished {
+    opacity: 0.85;
+}

@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+<link href="~/css/views/home/dashboard.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="~/js/views/home/dashboard.js"></script>
+<h4 class="h1">Online Learning Management System</h4>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <!-- Card for Total Courses -->
+        <div class="col-xxl-4 col-md-6 mb-3">
+            <div class="card text-dark shadow-lg">
+                <div class="card-body d-flex align-items-center">
+                    <div class="card-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div>
+                        <p class="card-title">
+                            @if (User.IsInRole(RoleConstants.Admin))
+                            {
+                                <a asp-controller="Admin" asp-action="Courses">Courses</a>
+                            }
+                            else if (User.IsInRole(RoleConstants.Instructor))
+                            {
+                                <a>Courses</a>
+                            }
+                            else
+                            {
+                                <a>Courses</a>
+                            }
+                        </p>
+                        <p class="card-text">Total Courses: @ViewBag.CourseCount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card for Total Instructors -->
+        <div class="col-xxl-4 col-md-6 mb-3">
+            <div class="card text-dark shadow-lg">
+                <div class="card-body d-flex align-items-center">
+                    <div class="card-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div>
+                        <p class="card-title">
+                            @if (User.IsInRole(RoleConstants.Admin))
+                            {
+                                <a asp-controller="Admin" asp-action="Instructors">Instructors</a>
+                            }
+                            else if (User.IsInRole(RoleConstants.Instructor))
+                            {
+                                <a>Instructors</a>
+                            }
+                            else
+                            {
+                                <a>Instructors</a>
+                            }
+                        </p>
+                        <p class="card-text">Total Instructors: @ViewBag.InstructorCount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card for Total Students -->
+        <div class="col-xxl-4 col-md-6 mb-3">
+            <div class="card text-dark shadow-lg">
+                <div class="card-body d-flex align-items-center">
+                    <div class="card-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <p class="card-title">
+                            @if (User.IsInRole(RoleConstants.Admin))
+                            {
+                                <a asp-controller="Admin" asp-action="Students">Students</a>
+                            }
+                            else if (User.IsInRole(RoleConstants.Instructor))
+                            {
+                                <a>Students</a>
+                            }
+                            else
+                            {
+                                <a>Students</a>
+                            }
+                        </p>
+                        <p class="card-text">Total Students: @ViewBag.StudentCount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart for Course Enrollments with bigger size and course names as labels -->
+    <div class="row justify-content-center ">
+        <div class="col-xxl-12 col-md-12 mb-3">
+            <div class="card text-dark shadow-lg " style="height:500px; padding:10px">
+                <canvas id="courseChart"
+                        data-titles='@Html.Raw(Json.Serialize(ViewBag.CourseTitles))'
+                        data-counts='@Html.Raw(Json.Serialize(ViewBag.EnrollmentCounts))'
+                        style="height: 400px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>

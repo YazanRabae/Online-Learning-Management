@@ -8,5 +8,6 @@ namespace LMS.Service.Mapper.Students
     {
         RegisterDto MapFromCreateStudentDtoToRegiserModel(CreateUserDto createStudentDto);
         Student MapFromCreateStudentDtoToEntity(CreateUserDto createStudentDto);
+        List<StudentDto> MapFromCreateStudentEntityToDto(List<Student> students);
     }
 }

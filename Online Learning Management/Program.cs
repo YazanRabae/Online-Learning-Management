@@ -3,6 +3,7 @@ using LMS.Repository.Context;
 using LMS.Repository.Repositories.Courses;
 using LMS.Repository.Repositories.Enrollments;
 using LMS.Repository.Repositories.Instructors;
+using LMS.Repository.Repositories.Shared;
 using LMS.Repository.Repositories.Students;
 using LMS.Repository.Repositories.Users;
 using LMS.Service.Common.Constants;
@@ -14,6 +15,7 @@ using LMS.Service.Services;
 using LMS.Service.Services.Courses;
 using LMS.Service.Services.Enrollments;
 using LMS.Service.Services.Instructors;
+using LMS.Service.Services.Shared;
 using LMS.Service.Services.Students;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -54,12 +56,14 @@ namespace Online_Learning_Management
             builder.Services.AddScoped<ICourseService, CourseService>();
             builder.Services.AddScoped<IStudentService, StudentService>();
             builder.Services.AddScoped<IInstructorService, InstructorService>();
+            builder.Services.AddScoped<ISharedService, SharedService>();
             builder.Services.AddScoped<ICourseMapper, CourseMapper>();
             builder.Services.AddScoped<IStudentMapper, StudentMapper>();
             builder.Services.AddScoped<IInstructorMapper, InstructorMapper>();
             builder.Services.AddScoped<IEnrollmentMapper, EnrollmentMapper>();
             builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
             builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
+            builder.Services.AddScoped<ISharedRepository, SharedRepository>();
 
 
             builder.Services.AddAuthorization(options =>

@@ -1,0 +1,113 @@
+﻿@model LMS.Service.DTOs.Courses.StudentCoursesDto
+@{
+    ViewBag.Title = "My Enrolled Courses";
+}
+<link href="~/css/views/student/courses.css" rel="stylesheet" />
+
+<div class="container mt-4">
+    <h2 class="mb-4">Pending Courses</h2>
+    <div class="row">
+        @if (Model.PendingCourses != null && Model.PendingCourses.Any())
+        {
+            foreach (var course in Model.PendingCourses)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0 rounded">
+                        <img src="@($"data:image/jpeg;base64,{course.ImageData}")" class="card-img-top" alt="@course.Title" />
+                        <div class="card-body">
+                            <h5 class="card-title">@course.Title</h5>
+                            <p class="card-text">@course.Description</p>
+                            <p class="card-text"><strong>Instructor:</strong> @course.InstructorName</p>
+                            <p class="card-text"><strong>Price:</strong> @course.Price JD</p>
+                            <p class="card-text"><strong>Start:</strong> @course.StartDate.ToShortDateString()</p>
+                            <span class="badge badge-active text-white" style="background-color: #fd7e14;">Pending</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted ms-3">No Pending Courses.</p>
+        }
+    </div>
+    <h2 class="mb-4">Active Courses</h2>
+    <div class="row">
+        @if (Model.ActiveCourses != null && Model.ActiveCourses.Any())
+        {
+            foreach (var course in Model.ActiveCourses)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0 rounded">
+                        <img src="@($"data:image/jpeg;base64,{course.ImageData}")" class="card-img-top" alt="@course.Title" />
+                        <div class="card-body">
+                            <h5 class="card-title">@course.Title</h5>
+                            <p class="card-text">@course.Description</p>
+                            <p class="card-text"><strong>Instructor:</strong> @course.InstructorName</p>
+                            <p class="card-text"><strong>Price:</strong> @course.Price JD</p>
+                            <p class="card-text"><strong>Start:</strong> @course.StartDate.ToShortDateString()</p>
+                            <span class="badge badge-active text-white">Active</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted ms-3">No Active Courses.</p>
+        }
+    </div>
+
+    <h2 class="mb-4 mt-5">Finished Courses</h2>
+    <div class="row">
+        @if (Model.FinishedCourses != null && Model.FinishedCourses.Any())
+        {
+            foreach (var course in Model.FinishedCourses)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0 rounded card-finished">
+                        <img src="data:image/jpeg;base64,@course.ImageData" class="card-img-top" alt="@course.Title" />
+                        <div class="card-body">
+                            <h5 class="card-title">@course.Title</h5>
+                            <p class="card-text">@course.Description</p>
+                            <p class="card-text"><strong>Instructor:</strong> @course.InstructorName</p>
+                            <p class="card-text"><strong>Price:</strong> @course.Price JD</p>
+                            <p class="card-text"><strong>Start:</strong> @course.StartDate.ToShortDateString()</p>
+                            <span class="badge badge-finished text-white">Finished</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted ms-3">No finished courses.</p>
+        }
+    </div>
+    <h2 class="mb-4">Rejected Courses</h2>
+    <div class="row">
+        @if (Model.RejectedCourses != null && Model.RejectedCourses.Any())
+        {
+            foreach (var course in Model.RejectedCourses)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0 rounded">
+                        <img src="@($"data:image/jpeg;base64,{course.ImageData}")" class="card-img-top" alt="@course.Title" />
+                        <div class="card-body">
+                            <h5 class="card-title">@course.Title</h5>
+                            <p class="card-text">@course.Description</p>
+                            <p class="card-text"><strong>Instructor:</strong> @course.InstructorName</p>
+                            <p class="card-text"><strong>Price:</strong> @course.Price JD</p>
+                            <p class="card-text"><strong>Start:</strong> @course.StartDate.ToShortDateString()</p>
+                            <span class="badge badge-active text-white" style="background-color: #dc3545;">Rejected</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted ms-3">No Rejected Courses.</p>
+        }
+    </div>
+</div>

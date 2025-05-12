@@ -1,0 +1,80 @@
+﻿body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #dbf3ff;
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #007bff;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: -1rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.3);
+    background-color: white;
+}
+
+.carousel-inner img {
+    object-fit: cover;
+    height: 580px;
+}
+
+.carousel-inner {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-caption h5,
+.carousel-caption p {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.user-card {
+    background: linear-gradient(135deg, #00c6ff, #007bff);
+    border-radius: 30px;
+    padding: 3rem;
+    color: #fff;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+    .user-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.3);
+    }
+
+.user-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+}
+
+.user-card h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.user-card p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.user-card .btn {
+    font-size: 1.2rem;
+    padding: 0.75rem 2.5rem;
+    border-radius: 30px;
+    transition: 0.3s ease;
+}
+
+    .user-card .btn:hover {
+        background-color: #e6f2ff;
+        color: #007bff;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    }

@@ -74,6 +74,12 @@ namespace LMS.Service.Services
         {
             return (await _userManager.GetUsersInRoleAsync("Student")).ToList();
         }
+        public async Task<string> GetRoleByUserId(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
 
+            return role;
+        }
     }
 }

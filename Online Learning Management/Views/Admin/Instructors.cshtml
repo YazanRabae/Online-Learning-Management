@@ -1,14 +1,15 @@
-﻿@using LMS.Service.Common.Constants
-@{
+﻿@{
     ViewData["Title"] = "Instructor";
 }
 <script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/js/instructoradmin.js"></script>
+<script src="~/js/views/admin/instructors.js"></script>
 <div class="container">
     <h1 class="text-left">@ViewData["Title"]</h1>
-
-    <a type="button" asp-action="CreateUser" asp-controller="Admin" asp-route-roleName="@RoleConstants.Instructor" class="btn btn-secondary">Create Instructor</a>
-
+    <div>
+        <a type="button" asp-action="CreateUser" asp-controller="Admin" asp-route-roleName="@RoleConstants.Instructor" class="btn btn-primary">Create Instructor</a>
+    </div>
+    
+    <br />
     <div class="col">
         <div class="card p-4">
             <h4>Search by</h4>
@@ -24,7 +25,7 @@
                     </div>
 
                     <div class="col-md-3 text-center">
-                        <button type="submit" class="btn btn-primary" id="applyFilters" >Search</button>
+                        <button type="button" class="btn btn-primary" id="applyFilters">Search</button> | <button type="button" class="btn btn-default" id="restFilters">Rest</button>
                     </div>
 
                 </div>
@@ -61,7 +62,6 @@
 </div>
 <script>
     $(document).ready(function () {
-        console.log("ready!");
         GetInstructors.OnStart();
     });
 </script>

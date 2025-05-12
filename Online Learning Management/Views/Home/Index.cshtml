@@ -2,69 +2,7 @@
     ViewData["Title"] = "Home Page";
     ViewBag.showSidebar = false;
 }
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet" />
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: #f8f9fa;
-    }
-
-    .hero-title {
-        font-family: 'Poppins', sans-serif;
-        font-size: 2.5rem;
-        font-weight: 700;
-        color:black ;
-        text-align: center;
-        text-transform: uppercase;
-        padding: 1rem;
-        margin-top: -2rem; /* ↓ lowered from 2rem to lift the title */
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-
-    .carousel-inner img {
-        object-fit: cover;
-        height: 500px;
-    }
-
-    .user-card {
-        background: linear-gradient(135deg, #007bff, #00c6ff);
-        border-radius: 20px;
-        padding: 2rem;
-        color: #fff;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-        .user-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-        }
-
-    .user-icon {
-        font-size: 3rem;
-        margin-right: 1rem;
-    }
-
-    .user-actions a {
-        text-decoration: none;
-        margin-right: 1rem;
-        font-weight: 500;
-    }
-
-    .divider {
-        height: 1px;
-        background: rgba(255, 255, 255, 0.3);
-        margin: 1rem 0;
-    }
-
-    .carousel-caption h5,
-    .carousel-caption p {
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-    }
-</style>
+<link href="~/css/views/home/index.css" rel="stylesheet" />
 
 <div class="container">
     <div class="text-center">
@@ -72,7 +10,7 @@
     </div>
 
     <!-- Carousel -->
-    <div id="carouselExampleCaptions" class="carousel slide mb-5 mt-4" data-bs-ride="carousel">
+    <div id="carouselExampleCaptions" class="carousel slide mb-5 mt-4" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
                     aria-current="true" aria-label="Slide 1"></button>
@@ -81,7 +19,7 @@
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
                     aria-label="Slide 3"></button>
         </div>
-        <div class="carousel-inner rounded-4 overflow-hidden shadow">
+        <div class="carousel-inner">
             <div class="carousel-item active">
                 <img src="~/photo/AdobeStock_197062338.png" class="d-block w-100" alt="Interactive Learning">
                 <div class="carousel-caption d-none d-md-block">
@@ -117,23 +55,27 @@
         </button>
     </div>
 
-    <!-- Combined User Card -->
+   <!-- Login Card -->
     <div class="d-flex justify-content-center mb-5">
         <div class="col-lg-8">
-            <div class="user-card text-white">
-                <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-person-circle user-icon"></i>
-                    <div>
-                        <h4 class="mb-0">Choose Your Role</h4>
-                        <small>Select an option below to continue</small>
-                    </div>
-                </div>
-                <div class="divider"></div>
-                <div class="user-actions">
-                    <h5>🎓 👩‍🏫 Login</h5>
-                    <a asp-controller="Home" asp-action="LogIn" class="text-white">Login</a>
-                </div>
+            <div class="user-card">
+                <i class="bi bi-person-circle user-icon"></i>
+                <h2>Welcome to LMS</h2>
+                <p>Please log in to continue and explore your learning journey.</p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button class="btn btn-light fw-semibold shadow-sm" disabled>
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Logged In
+                    </button>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="LogIn" class="btn btn-light fw-semibold shadow-sm">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Log In
+                    </a>
+                }
             </div>
         </div>
     </div>
 </div>
+ 

@@ -9,6 +9,7 @@ namespace LMS.Service.Services
     {
         Task<bool> LogIn(LogInDto model);
         Task<string> GetRoleByName(string email);
+        Task<string> GetRoleByUserId(string userId);
         Task<RegisterResultDto> Register(RegisterDto model, string role);
         Task Logout();
         Task<List<User>> GetInstructors();

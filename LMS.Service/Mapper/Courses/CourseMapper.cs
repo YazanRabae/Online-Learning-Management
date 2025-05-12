@@ -24,7 +24,7 @@ namespace LMS.Service.Mapper.Courses
                 MaxStudents = course.MaxStudents,
                 Price = course.Price,
                 CourseTime = course.CourseTime,
-                ImageData = course.ImageData,
+                ImageData = course.ImageData == null ? null : Convert.ToBase64String(course.ImageData),
                 CreatedAt = course.CreatedAt,
             }).ToList();
         }
@@ -47,15 +47,7 @@ namespace LMS.Service.Mapper.Courses
 
             if (courseDTO.ImageFile != null && courseDTO.ImageFile.Length > 0)
             {
-                using (var ms = new MemoryStream())
-                {
-                    courseDTO.ImageFile.CopyTo(ms);
-                    course.ImageData = ms.ToArray();
-                }
-            }
-            else
-            {
-                course.ImageData = courseDTO.ImageData; // retain existing image if not updating
+                course.ImageData = Convert.FromBase64String(courseDTO.ImageData);
             }
 
             return course;

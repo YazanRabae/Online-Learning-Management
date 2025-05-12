@@ -10,5 +10,6 @@ namespace LMS.Service.Services.Students
     public interface IStudentService
     {
         public Task CreateStudent(CreateUserDto createStudentDto);
+        public Task<List<StudentDto>> GetStudents();
     }
 }

@@ -14,10 +14,6 @@ namespace LMS.Repository.Repositories.Courses
         {
             _context = context;
         }
-
-        /// <summary>
-        /// Get all courses where a user is enrolled as a student.
-        /// </summary>
         public async Task<List<Course>> GetCoursesByStudentIdAsync(int studentId)
         {
             return await _context.Courses
@@ -27,10 +23,6 @@ namespace LMS.Repository.Repositories.Courses
                 .Where(course => course.Enrollments.Any(e => e.StudentId == studentId))
                 .ToListAsync();
         }
-
-        /// <summary>
-        /// Get all courses taught by a specific instructor.
-        /// </summary>
         public async Task<List<Course>> GetCoursesByInstructorIdAsync(int instructorId)
         {
             return await _context.Courses
@@ -39,45 +31,29 @@ namespace LMS.Repository.Repositories.Courses
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// Check if a student is already enrolled in a course.
-        /// </summary>
         public async Task<bool> IsStudentEnrolledAsync(int studentId, int courseId)
         {
             return await _context.Enrollments
                 .AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId);
         }
-
-        /// <summary>
-        /// Enroll a student in a course.
-        /// </summary>
         public async Task AddEnrollmentAsync(Enrollment enrollment)
         {
             try
             {
                 await _context.Enrollments.AddAsync(enrollment);
-                await SaveChangesAsync();  // Consolidated SaveChanges here
+                await SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                // You can log or wrap the exception here to provide more context
                 throw new Exception("Error enrolling student", ex);
             }
         }
-
-        /// <summary>
-        /// Create a new course.
-        /// </summary>
         public async Task CreateCourseAsync(Course course)
         {
             course.CreatedAt = DateTime.Now;
             await _context.Courses.AddAsync(course);
             await SaveChangesAsync(); // Saving after adding the course
         }
-
-        /// <summary>
-        /// Get instructor ID by course ID.
-        /// </summary>
         public async Task<int> GetInstructorIdByCourseIdAsync(int courseId)
         {
             return await _context.Courses
@@ -85,10 +61,6 @@ namespace LMS.Repository.Repositories.Courses
                 .Select(c => c.InstructorId)
                 .FirstOrDefaultAsync();
         }
-
-        /// <summary>
-        /// Save changes to the database.
-        /// </summary>
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
@@ -112,9 +84,8 @@ namespace LMS.Repository.Repositories.Courses
         public async Task AddCourseAsync(Course course)
         {
             await _context.Courses.AddAsync(course);
-            await SaveChangesAsync(); // Saving after adding the course
+            await SaveChangesAsync();
         }
-
         public async Task<List<Course>> GetAllWithInstructorAndEnrollmentsAsync()
         {
             return await _context.Courses
@@ -122,12 +93,30 @@ namespace LMS.Repository.Repositories.Courses
                 .Include(c => c.Enrollments)
                 .ToListAsync();
         }
-
         public async Task<List<Course>> GetCoursesByUserId(string userId)
         {
             return await _context.Courses
                 .Include(c => c.Instructor)
                 .Where(c => c.Instructor.UserId == userId)
+                .ToListAsync();
+        }
+
+
+        public async Task<List<Course>> GetEnrolledCoursesByStudentIdAsync(int studentId)
+        {
+            return await _context.Courses
+                .Include(c => c.Instructor)
+                .Include(c => c.Enrollments)
+                .Where(c => c.Enrollments.Any(e => e.StudentId == studentId))
+                .ToListAsync();
+        }
+
+        public async Task<List<Course>> GetAvailableCoursesAsync(int studentId)
+        {
+            return await _context.Courses
+                .Include(c => c.Instructor)
+                .Include(c => c.Enrollments)
+                .Where(c => c.StartDate > DateTime.Now && !c.Enrollments.Any(e => e.StudentId == studentId))
                 .ToListAsync();
         }
     }

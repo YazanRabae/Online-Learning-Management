@@ -31,5 +31,10 @@ namespace LMS.Repository.Repositories.Students
             await _context.Students.AddAsync(student);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Student>> GetStudents()
+        {
+            return await _context.Students.ToListAsync();
+        }
     }
 }

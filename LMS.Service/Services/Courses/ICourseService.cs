@@ -11,5 +11,9 @@ namespace LMS.Service.Services.Courses
         Task<bool> IsEnrolled(string userId, int courseId);
         Task<int> NumberOfCourses(string userId);
         Task<List<Course>> GetCoursesByUserId(string userId);
+
+        Task<StudentCoursesDto> GetEnrolledCoursesSplitAsync(string userId);
+        Task<StudentCoursesDto> GetAvailableCoursesAsync(string userId);
+
     }
 }

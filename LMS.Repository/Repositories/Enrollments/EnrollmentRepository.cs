@@ -15,19 +15,11 @@ namespace LMS.Repository.Repositories.Enrollments
         {
             _context = context;
         }
-
-        /// <summary>
-        /// Adds a new enrollment to the database.
-        /// </summary>
         public async Task CreateAsync(Enrollment enrollment)
         {
             await _context.Enrollments.AddAsync(enrollment);
             await _context.SaveChangesAsync();
         }
-
-        /// <summary>
-        /// Returns all enrollments with status "Pending", including related data.
-        /// </summary>
         public async Task<List<Enrollment>> GetPendingEnrollmentsAsync()
         {
             return await _context.Enrollments
@@ -37,19 +29,12 @@ namespace LMS.Repository.Repositories.Enrollments
                 .Where(e => e.Status == EnrollmentStatus.Pending)
                 .ToListAsync();
         }
-
-        /// <summary>
-        /// Updates an existing enrollment record.
-        /// </summary>
         public async Task UpdateAsync(Enrollment enrollment)
         {
             _context.Enrollments.Update(enrollment);
             await _context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Sets the status of the enrollment to "Accepted".
-        /// </summary>
         public async Task AcceptEnrollmentAsync(int enrollmentId)
         {
             var enrollment = await _context.Enrollments.FindAsync(enrollmentId);
@@ -60,10 +45,6 @@ namespace LMS.Repository.Repositories.Enrollments
                 await _context.SaveChangesAsync();
             }
         }
-
-        /// <summary>
-        /// Sets the status of th e enrollment to "Rejected".
-        /// </summary>
         public async Task RejectEnrollmentAsync(int enrollmentId)
         {
             var enrollment = await _context.Enrollments.FindAsync(enrollmentId);
@@ -74,7 +55,6 @@ namespace LMS.Repository.Repositories.Enrollments
                 await _context.SaveChangesAsync();
             }
         }
-
         public async Task<IEnumerable<Enrollment>> GetEnrollmentsByInstructorUsernameAsync(string username)
         {
             var instructorId = await _context.Instructors.Where(u => u.Name == username).Select(i => i.Id).FirstOrDefaultAsync();
@@ -94,7 +74,15 @@ namespace LMS.Repository.Repositories.Enrollments
                 .Include(e => e.Course)
                 .Include(e => e.Student)
                 .Include(e => e.Course.Instructor)
-                .Where(e => e.Course.Instructor.UserId == userId)
+                .Where(e => e.Course.Instructor.UserId == userId && e.Status == EnrollmentStatus.Pending)
+                .ToListAsync();
+        }
+
+        public async Task<List<Enrollment>> GetStudentsByCourse(int courseId)
+        {
+            return await _context.Enrollments
+                .Include(e => e.Student)
+                .Where(e => e.CourseId == courseId && e.Status == EnrollmentStatus.Accepted)
                 .ToListAsync();
         }
     }

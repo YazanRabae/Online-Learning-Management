@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,15 +10,16 @@ namespace LMS.Service.DTOs.Courses
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Course title is required.")]
-        [StringLength(100, MinimumLength = 1, ErrorMessage = "Course title must be between 5 and 100 characters.")]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "Course title must be between 5 and 100 characters.")]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Course description is required.")]
-        [StringLength(1000, MinimumLength = 1, ErrorMessage = "Course description must be between 20 and 1000 characters.")]
+        [StringLength(1000, MinimumLength = 20, ErrorMessage = "Course description must be between 20 and 1000 characters.")]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Start date is required.")]
         [DataType(DataType.Date, ErrorMessage = "Invalid date format.")]
+        [DateNotInPast(ErrorMessage = "Start date cannot be in the past.")]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
@@ -42,27 +42,21 @@ namespace LMS.Service.DTOs.Courses
         [Display(Name = "Course Time (hours)")]
         public int CourseTime { get; set; }
 
-        // For displaying an uploaded image
-        public byte[] ImageData { get; set; }
+        public string ImageData { get; set; }
 
-        // For receiving an image file from form
         [Display(Name = "Course Image")]
         public IFormFile ImageFile { get; set; }
 
-        // Instructor Information
         public int InstructorId { get; set; }
 
         public string InstructorName { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        // Indicates whether the current user is enrolled
         public bool IsEnrolled { get; set; }
     }
 
-    /// <summary>
-    /// Custom validation attribute to ensure EndDate is greater than StartDate.
-    /// </summary>
+    // ✅ Custom validation: EndDate > StartDate
     public class DateGreaterThanAttribute : ValidationAttribute
     {
         private readonly string _comparisonProperty;
@@ -91,7 +85,19 @@ namespace LMS.Service.DTOs.Courses
             return ValidationResult.Success;
         }
     }
+
+    // ✅ Custom validation: StartDate >= Today
+    public class DateNotInPastAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (value is not DateTime dateValue)
+                return new ValidationResult("Invalid date format.");
+
+            if (dateValue.Date < DateTime.Now.Date)
+                return new ValidationResult(ErrorMessage ?? "Start date cannot be in the past.");
+
+            return ValidationResult.Success;
+        }
+    }
 }
-
-
-

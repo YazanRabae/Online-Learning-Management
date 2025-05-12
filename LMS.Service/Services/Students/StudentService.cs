@@ -34,5 +34,12 @@ namespace LMS.Service.Services.Students
 
             await _studentRepository.CreateStudent(student);
         }
+
+        public async Task<List<StudentDto>> GetStudents()
+        {
+            List<Student> students = await _studentRepository.GetStudents();
+
+            return _studentMapper.MapFromCreateStudentEntityToDto(students);
+        }
     }
 }

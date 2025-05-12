@@ -11,6 +11,11 @@
                 var tbody = $('#enrollmentTableBody'); // Target the table body
                 tbody.empty(); // Clear any existing content
 
+                if (!data || data.length === 0) {
+                    var row = '<tr><td colspan="6" class="text-center">No Pending Enrollments</td></tr>';
+                    tbody.append(row);
+                    return;
+                }
                 // Iterate over the returned JSON data array
                 $.each(data, function (index, enrollment) {
 

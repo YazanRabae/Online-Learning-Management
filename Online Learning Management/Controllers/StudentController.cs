@@ -6,6 +6,7 @@ using LMS.Service.Services.Courses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Online_Learning_Management.Models;
 
 namespace Online_Learning_Management.Controllers
 {
@@ -28,68 +29,14 @@ namespace Online_Learning_Management.Controllers
         {
             return View();
         }
-        public IActionResult Register()
-        {
-            if (signInManager.IsSignedIn(User))
-                return RedirectToAction("Dashboard", "Student");
 
-            return View();
-        }
-        public async Task<IActionResult> Logout()
-        {
-            await userService.Logout();
-            return RedirectToAction("Index", "Home");
-        }
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto model)
-        {
-            if (ModelState.IsValid)
-            {
-                await userService.Register(model, "Student");
-                return RedirectToAction("Dashboard", "Student");
-
-            }
-            return View(model);
-        }
-        public IActionResult LogIn()
-        {
-            if (signInManager.IsSignedIn(User))
-                return RedirectToAction("Dashboard", "Student");
-
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> LogIn(LogInDto model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await userManager.FindByEmailAsync(model.Email);
-
-                if (user == null)
-                    return RedirectToAction("LogIn", "Student");
-
-                var roles = await userManager.GetRolesAsync(user);
-
-                var roleAssign = roles.FirstOrDefault();
-
-                if (roleAssign == "Student")
-                {
-                    await userService.LogIn(model);
-                    return RedirectToAction("Dashboard", "Student");
-                }
-                else
-                    return View("LogIn" ,"Student");
-            }
-
-            return View(model);
-        }
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Profile()
         {
             var user = await userManager.GetUserAsync(User);
 
             if (user == null)
-                return RedirectToAction("Register");
+                return RedirectToAction("Index" , "Home");
 
             var model = new RegisterDto
             {
@@ -99,34 +46,35 @@ namespace Online_Learning_Management.Controllers
 
             return View(model);
         }
-        [Authorize(Roles = "Student")]
-        public IActionResult Dashboard()
+
+
+        [HttpGet]
+        public async Task<IActionResult> Courses()
         {
-
-            if (signInManager.IsSignedIn(User))
-                return View();
-
-            return RedirectToAction("LogIn", "Student");
+            var userId = userManager.GetUserId(User);
+            return View(await courseService.GetEnrolledCoursesSplitAsync(userId));
         }
-        public async Task<IActionResult> GetAllCourses()
+
+        [HttpGet]
+        public async Task<IActionResult> Enroll()
         {
-            var UserId = userManager.GetUserId(User);
-
-            var allCourses = await courseService.GetAllCourses(UserId);
-
-            return Ok(allCourses);
+            var userId = userManager.GetUserId(User);
+            return View(await courseService.GetAvailableCoursesAsync(userId));
         }
 
         [HttpPost]
         public async Task<IActionResult> AddEnrollment(int courseId)
         {
-            var isEnrolled = await courseService.IsEnrolled(userManager.GetUserId(User), courseId);
+            var userId = userManager.GetUserId(User);
 
-            if (isEnrolled)
-                return BadRequest();
+            if (await courseService.IsEnrolled(userId, courseId))
+                return BadRequest("Already enrolled");
 
-            await courseService.AddEnrollment(userManager.GetUserId(User), courseId);
+            await courseService.AddEnrollment(userId, courseId);
+            TempData["Success"] = "Successfully enrolled!";
             return Ok();
         }
+
     }
+
 }

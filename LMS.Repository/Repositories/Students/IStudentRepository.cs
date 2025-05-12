@@ -11,5 +11,6 @@ namespace LMS.Repository.Repositories.Students
     {
         Task<int> GetStudentId(string userId);
         Task CreateStudent(Student student);
+        Task<List<Student>> GetStudents();
     }
 }

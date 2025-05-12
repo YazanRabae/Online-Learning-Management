@@ -49,5 +49,17 @@ namespace LMS.Service.Services.Enrollments
         {
             return await _enrollmentRepository.GetAllEnrollmentsByUserId(userId);
         }
+
+        public async Task<List<StudentDetailsDto>> GetStudentsByCourse(int courseId)
+        {
+            var enrollments = await _enrollmentRepository.GetStudentsByCourse(courseId);
+            return enrollments.Select( e => new StudentDetailsDto
+            {
+                Id = e.Student.Id,
+                Name = e.Student.Name,
+                Email = e.Student.Email
+
+            }).ToList();
+        }
     }
 }

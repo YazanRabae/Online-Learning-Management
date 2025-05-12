@@ -1,14 +1,14 @@
-﻿<option value="" disable hidden selected>Select Instructor</option>'@{
+﻿@{
     ViewData["Title"] = "Courses";
 }
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/lib/assets/js/GetCourses.js"></script>
-<script src="~/lib/assets/js/GetInstructorsDrop.js"></script>
+
+<script src="~/js/views/admin/courses.js"></script>
+<link href="~/css/views/admin/courses.css" rel="stylesheet" />
 
 <div class="container">
     <h1 class="text-left">@ViewData["Title"]</h1>
 
-    <div class="col">
+    <div class="col mb-4">
         <div class="card p-4">
             <h4>Search by</h4>
             <div class="row gy-4">
@@ -16,16 +16,12 @@
                     <input type="text" name="courseName" id="courseName" class="form-control" placeholder="Course Title">
                 </div>
                 <div class="col-md-3">
-                    <div class="col-sm-10">
-                        <select class="form-select" name="instructorId" id="instructorId" aria-label="Instructor Name">
-                            
-                            <option value="" selected disabled hidden>Select Instructor</option>
-
-                        </select>
-                    </div>
+                    <select name="instructorEmail" id="instructorEmail" aria-label="Instructor Name">
+                        <option value="" selected disabled hidden>Select Instructor</option>
+                    </select>
                 </div>
                 <div class="col-md-3 text-center">
-                    <button type="button" id="searchButton" class="btn btn-primary">Search</button>
+                    <button type="button" id="searchButton" class="btn btn-primary">Search</button> | <button type="button" class="btn btn-default" id="restFilters">Rest</button>
                 </div>
             </div>
         </div>
@@ -36,40 +32,54 @@
             <div class="col-lg-12">
                 <div class="card p-4">
                     <div class="card-body" id="table">
-                        <!-- Table with striped rows -->
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Description</th>
-                                    <th scope="col">Instructor</th>
-                                    <th scope="col">Start Date</th>
-                                    <th scope="col">End Date</th>
-                                    <th scope="col">Max Students</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Course Time (hrs)</th>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Instructor</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Max Students</th>
+                                    <th>Price</th>
+                                    <th>Course Time (hrs)</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="courseTableBody">
-                             
-                            </tbody>
+                            <tbody id="courseTableBody"></tbody>
                         </table>
-                    
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </div>
-<script>
-    $(document).ready(function () {
-        console.log("ready!");
-        GetCourses.OnStart();
-    });
 
-    $(document).ready(function () {
-        GetInstructorsDrop.OnStart();
-    });
+<!-- Students Modal -->
+<div class="modal fade" id="studentsModal" tabindex="-1" role="dialog" aria-labelledby="studentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Enrolled Students</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul id="studentsList" class="list-group"></ul>
+            </div>
+        </div>
+    </div>
+</div>
 
-</script>
+<!-- Description Modal -->
+<div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Course Description</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="descriptionModalBody"></div>
+        </div>
+    </div>
+</div>

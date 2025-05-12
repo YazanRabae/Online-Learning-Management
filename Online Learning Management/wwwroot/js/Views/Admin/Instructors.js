@@ -5,6 +5,11 @@ var GetInstructors = {
         $('#applyFilters').on('click', function () {
             GetInstructors.GetData(); // Load data with current filters
         });
+        $('#restFilters').on('click', function () {
+            $('#filterUserName').val(null)
+            $('#filterEmail').val(null)
+            GetInstructors.GetData();
+        });
     },
     GetData: function () {
         // Get filter values

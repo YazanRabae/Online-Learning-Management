@@ -1,4 +1,5 @@
 ﻿using LMS.Domain.Entities.Courses;
+using LMS.Domain.Entities.Enrollments;
 using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
 using LMS.Service.Common.Constants;
@@ -8,6 +9,7 @@ using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Mapper.Students;
 using LMS.Service.Services;
 using LMS.Service.Services.Courses;
+using LMS.Service.Services.Enrollments;
 using LMS.Service.Services.Instructors;
 using LMS.Service.Services.Students;
 using Microsoft.AspNetCore.Authorization;
@@ -33,15 +35,17 @@ namespace Online_Learning_Management.Controllers
         private readonly IStudentMapper _studentMapper;
         private readonly IStudentService _studentService;
         private readonly IInstructorService _instructorService;
+        private readonly IEnrollmentService _enrollmentService;
 
-        public AdminController(UserManager<User> userManager,
+        public AdminController(UserManager<User>userManager,
            SignInManager<User> signInManager,
            IUserService userService,
            DbLMS context,
            ICourseService courseService,
            IStudentMapper studentMapper,
            IStudentService studentService,
-           IInstructorService instructorService)
+           IInstructorService instructorService,
+           IEnrollmentService enrollmentService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -51,6 +55,7 @@ namespace Online_Learning_Management.Controllers
             _studentMapper = studentMapper;
             _studentService = studentService;
             _instructorService = instructorService;
+            _enrollmentService = enrollmentService;
         }
 
 
@@ -64,26 +69,21 @@ namespace Online_Learning_Management.Controllers
             return View();
         }
 
-        public async Task<IActionResult> GetStudentsAsync(string userName, string email)
+        [HttpGet]
+        public async Task<IActionResult> GetStudents(string name, string email)
         {
+            var students = await _studentService.GetStudents();
 
-            var Students = await _userService.GetStudents();
-
-            if (!string.IsNullOrEmpty(userName) && string.IsNullOrEmpty(email))
+            if (!string.IsNullOrEmpty(name))
             {
-                Students = Students.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
+                students = students.Where(i => i.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
             }
-            else if (!string.IsNullOrEmpty(email) && string.IsNullOrEmpty(userName))
+            if (!string.IsNullOrEmpty(email))
             {
-                Students = Students.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
-            else if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(email))
-            {
-                Students = Students.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)
-                                                      && i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
+                students = students.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            return Ok(Students);
+            return Ok(students);
         }
 
         public IActionResult CreateUser(string roleName)
@@ -118,7 +118,7 @@ namespace Online_Learning_Management.Controllers
                 {
                     await _studentService.CreateStudent(createUserDto);
                     TempData["Success"] = createUserDto.RoleName + " Created Successfully";
-                    return RedirectToAction("Students", "Admin");
+                    return RedirectToAction("students", "Admin");
                 }
                 else
                 {
@@ -165,6 +165,13 @@ namespace Online_Learning_Management.Controllers
 
 
 
+        [HttpGet]
+        public async Task<IActionResult> GetStudentsByCourse(int courseId)
+        {
+            var students = await _enrollmentService.GetStudentsByCourse(courseId);
+
+            return Json(students);
+        }
 
         public IActionResult Courses()
         {
@@ -172,7 +179,7 @@ namespace Online_Learning_Management.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCourses(string courseName, string instructorId)
+        public async Task<IActionResult> GetCourses(string courseName, string instructorEmail)
         {
 
             var courses = _context.Courses
@@ -183,6 +190,7 @@ namespace Online_Learning_Management.Controllers
                    c.Title,
                    c.Description,
                    InstructorName = c.Instructor.Name,
+                   InstructorEmail = c.Instructor.Email, // Added
                    c.StartDate,
                    c.EndDate,
                    c.MaxStudents,
@@ -191,29 +199,17 @@ namespace Online_Learning_Management.Controllers
                })
                .ToList();
 
-            if (string.IsNullOrEmpty(courseName) && !string.IsNullOrEmpty(instructorId))
+            if (!string.IsNullOrEmpty(instructorEmail))
             {
-
-                courses = courses.Where(i => i.InstructorName.Contains(instructorId, StringComparison.OrdinalIgnoreCase)).ToList();
+                courses = courses.Where(i => i.InstructorEmail.Contains(instructorEmail, StringComparison.OrdinalIgnoreCase)).ToList();
             }
-            else if (!string.IsNullOrEmpty(courseName) && !string.IsNullOrEmpty(instructorId))
-            {
 
-                courses = courses.Where(i => i.Title.Contains(courseName, StringComparison.OrdinalIgnoreCase)
-                                            && i.InstructorName.Contains(instructorId, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
-            else if (!string.IsNullOrEmpty(courseName) && string.IsNullOrEmpty(instructorId))
+            if (!string.IsNullOrEmpty(courseName))
             {
                 courses = courses.Where(i => i.Title.Contains(courseName, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-
             return Ok(courses);
-        }
-
-        public IActionResult LogIn()
-        {
-            return View();
         }
 
         public async Task<IActionResult> ManageUserClaims(string userId)
@@ -285,40 +281,5 @@ namespace Online_Learning_Management.Controllers
 
             return RedirectToAction("EditUser", new { Id = model.UserId });
         }
-
-        public async Task<IActionResult> DashboardAsync()
-        {
-            var UserId = _userManager.GetUserId(User);
-            // Get the counts
-            var courses = await _courseService.GetAllCourses(UserId);
-            var students = await _userService.GetStudents();
-            var instructors = await _userService.GetInstructors();
-
-            // Getting the counts
-            int courseCount = courses.Count();
-            int studentCount = students.Count();
-            int instructorCount = instructors.Count();
-            // Store the counts in ViewBag
-            ViewBag.CourseCount = courseCount;
-            ViewBag.StudentCount = studentCount;
-            ViewBag.InstructorCount = instructorCount;
-
-
-
-            var courseData = _context.Courses
-                             .Select(course => new
-                             {
-                                 course.Title,
-                                 EnrollmentCount = course.Enrollments.Count()
-                             }).ToList();
-
-            ViewBag.CourseTitles = courseData.Select(c => c.Title).ToArray();
-            ViewBag.EnrollmentCounts = courseData.Select(c => c.EnrollmentCount).ToArray();
-
-            // Return the view
-            return View();
-        }
-
-
     }
 }
