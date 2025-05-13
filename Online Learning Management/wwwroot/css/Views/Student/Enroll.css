@@ -1,4 +1,33 @@
-﻿.card-img-top {
+﻿/* Styling search inputs and buttons */
+#searchTitle, #searchInstructor, #searchPrice {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#btnSearch, #btnReset {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+    #btnSearch:hover, #btnReset:hover {
+        background-color: #0056b3;
+        color: white;
+    }
+
+#searchPrice {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Styling for course card */
+.card-img-top {
     height: 200px;
     object-fit: cover;
 }
@@ -16,6 +45,7 @@
     justify-content: space-between;
 }
 
+/* Styling alert boxes */
 .alert {
     position: fixed;
     top: 70px;
@@ -24,4 +54,12 @@
     z-index: 1050;
     width: 90%;
     max-width: 600px;
+}
+
+/* Responsive grid layout for course cards */
+@media (max-width: 768px) {
+    .col-lg-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }

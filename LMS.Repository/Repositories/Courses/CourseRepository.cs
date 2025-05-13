@@ -119,5 +119,12 @@ namespace LMS.Repository.Repositories.Courses
                 .Where(c => c.StartDate > DateTime.Now && !c.Enrollments.Any(e => e.StudentId == studentId))
                 .ToListAsync();
         }
+
+        public async Task<List<Course>> GetCourses()
+        {
+            return await _context.Courses
+                .Include(c => c.Instructor)
+                .ToListAsync();
+        }
     }
 }

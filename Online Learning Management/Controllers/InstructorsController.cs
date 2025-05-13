@@ -180,6 +180,20 @@ namespace Online_Learning_Management.Controllers
             await _enrollmentService.RejectEnrollmentAsync(id);
             return Ok();
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> RejectStudent(int studentId)
+        {
+            if (studentId <= 0)
+            {
+                return BadRequest("Invalid student ID.");
+            }
+
+            await _enrollmentService.RejectStudentByIdAsync(studentId);
+
+            return Ok();
+        }
         [HttpGet]
         public async Task<IActionResult> GetStudentsByCourse(int courseId)
         {

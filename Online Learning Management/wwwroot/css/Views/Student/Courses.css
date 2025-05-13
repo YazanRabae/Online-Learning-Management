@@ -14,3 +14,115 @@
 .card-finished {
     opacity: 0.85;
 }
+/* Add to your courses.css or style file */
+.course-section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 35px; /* Space for the icon */
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+/* Pending */
+.pending-title {
+    color: #fd7e14;
+    border-left: 5px solid #fd7e14;
+}
+
+    .pending-title:hover {
+        color: #ffffff;
+        background-color: #fd7e14;
+        transform: scale(1.1);
+    }
+
+    .pending-title i {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 1.8rem;
+    }
+
+/* Active */
+.active-title {
+    color: #28a745;
+    border-left: 5px solid #28a745;
+}
+
+    .active-title:hover {
+        color: #ffffff;
+        background-color: #28a745;
+        transform: scale(1.1);
+    }
+
+    .active-title i {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 1.8rem;
+    }
+
+/* Finished */
+.finished-title {
+    color: #007bff;
+    border-left: 5px solid #007bff;
+}
+
+    .finished-title:hover {
+        color: #ffffff;
+        background-color: #007bff;
+        transform: scale(1.1);
+    }
+
+    .finished-title i {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 1.8rem;
+    }
+
+/* Rejected */
+.rejected-title {
+    color: #dc3545;
+    border-left: 5px solid #dc3545;
+}
+
+    .rejected-title:hover {
+        color: #ffffff;
+        background-color: #dc3545;
+        transform: scale(1.1);
+    }
+
+    .rejected-title i {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 1.8rem;
+    }
+
+/* Animation on hover for the course sections */
+.course-section-title:hover {
+    transform: translateX(10px);
+}
+
+/* Search Input Enhancements */
+#searchTitle, #searchInstructor, #searchPrice, #courseStatusFilter {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+#btnSearch, #btnReset {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    #btnSearch:hover, #btnReset:hover {
+        background-color: #0056b3;
+        color: white;
+    }

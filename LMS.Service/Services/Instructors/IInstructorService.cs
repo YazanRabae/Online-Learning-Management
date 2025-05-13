@@ -1,4 +1,5 @@
-﻿using LMS.Service.DTOs.Students;
+﻿using LMS.Service.DTOs.Instructors;
+using LMS.Service.DTOs.Students;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace LMS.Service.Services.Instructors
     public interface IInstructorService
     {
         public Task CreateInstructor(CreateUserDto createInstructorDto);
+        public Task<List<InstructorDto>> GetInstructors();
     }
 }

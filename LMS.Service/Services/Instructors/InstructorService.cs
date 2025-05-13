@@ -1,5 +1,6 @@
 ﻿using LMS.Domain.Entities.Instructors;
 using LMS.Repository.Repositories.Instructors;
+using LMS.Service.DTOs.Instructors;
 using LMS.Service.DTOs.Students;
 using LMS.Service.Mapper.Instructors;
 
@@ -22,6 +23,13 @@ namespace LMS.Service.Services.Instructors
             Instructor Instructor = _InstructorMapper.MapFromCreateInstructorDtoToEntity(createInstructorDto);
 
             await _InstructorRepository.CreateInstructor(Instructor);
+        }
+
+        public async Task<List<InstructorDto>> GetInstructors()
+        {
+            List<Instructor> instructors = await _InstructorRepository.GetInstructors();
+
+            return _InstructorMapper.MapFromInstructorEntityToDto(instructors);
         }
     }
 }

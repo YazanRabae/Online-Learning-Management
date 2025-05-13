@@ -163,5 +163,27 @@ namespace LMS.Service.Services.Courses
 
             return studentCourses;
         }
+
+        public async Task<List<CourseDTO>> GetCourses()
+        {
+            var courses = await _courseRepository.GetCourses();
+
+            var courseDTOs = courses.Select(c => new CourseDTO
+            {
+                Id = c.Id,
+                Title = c.Title,
+                InstructorName = c.Instructor.Name,
+                InstructorEmail = c.Instructor.Email,
+                InstructorId = c.InstructorId,
+                StartDate = c.StartDate,
+                EndDate = c.EndDate,
+                MaxStudents = c.MaxStudents,
+                Price = c.Price,
+                CourseTime = c.CourseTime,
+                Description = c.Description,
+            }).ToList();
+
+            return courseDTOs;
+        }
     }
 }

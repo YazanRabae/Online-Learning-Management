@@ -58,7 +58,7 @@ namespace LMS.Repository.Repositories.Enrollments
         public async Task<IEnumerable<Enrollment>> GetEnrollmentsByInstructorUsernameAsync(string username)
         {
             var instructorId = await _context.Instructors.Where(u => u.Name == username).Select(i => i.Id).FirstOrDefaultAsync();
-            if (instructorId < 1) 
+            if (instructorId < 1)
                 return new List<Enrollment>();
 
             return await _context.Enrollments
@@ -84,6 +84,21 @@ namespace LMS.Repository.Repositories.Enrollments
                 .Include(e => e.Student)
                 .Where(e => e.CourseId == courseId && e.Status == EnrollmentStatus.Accepted)
                 .ToListAsync();
+        }
+
+        public async Task RejectEnrollmentByStudentIdAsync(int studentId)
+        {
+            // Find the enrollment by studentId
+            var enrollment = await _context.Enrollments
+                .Where(e => e.StudentId == studentId)
+                .FirstOrDefaultAsync();
+
+            if (enrollment != null)
+            {
+                enrollment.Status = EnrollmentStatus.Rejected;
+                _context.Enrollments.Update(enrollment);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

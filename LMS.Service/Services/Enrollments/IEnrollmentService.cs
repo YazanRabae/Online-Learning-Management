@@ -12,5 +12,7 @@ namespace LMS.Service.Services.Enrollments
         Task<List<EnrollmentDTO>> GetPendingEnrollmentsByInstructorUsernameAsync(string instructorUsername);
         Task<List<Enrollment>> GetAllEnrollmentsByUserId(string userId);
         Task<List<StudentDetailsDto>> GetStudentsByCourse(int courseId);
+        Task RejectStudentByIdAsync(int studentId);
+
     }
 }

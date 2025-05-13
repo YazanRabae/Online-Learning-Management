@@ -1,0 +1,28 @@
+﻿@model LMS.Service.DTOs.Courses.CourseDTO
+
+<div class="col-lg-4 col-md-6 mb-4">
+    <div class="card shadow-sm border-0 rounded">
+        <img src="@($"data:image/jpeg;base64,{Model.ImageData}")" class="card-img-top" alt="@Model.Title" />
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+            <p class="card-text">@Model.Description</p>
+            <p class="card-text"><strong>Instructor:</strong> @Model.InstructorName</p>
+            <p class="card-text"><strong>Price:</strong> @Model.Price JD</p>
+            <p class="card-text"><strong>Start:</strong> @Model.StartDate.ToShortDateString()</p>
+            <span class="badge text-white" style="background-color: @(GetBadgeColor(ViewData["Status"]?.ToString()))">
+                @ViewData["Status"]
+            </span>
+        </div>
+    </div>
+</div>
+
+@functions {
+    private string GetBadgeColor(string status) => status switch
+    {
+        "Pending" => "#fd7e14",
+        "Active" => "#28a745",
+        "Finished" => "#007bff",
+        "Rejected" => "#dc3545",
+        _ => "#6c757d"
+    };
+}

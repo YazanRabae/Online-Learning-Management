@@ -6,50 +6,66 @@ var GetInstructors = {
             GetInstructors.GetData(); // Load data with current filters
         });
         $('#restFilters').on('click', function () {
-            $('#filterUserName').val(null)
-            $('#filterEmail').val(null)
+            $('#filterUserName').val(null);
+            $('#filterEmail').val(null);
+            $('#pageNumber').val(null);
+            GetInstructors.GetData();
+        });
+        $('#nextPage').on('click', function () {
+            var currentPage = parseInt($('#pageNumber').val(), 10) || 1;
+            $('#pageNumber').val(currentPage + 1);
+            GetInstructors.GetData();
+        });
+        $('#previousPage').on('click', function () {
+            var currentPage = parseInt($('#pageNumber').val(), 10) || 1;
+            $('#pageNumber').val(currentPage - 1);
             GetInstructors.GetData();
         });
     },
     GetData: function () {
         // Get filter values
-        var userNameFilter = $('#filterUserName').val();
+        var nameFilter = $('#filterUserName').val();
         var emailFilter = $('#filterEmail').val();
+        var pageNumber = $('#pageNumber').val();
 
         $.ajax({
             url: window.origin + '/Admin/GetInstructors',
             type: 'GET',
             dataType: 'json',
             data: {
-                userName: userNameFilter,
-                email: emailFilter
+                name: nameFilter,
+                email: emailFilter,
+                pageNumber: pageNumber,
             },
             success: function (data) {
-                var tbody = $('#InstructorsTableBody'); // Target the table body
-                tbody.empty(); // Clear any existing content
+                var tbody = $('#InstructorsTableBody');
+                tbody.empty();
 
-                // Iterate over the returned JSON data array
-                $.each(data, function (index, instructor) {
-                    // Check if the username contains '@'
-                    if (instructor.userName.includes('@')) {
-                        // Extract the substring before '@'
-                        var atIndex = instructor.userName.indexOf('@');
-                        instructor.userName = instructor.userName.substring(0, atIndex);
-                    }
+                $.each(data.instructors, function (index, instructor) {
 
                     // Construct each table row
                     var row = '<tr>' +
-                        '<td scope="row">' + (index + 1) + '</td>' +  // Row number
-                        '<td>' + instructor.userName + '</td>' +         // Instructor Name
-                        '<td>' + instructor.email + '</td>' +        // Instructor Email
+                        '<td scope="row">' + ((data.pageSize * (data.pageIndex - 1)) + (index + 1)) + '</td>' +  
+                        '<td>' + instructor.name + '</td>' +
+                        '<td>' + instructor.email + '</td>' + 
                         '</tr>';
-                    // Append the constructed row to the table body
+
                     tbody.append(row);
                 });
+                GetInstructors.toggleButton('#nextPage', data.hasNextPage);
+                GetInstructors.toggleButton('#previousPage', data.hasPreviousPage);
+                $('#pageNumber').val(data.pageIndex);
             },
             error: function (xhr, status, error) {
-                console.error('Error fetching instructors:', error);  // Log errors to the console
+                console.error('Error fetching instructors:', error); 
             }
         });
+    },
+    toggleButton(selector, enabled) {
+        $(selector).toggleClass('disabled', !enabled)
+            .css({
+                'pointer-events': enabled ? 'auto' : 'none',
+                'opacity': enabled ? '1' : '0.6'
+            });
     }
 }

@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Student";
 }
-<script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/js/views/admin/students.js"></script>
 <div class="container">
 
@@ -60,6 +59,12 @@
         </div>
     </section>
 </div>
+<input type="hidden" id="pageNumber" />
+<div class="d-flex justify-content-end mt-3 gap-2">
+    <a class="btn btn-outline-primary" id="previousPage">Previous</a>
+    <a class="btn btn-outline-primary" id="nextPage">Next</a>
+</div>
+
 <script>
     $(document).ready(function () {
         GetStudents.onStart();

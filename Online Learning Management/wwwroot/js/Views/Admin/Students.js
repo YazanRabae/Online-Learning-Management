@@ -8,6 +8,17 @@ var GetStudents = {
         $('#restFilters').on('click', function () {
             $('#filterName').val(null);
             $('#filterEmail').val(null);
+            $('#pageNumber').val(null);
+            GetStudents.getdata();
+        });
+        $('#nextPage').on('click', function () {
+            var currentPage = parseInt($('#pageNumber').val(), 10) || 1;
+            $('#pageNumber').val(currentPage + 1);
+            GetStudents.getdata();
+        });
+        $('#previousPage').on('click', function () {
+            var currentPage = parseInt($('#pageNumber').val(), 10) || 1;
+            $('#pageNumber').val(currentPage - 1);
             GetStudents.getdata();
         });
     },
@@ -15,6 +26,7 @@ var GetStudents = {
         // get filter values
         var usernamefilter = $('#filterName').val();
         var emailfilter = $('#filterEmail').val();
+        var pageNumber = $('#pageNumber').val();
 
         $.ajax({
             url: window.origin + '/admin/getstudents',
@@ -22,18 +34,18 @@ var GetStudents = {
             datatype: 'json',
             data: {
                 name: usernamefilter,
-                email: emailfilter
+                email: emailfilter,
+                pageNumber : pageNumber,
             },
             success: function (data) {
                 var tbody = $('#StudentsTableBody');
                 tbody.empty();
 
-
-                $.each(data, function (index, students) {
+                $.each(data.students, function (index, students) {
 
                     // construct each table row
                     var row = '<tr>' +
-                        '<td scope="row">' + (index + 1) + '</td>' +
+                        '<td scope="row">' + ((data.pageSize * (data.pageIndex - 1)) + (index + 1)) + '</td>' +
                         '<td>' + students.name + '</td>' +
                         '<td>' + students.email + '</td>' +
                         '</tr>';
@@ -41,10 +53,20 @@ var GetStudents = {
 
                     tbody.append(row);
                 });
+                GetStudents.toggleButton('#nextPage', data.hasNextPage);
+                GetStudents.toggleButton('#previousPage', data.hasPreviousPage);
+                $('#pageNumber').val(data.pageIndex);
             },
             error: function (xhr, status, error) {
                 console.error('error fetching students:', error);
             }
         });
+    },
+    toggleButton(selector, enabled) {
+        $(selector).toggleClass('disabled', !enabled)
+            .css({
+                'pointer-events': enabled ? 'auto' : 'none',
+                'opacity': enabled ? '1' : '0.6'
+            });
     }
 }

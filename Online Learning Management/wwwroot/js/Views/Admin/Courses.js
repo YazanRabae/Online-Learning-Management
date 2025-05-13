@@ -7,34 +7,44 @@
         $('#restFilters').on('click', function () {
             $('#courseName').val(null);
             $('#instructorEmail').val('').trigger('change');
+            $('#pageNumber').val(null);
+            GetCourses.GetData();
+        });
+        $('#nextPage').on('click', function () {
+            var currentPage = parseInt($('#pageNumber').val(), 10) || 1;
+            $('#pageNumber').val(currentPage + 1);
+            GetCourses.GetData();
+        });
+        $('#previousPage').on('click', function () {
+            var currentPage = parseInt($('#pageNumber').val(), 10) || 1;
+            $('#pageNumber').val(currentPage - 1);
             GetCourses.GetData();
         });
     },
     GetData: function () {
         var courseName = $('#courseName').val();
-        var instructorEmail = $('#instructorEmail').val();
+        var instructorId = $('#instructorEmail').val();
+        var pageNumber = $('#pageNumber').val();
+
         $.ajax({
             url: window.origin + '/Admin/GetCourses',
             type: 'GET',
             dataType: 'json',
             data: {
                 courseName: courseName,
-                instructorEmail: instructorEmail
+                instructorId: instructorId,
+                pageNumber: pageNumber,
             },
             success: function (data) {
                 var tbody = $('#courseTableBody');
                 tbody.empty();
 
-                $.each(data, function (index, course) {
+                $.each(data.courses, function (index, course) {
                     var startDate = new Date(course.startDate).toLocaleDateString();
                     var endDate = new Date(course.endDate).toLocaleDateString();
 
-                    var shortDesc = course.description.length > 30
-                        ? course.description.substring(0, 30) + '...'
-                        : course.description;
-
                     var row = '<tr>' +
-                        '<td>' + (index + 1) + '</td>' +
+                        '<td>' + ((data.pageSize * (data.pageIndex - 1)) + (index + 1)) + '</td>' +
                         '<td>' + course.title + '</td>' +
                         '<td>' + course.instructorName + '</td>' +
                         '<td>' + startDate + '</td>' +
@@ -48,11 +58,21 @@
 
                     tbody.append(row);
                 });
+                GetCourses.toggleButton('#nextPage', data.hasNextPage);
+                GetCourses.toggleButton('#previousPage', data.hasPreviousPage);
+                $('#pageNumber').val(data.pageIndex);
             },
             error: function (xhr, status, error) {
                 console.error('Error fetching courses:', error);
             }
         });
+    },
+    toggleButton(selector, enabled) {
+        $(selector).toggleClass('disabled', !enabled)
+            .css({
+                'pointer-events': enabled ? 'auto' : 'none',
+                'opacity': enabled ? '1' : '0.6'
+            });
     }
 };
 
@@ -65,12 +85,15 @@ var GetInstructorsDrop = {
             url: '/Admin/GetInstructors',
             type: 'GET',
             dataType: 'json',
+            data: {
+                getAll: true,
+            },
             success: function (data) {
                 var select = $('#instructorEmail');
                 select.empty();
                 select.append('<option value="" selected>Select Instructor</option>');
-                $.each(data, function (index, instructor) {
-                    select.append('<option value="' + instructor.userName + '">' + instructor.userName + '</option>');
+                $.each(data.instructors, function (index, instructor) {
+                    select.append('<option value="' + instructor.id + '">' + instructor.name + '</option>');
                 });
 
                 // Make searchable

@@ -50,6 +50,7 @@ namespace LMS.Service.DTOs.Courses
         public int InstructorId { get; set; }
 
         public string InstructorName { get; set; }
+        public string InstructorEmail { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

@@ -27,5 +27,11 @@ namespace LMS.Repository.Repositories.Instructors
                 .Select(s => s.Id)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<Instructor>> GetInstructors()
+        {
+            return await _context.Instructors
+                .ToListAsync();
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model LMS.Service.DTOs.Courses.StudentCoursesDto
+﻿@* @model LMS.Service.DTOs.Courses.StudentCoursesDto
 @{
     ViewBag.Title = "My Enrolled Courses";
 }
@@ -111,3 +111,222 @@
         }
     </div>
 </div>
+ *@
+
+
+@* @model LMS.Service.DTOs.Courses.StudentCoursesDto
+@{
+    ViewBag.Title = "My Enrolled Courses";
+}
+<link href="~/css/views/student/courses.css" rel="stylesheet" />
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <input type="text" id="searchTitle" class="form-control" placeholder="Search by Title" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" id="searchInstructor" class="form-control" placeholder="Search by Instructor" />
+        </div>
+        <div class="col-md-3">
+            <input type="number" id="searchPrice" class="form-control" placeholder="Search by Price" />
+        </div>
+        <div class="col-md-3">
+            <select id="courseStatusFilter" class="form-control">
+                <option value="">Select Course Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Active">Active</option>
+                <option value="Finished">Finished</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <button id="btnSearch" class="btn btn-primary">Search</button>
+            <button id="btnReset" class="btn btn-secondary ms-2">Reset</button>
+        </div>
+    </div>
+
+    <div id="pendingCoursesSection">
+        <h2 class="mb-4">Pending Courses</h2>
+        <div class="row" id="pendingCourses">
+            @if (Model.PendingCourses != null && Model.PendingCourses.Any())
+            {
+                foreach (var course in Model.PendingCourses)
+                {
+                    @Html.Partial("_CourseCard", course)
+                }
+            }
+            else
+            {
+                <p class="text-muted ms-3">No Pending Courses.</p>
+            }
+        </div>
+    </div>
+
+    <div id="activeCoursesSection">
+        <h2 class="mb-4">Active Courses</h2>
+        <div class="row" id="activeCourses">
+            @if (Model.ActiveCourses != null && Model.ActiveCourses.Any())
+            {
+                foreach (var course in Model.ActiveCourses)
+                {
+                    @Html.Partial("_CourseCard", course)
+                }
+            }
+            else
+            {
+                <p class="text-muted ms-3">No Active Courses.</p>
+            }
+        </div>
+    </div>
+
+    <div id="finishedCoursesSection">
+        <h2 class="mb-4 mt-5">Finished Courses</h2>
+        <div class="row" id="finishedCourses">
+            @if (Model.FinishedCourses != null && Model.FinishedCourses.Any())
+            {
+                foreach (var course in Model.FinishedCourses)
+                {
+                    @Html.Partial("_CourseCard", course)
+                }
+            }
+            else
+            {
+                <p class="text-muted ms-3">No Finished Courses.</p>
+            }
+        </div>
+    </div>
+
+    <div id="rejectedCoursesSection">
+        <h2 class="mb-4">Rejected Courses</h2>
+        <div class="row" id="rejectedCourses">
+            @if (Model.RejectedCourses != null && Model.RejectedCourses.Any())
+            {
+                foreach (var course in Model.RejectedCourses)
+                {
+                    @Html.Partial("_CourseCard", course)
+                }
+            }
+            else
+            {
+                <p class="text-muted ms-3">No Rejected Courses.</p>
+            }
+        </div>
+    </div>
+</div>
+ *@
+ @model LMS.Service.DTOs.Courses.StudentCoursesDto
+@{
+    ViewBag.Title = "My Enrolled Courses";
+}
+<link href="~/css/views/student/courses.css" rel="stylesheet" />
+<style>
+
+
+</style>
+<div class="container mt-4">
+    <!-- Search Filters -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <input type="text" id="searchTitle" class="form-control" placeholder="Search by Title" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" id="searchInstructor" class="form-control" placeholder="Search by Instructor" />
+        </div>
+        <div class="col-md-3">
+            <input type="number" id="searchPrice" class="form-control" placeholder="Search by Price" />
+        </div>
+        <div class="col-md-3">
+            <select id="courseStatusFilter" class="form-control">
+                <option value="">Select Course Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Active">Active</option>
+                <option value="Finished">Finished</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <button id="btnSearch" class="btn btn-primary">Search</button>
+            <button id="btnReset" class="btn btn-secondary ms-2">Reset</button>
+        </div>
+    </div>
+
+    <!-- Course Sections -->
+    <div id="pendingCoursesSection">
+        <h2 class="mb-4 course-section-title pending-title">Pending Courses <i class="fa fa-clock"></i></h2>
+        <div class="row" id="pendingCourses">
+            @if (Model.PendingCourses != null && Model.PendingCourses.Any())
+            {
+                foreach (var course in Model.PendingCourses)
+                {
+                    @Html.Partial("_CourseCard", course)
+                }
+            }
+            else
+            {
+                <p class="text-muted ms-3">No Pending Courses.</p>
+            }
+        </div>
+    </div>
+
+    <div id="activeCoursesSection">
+        <h2 class="mb-4 course-section-title active-title">Active Courses <i class="fa fa-play-circle"></i></h2>
+        <div class="row" id="activeCourses">
+            @if (Model.ActiveCourses != null && Model.ActiveCourses.Any())
+            {
+                foreach (var course in Model.ActiveCourses)
+                {
+                    @Html.Partial("_CourseCard", course)
+                }
+            }
+            else
+            {
+                <p class="text-muted ms-3">No Active Courses.</p>
+            }
+        </div>
+    </div>
+
+    <div id="finishedCoursesSection">
+        <h2 class="mb-4 course-section-title finished-title">Finished Courses <i class="fa fa-check-circle"></i></h2>
+        <div class="row" id="finishedCourses">
+            @if (Model.FinishedCourses != null && Model.FinishedCourses.Any())
+            {
+                foreach (var course in Model.FinishedCourses)
+                {
+                    @Html.Partial("_CourseCard", course)
+                }
+            }
+            else
+            {
+                <p class="text-muted ms-3">No Finished Courses.</p>
+            }
+        </div>
+    </div>
+
+    <div id="rejectedCoursesSection">
+        <h2 class="mb-4 course-section-title rejected-title">Rejected Courses <i class="fa fa-times-circle"></i></h2>
+        <div class="row" id="rejectedCourses">
+            @if (Model.RejectedCourses != null && Model.RejectedCourses.Any())
+            {
+                foreach (var course in Model.RejectedCourses)
+                {
+                    @Html.Partial("_CourseCard", course)
+                }
+            }
+            else
+            {
+                <p class="text-muted ms-3">No Rejected Courses.</p>
+            }
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/views/student/courses.js"></script>

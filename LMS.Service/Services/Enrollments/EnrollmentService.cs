@@ -61,5 +61,10 @@ namespace LMS.Service.Services.Enrollments
 
             }).ToList();
         }
+
+        public async Task RejectStudentByIdAsync(int studentId)
+        {
+            await _enrollmentRepository.RejectEnrollmentByStudentIdAsync(studentId);
+        }
     }
 }

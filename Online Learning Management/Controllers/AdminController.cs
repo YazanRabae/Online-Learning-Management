@@ -1,9 +1,13 @@
 ﻿using LMS.Domain.Entities.Courses;
 using LMS.Domain.Entities.Enrollments;
+using LMS.Domain.Entities.Instructors;
+using LMS.Domain.Entities.Students;
 using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
 using LMS.Service.Common.Constants;
 using LMS.Service.DTOs.Courses;
+using LMS.Service.DTOs.Instructors;
+using LMS.Service.DTOs.Shared;
 using LMS.Service.DTOs.Students;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Mapper.Students;
@@ -17,6 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Printing;
 using System.Security.Claims;
 using System.Web.WebPages.Html;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -26,31 +31,22 @@ namespace Online_Learning_Management.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly UserManager<User> _userManager;
-
-        private readonly SignInManager<User> _signInManager;
         private readonly IUserService _userService;
-        private readonly DbLMS _context;
         private readonly ICourseService _courseService;
         private readonly IStudentMapper _studentMapper;
         private readonly IStudentService _studentService;
         private readonly IInstructorService _instructorService;
         private readonly IEnrollmentService _enrollmentService;
 
-        public AdminController(UserManager<User>userManager,
-           SignInManager<User> signInManager,
+        public AdminController(
            IUserService userService,
-           DbLMS context,
            ICourseService courseService,
            IStudentMapper studentMapper,
            IStudentService studentService,
            IInstructorService instructorService,
            IEnrollmentService enrollmentService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
             _userService = userService;
-            _context = context;
             _courseService = courseService;
             _studentMapper = studentMapper;
             _studentService = studentService;
@@ -70,7 +66,7 @@ namespace Online_Learning_Management.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetStudents(string name, string email)
+        public async Task<IActionResult> GetStudents(string name, string email, int? pageNumber)
         {
             var students = await _studentService.GetStudents();
 
@@ -83,7 +79,22 @@ namespace Online_Learning_Management.Controllers
                 students = students.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            return Ok(students);
+            var paginatedStudents = PaginatedList<StudentDto>.CreateAsync(students, pageNumber ?? 1);
+
+            if (!paginatedStudents.Any())
+            {
+                paginatedStudents = PaginatedList<StudentDto>.CreateAsync(students, 1);
+            }
+
+            return Ok(new
+            {
+                Students = paginatedStudents,
+                PageIndex = paginatedStudents.PageIndex,
+                PageSize = paginatedStudents.PageSize,
+                TotalPages = paginatedStudents.TotalPages,
+                HasPreviousPage = paginatedStudents.HasPreviousPage,
+                HasNextPage = paginatedStudents.HasNextPage
+            });
         }
 
         public IActionResult CreateUser(string roleName)
@@ -141,26 +152,41 @@ namespace Online_Learning_Management.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetInstructorsAsync(string userName, string email)
+        public async Task<IActionResult> GetInstructorsAsync(string name, string email, int? pageNumber, bool getAll = false)
         {
+            var instructors = await _instructorService.GetInstructors();
 
-            var instructors = await _userService.GetInstructors();
-
-            if (!string.IsNullOrEmpty(userName) && string.IsNullOrEmpty(email))
+            if (getAll)
             {
-                instructors = instructors.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)).ToList();
+                return Ok(new
+                {
+                    Instructors = instructors
+                });
             }
-            else if (!string.IsNullOrEmpty(email) && string.IsNullOrEmpty(userName))
+            if (!string.IsNullOrEmpty(name))
+            {
+                instructors = instructors.Where(i => i.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            if (!string.IsNullOrEmpty(email))
             {
                 instructors = instructors.Where(i => i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
             }
-            else if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(email))
+            var paginatedInstructors = PaginatedList<InstructorDto>.CreateAsync(instructors, pageNumber ?? 1);
+
+            if (!paginatedInstructors.Any())
             {
-                instructors = instructors.Where(i => i.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase)
-                                                      && i.Email.Contains(email, StringComparison.OrdinalIgnoreCase)).ToList();
+                paginatedInstructors = PaginatedList<InstructorDto>.CreateAsync(instructors, 1);
             }
 
-            return Ok(instructors);
+            return Ok(new
+            {
+                Instructors = paginatedInstructors,
+                PageIndex = paginatedInstructors.PageIndex,
+                PageSize = paginatedInstructors.PageSize,
+                TotalPages = paginatedInstructors.TotalPages,
+                HasPreviousPage = paginatedInstructors.HasPreviousPage,
+                HasNextPage = paginatedInstructors.HasNextPage
+            });
         }
 
 
@@ -179,107 +205,35 @@ namespace Online_Learning_Management.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCourses(string courseName, string instructorEmail)
+        public async Task<IActionResult> GetCourses(string courseName, int? instructorId, int? pageNumber)
         {
+            var courses = await _courseService.GetCourses();
 
-            var courses = _context.Courses
-               .Include(c => c.Instructor)
-               .Select(c => new
-               {
-                   c.Id,
-                   c.Title,
-                   c.Description,
-                   InstructorName = c.Instructor.Name,
-                   InstructorEmail = c.Instructor.Email, // Added
-                   c.StartDate,
-                   c.EndDate,
-                   c.MaxStudents,
-                   c.Price,
-                   c.CourseTime
-               })
-               .ToList();
-
-            if (!string.IsNullOrEmpty(instructorEmail))
+            if (instructorId.HasValue && instructorId > 0)
             {
-                courses = courses.Where(i => i.InstructorEmail.Contains(instructorEmail, StringComparison.OrdinalIgnoreCase)).ToList();
+                courses = courses.Where(i => i.InstructorId == instructorId).ToList();
             }
-
             if (!string.IsNullOrEmpty(courseName))
             {
                 courses = courses.Where(i => i.Title.Contains(courseName, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            return Ok(courses);
-        }
+            var paginatedCourses = PaginatedList<CourseDTO>.CreateAsync(courses, pageNumber ?? 1);
 
-        public async Task<IActionResult> ManageUserClaims(string userId)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
+            if (!paginatedCourses.Any())
             {
-                ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
-                return View("NotFound");
-            }
-            ViewBag.UserName = user.UserName;
-
-            var existingUserClaims = await _userManager.GetClaimsAsync(user);
-
-            var model = new UserClaimsViewModel
-            {
-                UserId = user.Id
-            };
-
-            foreach (var claim in ClaimsStores.AllClaims)
-            {
-                var userClaim = new UserClaims
-                {
-                    ClaimType = claim.Type
-                };
-
-                if (existingUserClaims.Any(c => c.Type == claim.Type && c.Value == "true"))
-                {
-                    userClaim.IsSelected = true;
-                }
-                else
-                {
-                    userClaim.IsSelected = false;
-                }
-
-                model.Claims.Add(userClaim);
+                paginatedCourses = PaginatedList<CourseDTO>.CreateAsync(courses, 1);
             }
 
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ManageUserClaims(UserClaimsViewModel model)
-        {
-            var user = await _userManager.FindByIdAsync(model.UserId);
-            if (user == null)
+            return Ok(new
             {
-                ViewBag.ErrorMessage = $"User with Id = {model.UserId} cannot be found";
-                return View("NotFound");
-            }
-
-            var existingClaims = await _userManager.GetClaimsAsync(user);
-            var result = await _userManager.RemoveClaimsAsync(user, existingClaims);
-
-            if (!result.Succeeded)
-            {
-                ModelState.AddModelError("", "Cannot remove user's existing claims");
-                return View(model);
-            }
-
-            result = await _userManager.AddClaimsAsync(user, model.Claims
-                .Select(c => new Claim(c.ClaimType, c.IsSelected ? "true" : "false")));
-
-            if (!result.Succeeded)
-            {
-                ModelState.AddModelError("", "Cannot add selected claims to user");
-                return View(model);
-            }
-
-            return RedirectToAction("EditUser", new { Id = model.UserId });
+                Courses = paginatedCourses,
+                PageIndex = paginatedCourses.PageIndex,
+                PageSize = paginatedCourses.PageSize,
+                TotalPages = paginatedCourses.TotalPages,
+                HasPreviousPage = paginatedCourses.HasPreviousPage,
+                HasNextPage = paginatedCourses.HasNextPage
+            });
         }
     }
 }
