@@ -1,27 +1,7 @@
 ﻿var GetCoursesIns = {
     OnStart: function () {
         this.GetData();
-        $(function () {
-            $('#startDateRange').daterangepicker({
-                opens: 'left',
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    cancelLabel: 'Clear'
-                }
-            }, function (start, end, label) {
-                
-            });
-        });
-        $(function () {
-            $('#endDateRange').daterangepicker({
-                opens: 'left',
-                locale: {
-                    format: 'YYYY-MM-DD'
-                }
-            }, function (start, end, label) {
-                
-            });
-        });
+        this.InitializeCalendars();
         $('#btnSearch').click(function () {
             GetCoursesIns.GetData();
         });
@@ -29,6 +9,8 @@
         $('#btnReset').click(function () {
             $('#searchTitle').val(null);
             $('#pageNumber').val(null);
+            GetCoursesIns.InitializeCalendars();
+
             GetCoursesIns.GetData();
         });
 
@@ -125,15 +107,31 @@
         var startDateTo = null;
         var endDateFrom = null;
         var endDateTo = null;
-
+        var now = moment().format('YYYY-MM-DD');
         var startPicker = $('#startDateRange').data('daterangepicker');
-        if (startPicker) {
+        if(
+            startPicker &&
+            startPicker.startDate._isValid &&
+            startPicker.endDate._isValid &&
+            (
+                startPicker.startDate.format('YYYY-MM-DD') !== now ||
+                startPicker.endDate.format('YYYY-MM-DD') !== now
+            )
+        ) {
             startDateFrom = startPicker.startDate.format('YYYY-MM-DD');
             startDateTo = startPicker.endDate.format('YYYY-MM-DD');
         }
 
         var endPicker = $('#endDateRange').data('daterangepicker');
-        if (endPicker) {
+        if (
+            endPicker &&
+            endPicker.startDate._isValid &&
+            endPicker.endDate._isValid &&
+            (
+                endPicker.startDate.format('YYYY-MM-DD') !== now ||
+                endPicker.endDate.format('YYYY-MM-DD') !== now
+            )
+        ) {
             endDateFrom = endPicker.startDate.format('YYYY-MM-DD');
             endDateTo = endPicker.endDate.format('YYYY-MM-DD');
         }
@@ -193,5 +191,47 @@
                 'pointer-events': enabled ? 'auto' : 'none',
                 'opacity': enabled ? '1' : '0.6'
             });
+    },
+    InitializeCalendars() {
+        $('#startDateRange').val('');
+        $('#startDateRange').daterangepicker({
+            autoUpdateInput: false,
+            opens: 'left',
+            locale: {
+                format: 'YYYY-MM-DD',
+                cancelLabel: 'Clear'
+            }
+        });
+
+        // Update the input field when a date range is selected
+        $('#startDateRange').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+        });
+
+        // Clear the input field when the cancel button is clicked
+        $('#startDateRange').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
+
+
+        $('#endDateRange').val('');
+        $('#endDateRange').daterangepicker({
+            autoUpdateInput: false,
+            opens: 'left',
+            locale: {
+                format: 'YYYY-MM-DD',
+                cancelLabel: 'Clear'
+            }
+        });
+
+        // Update the input field when a date range is selected
+        $('#endDateRange').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+        });
+
+        // Clear the input field when the cancel button is clicked
+        $('#endDateRange').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
     }
 };
