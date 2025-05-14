@@ -7,7 +7,27 @@
                 <h1>Enrollments</h1>
             </div>
         </div>
+        <div class="col">
+            <div class="card p-4">
+                <h4>Search by</h4>
+                <form id="searchForm" action="#" method="post" class="php-email-form">
+                    <div class="row gy-4">
 
+                        <div class="col-md-3">
+                            <input type="text" id="courseNameFilter" name="name" class="form-control" placeholder="Course Name">
+                        </div>
+
+                        <div class="col-md-3">
+                            <input type="text" id="studentNameFilter" name="name" class="form-control" placeholder="Student Name">
+                        </div>
+
+                        <div class="col-md-3 text-center">
+                            <button type="button" class="btn btn-primary" id="applyFilters">Search</button> | <button type="button" class="btn btn-default" id="restFilters">Rest</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="card mt-4 p-3">
             <table class="table table-striped">
                 <thead>
@@ -26,6 +46,12 @@
         </div>
     </div>
 </section>
+
+<input type="hidden" id="pageNumber" />
+<div class="d-flex justify-content-end mt-3 gap-2">
+    <a class="btn btn-outline-primary" id="previousPage">Previous</a>
+    <a class="btn btn-outline-primary" id="nextPage">Next</a>
+</div>
 
 <script>
     $(document).ready(function () {

@@ -22,35 +22,48 @@
         });
     });
 
-    // Search button click handler
+    // Search functionality
     $('#btnSearch').click(function () {
-        const searchTitle = $('#searchTitle').val().toLowerCase();
-        const searchInstructor = $('#searchInstructor').val().toLowerCase();
-        const searchPrice = parseFloat($('#searchPrice').val()) || 0;
+        var title = $('#searchTitle').val().toLowerCase();
+        var instructor = $('#searchInstructor').val().toLowerCase();
+        var price = $('#searchPrice').val();
 
-        // Filter courses based on search values
-        $('.course-card').each(function () {
-            const title = $(this).data('title').toLowerCase();
-            const instructor = $(this).data('instructor').toLowerCase();
-            const price = parseFloat($(this).data('price'));
-
-            // Check if course matches search criteria
-            if ((title.includes(searchTitle) || searchTitle === "") &&
-                (instructor.includes(searchInstructor) || searchInstructor === "") &&
-                (isNaN(searchPrice) || price <= searchPrice || searchPrice === 0)) {
-                $(this).show();  // Show the course card
-            } else {
-                $(this).hide();  // Hide the course card
-            }
-        });
+        // Filter the courses based on search criteria
+        filterCourses(title, instructor, price);
     });
 
-    // Reset button click handler
+    // Reset functionality
     $('#btnReset').click(function () {
+        // Clear input fields and dropdown
         $('#searchTitle').val('');
         $('#searchInstructor').val('');
         $('#searchPrice').val('');
-        $('.course-card').show();  // Show all course cards
+
+        // Show all courses again
+        filterCourses('', '', '', '');
     });
+
+    function filterCourses(title, instructor, price) {
+        // Convert input parameters to lowercase for case-insensitive comparison
+        title = title.toLowerCase();
+        instructor = instructor.toLowerCase();
+        price = price.toLowerCase();
+
+        // Iterate over each course card
+        $('.course-card').each(function () {
+            var card = $(this);
+            var courseTitle = card.data('title').toLowerCase();
+            var courseInstructor = card.data('instructor').toLowerCase();
+            var coursePrice = card.data('price').toString().toLowerCase();
+
+            // Check if the card matches the filter criteria
+            var matchTitle = title === '' || courseTitle.includes(title);
+            var matchInstructor = instructor === '' || courseInstructor.includes(instructor);
+            var matchPrice = price === '' || coursePrice.includes(price);
+
+            // Show or hide the card based on the match result
+            card.toggle(matchTitle && matchInstructor && matchPrice);
+        });
+    }
 });
 

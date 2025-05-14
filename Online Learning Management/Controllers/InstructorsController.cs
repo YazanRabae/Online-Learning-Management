@@ -1,7 +1,11 @@
 ﻿using LMS.Domain.Entities.Enrollments;
+using LMS.Domain.Entities.Instructors;
 using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
 using LMS.Service.DTOs.Courses;
+using LMS.Service.DTOs.Enrollments;
+using LMS.Service.DTOs.Instructors;
+using LMS.Service.DTOs.Shared;
 using LMS.Service.DTOs.UserDTOs;
 using LMS.Service.Services;
 using LMS.Service.Services.Courses;
@@ -88,37 +92,49 @@ namespace Online_Learning_Management.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> GetAllCourses()
+        public async Task<IActionResult> GetAllCourses(string title,
+            string startDateFrom,
+            string startDateTo,
+            string endDateFrom,
+            string endDateTo,
+            int? pageNumber)
         {
-
             var userId = userManager.GetUserId(User);
+            var courses = await _courseService.GetCoursesByUserId(userId);
 
-            if (string.IsNullOrEmpty(userId))
+            if (!string.IsNullOrEmpty(title))
             {
-                return Unauthorized();
+                courses = courses.Where(i => i.Title.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            if (!string.IsNullOrEmpty(startDateFrom) && !string.IsNullOrEmpty(startDateTo))
+            {
+                DateTime dateFrom = DateTime.Parse(startDateFrom);
+                DateTime dateTo = DateTime.Parse(startDateTo);
+                courses = courses.Where(i => dateFrom <= i.StartDate && i.StartDate <= dateTo).ToList();
+            }
+            if (!string.IsNullOrEmpty(endDateFrom) && !string.IsNullOrEmpty(endDateTo))
+            {
+                DateTime dateFrom = DateTime.Parse(endDateFrom);
+                DateTime dateTo = DateTime.Parse(endDateTo);
+                courses = courses.Where(i => dateFrom <= i.EndDate && i.EndDate <= dateTo).ToList();
             }
 
-            var courses = (await _courseService.GetCoursesByUserId(userId))
-                .Select(c => new
-                {
-                    c.Id,
-                    c.Title,
-                    c.Description,
-                    InstructorName = c.Instructor.Name,
-                    c.StartDate,
-                    c.EndDate,
-                    c.MaxStudents,
-                    c.Price,
-                    c.CourseTime
-                })
-                .ToList();
+            var paginatedCourses = PaginatedList<CourseDTO>.CreateAsync(courses, pageNumber ?? 1);
 
-            if (courses == null || !courses.Any())
+            if (!paginatedCourses.Any())
             {
-                return NotFound("No courses found for the current instructor.");
+                paginatedCourses = PaginatedList<CourseDTO>.CreateAsync(courses, 1);
             }
 
-            return Ok(courses);
+            return Ok(new
+            {
+                Courses = paginatedCourses,
+                PageIndex = paginatedCourses.PageIndex,
+                PageSize = paginatedCourses.PageSize,
+                TotalPages = paginatedCourses.TotalPages,
+                HasPreviousPage = paginatedCourses.HasPreviousPage,
+                HasNextPage = paginatedCourses.HasNextPage
+            });
         }
 
         [HttpPost]
@@ -140,30 +156,41 @@ namespace Online_Learning_Management.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPendingEnrollments()
+        public async Task<IActionResult> GetAllPendingEnrollments(
+            string courseName,
+            string studentName,
+            int? pageNumber
+            )
         {
-            // Get the currently authenticated instructor's username
             var userId = userManager.GetUserId(User);
 
-            if (string.IsNullOrEmpty(userId))
+            var enrollments = (await _enrollmentService.GetAllEnrollmentsByUserId(userId));
+
+            if (!string.IsNullOrEmpty(courseName))
             {
-                return Unauthorized();
+                enrollments = enrollments.Where(i => i.CourseName.Contains(courseName, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            if (!string.IsNullOrEmpty(studentName))
+            {
+                enrollments = enrollments.Where(i => i.StudentName.Contains(studentName, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
+            var paginatedEnrollments = PaginatedList<EnrollmentDTO>.CreateAsync(enrollments, pageNumber ?? 1);
 
-            var enrollments = (await _enrollmentService.GetAllEnrollmentsByUserId(userId))
-                .Select(e => new
-                {
-                    e.Id,
-                    StudentName = e.Student.Name,
-                    CourseName = e.Course.Title,
-                    e.AddDate,
-                    e.Course.Price,
-                    status = e.Status,
-                })
-                .ToList();
+            if (!paginatedEnrollments.Any())
+            {
+                paginatedEnrollments = PaginatedList<EnrollmentDTO>.CreateAsync(enrollments, 1);
+            }
 
-            return Ok(enrollments);
+            return Ok(new
+            {
+                Enrollments = paginatedEnrollments,
+                PageIndex = paginatedEnrollments.PageIndex,
+                PageSize = paginatedEnrollments.PageSize,
+                TotalPages = paginatedEnrollments.TotalPages,
+                HasPreviousPage = paginatedEnrollments.HasPreviousPage,
+                HasNextPage = paginatedEnrollments.HasNextPage
+            });
         }
 
         [HttpPost]
@@ -183,14 +210,14 @@ namespace Online_Learning_Management.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> RejectStudent(int studentId)
+        public async Task<IActionResult> RejectStudent(int studentId, int courseId)
         {
-            if (studentId <= 0)
+            if (studentId <= 0 || courseId <= 0)
             {
                 return BadRequest("Invalid student ID.");
             }
 
-            await _enrollmentService.RejectStudentByIdAsync(studentId);
+            await _enrollmentService.RejectStudentByIdAsync(studentId, courseId);
 
             return Ok();
         }

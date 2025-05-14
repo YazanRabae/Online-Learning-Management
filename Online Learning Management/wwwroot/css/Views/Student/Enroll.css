@@ -56,6 +56,43 @@
     max-width: 600px;
 }
 
+.course-section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 35px; /* Space for the icon */
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.course-section-title:hover {
+    transform: translateX(10px);
+}
+
+/* Active */
+.active-title {
+    color: #28a745;
+    border-left: 5px solid #28a745;
+}
+
+    .active-title:hover {
+        color: #ffffff;
+        background-color: #28a745;
+        transform: scale(1.1);
+    }
+
+    .active-title i {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 1.8rem;
+    }
+
+.modal-backdrop.show {
+    opacity: 0.3; /* Adjust the opacity as desired */
+    background-color: rgba(0, 0, 0, 0.5); /* Customize the color and transparency */
+}
 /* Responsive grid layout for course cards */
 @media (max-width: 768px) {
     .col-lg-4 {

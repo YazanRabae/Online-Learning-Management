@@ -11,9 +11,6 @@ namespace LMS.Service.DTOs.Enrollments
         [Key]
         public int Id { get; set; }
 
-        [Display(Name = "Enrollment Date")]
-        public DateTime AddDate { get; set; } = DateTime.Now;
-
         [Required]
         public EnrollmentStatus Status { get; set; } = EnrollmentStatus.Pending;
 
@@ -30,6 +27,10 @@ namespace LMS.Service.DTOs.Enrollments
         // Foreign Key for Student
         [RequiredIfNotNull(nameof(Student), ErrorMessage = "Student ID is required.")]
         public int StudentId { get; set; }
+        public string StudentName { get; set; }
+        public string CourseName { get; set; }
+        public DateTime AddDate { get; set; }
+        public decimal Price { get; set; }
         public LMS.Domain.Entities.Students.Student Student { get; set; }
     }
 

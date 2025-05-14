@@ -86,11 +86,11 @@ namespace LMS.Repository.Repositories.Enrollments
                 .ToListAsync();
         }
 
-        public async Task RejectEnrollmentByStudentIdAsync(int studentId)
+        public async Task RejectEnrollmentByStudentIdAsync(int studentId, int courseId)
         {
             // Find the enrollment by studentId
             var enrollment = await _context.Enrollments
-                .Where(e => e.StudentId == studentId)
+                .Where(e => e.StudentId == studentId && e.CourseId == courseId)
                 .FirstOrDefaultAsync();
 
             if (enrollment != null)

@@ -16,7 +16,7 @@ namespace LMS.Repository.Repositories.Enrollments
         Task<List<Enrollment>> GetAllEnrollmentsByUserId(string userId);
         Task<List<Enrollment>> GetStudentsByCourse(int courseId);
 
-        Task RejectEnrollmentByStudentIdAsync(int studentId);
+        Task RejectEnrollmentByStudentIdAsync(int studentId, int courseId);
 
     }
 }

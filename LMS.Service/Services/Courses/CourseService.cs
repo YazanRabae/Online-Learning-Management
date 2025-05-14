@@ -101,9 +101,22 @@ namespace LMS.Service.Services.Courses
             return await _courseRepository.GetCourseCountByInstructorAsync(userId);
         }
 
-        public async Task<List<Course>> GetCoursesByUserId(string userId)
+        public async Task<List<CourseDTO>> GetCoursesByUserId(string userId)
         {
-            return await _courseRepository.GetCoursesByUserId(userId);
+            var courses = await _courseRepository.GetCoursesByUserId(userId);
+
+            return courses.Select(c => new CourseDTO
+             {
+                 Id = c.Id,
+                 Title = c.Title,
+                 Description = c.Description,
+                 InstructorName = c.Instructor.Name,
+                 StartDate = c.StartDate,
+                 EndDate = c.EndDate,
+                 MaxStudents = c.MaxStudents,
+                 Price = c.Price,
+                 CourseTime = c.CourseTime
+             }).ToList();
         }
 
         public async Task<StudentCoursesDto> GetEnrolledCoursesSplitAsync(string userId)
@@ -125,7 +138,8 @@ namespace LMS.Service.Services.Courses
                     StartDate = course.StartDate,
                     InstructorName = course.Instructor?.Name,
                     ImageData = course.ImageData == null ? null : Convert.ToBase64String(course.ImageData),
-                    IsEnrolled = true
+                    IsEnrolled = true,
+                    Status = course.Enrollments.FirstOrDefault(s => s.StudentId == studentId).Status.ToString()
                 };
 
                 var studentCourseStatus = course.Enrollments.First(e => e.StudentId == studentId).Status;
@@ -140,6 +154,8 @@ namespace LMS.Service.Services.Courses
                     studentCourses.ActiveCourses.Add(studentCourse);
             }
 
+            studentCourses.FinishedCourses.ForEach(s => s.Status = "Finished");
+            studentCourses.ActiveCourses.ForEach(s => s.Status = "Active");
             return studentCourses;
         }
 

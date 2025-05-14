@@ -156,13 +156,8 @@ namespace Online_Learning_Management.Controllers
         {
             var instructors = await _instructorService.GetInstructors();
 
-            if (getAll)
-            {
-                return Ok(new
-                {
-                    Instructors = instructors
-                });
-            }
+            if (getAll) return Ok(new { Instructors = instructors });
+
             if (!string.IsNullOrEmpty(name))
             {
                 instructors = instructors.Where(i => i.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();

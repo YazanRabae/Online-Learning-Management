@@ -55,6 +55,7 @@ namespace LMS.Service.DTOs.Courses
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public bool IsEnrolled { get; set; }
+        public string Status { get; set; }
     }
 
     // ✅ Custom validation: EndDate > StartDate

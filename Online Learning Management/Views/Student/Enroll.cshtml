@@ -1,55 +1,11 @@
-﻿@* @model LMS.Service.DTOs.Courses.StudentCoursesDto
-@{
-    ViewBag.Title = "Available Courses";
-}
-<link href="~/css/views/student/enroll.css" rel="stylesheet" />
-<script src="~/js/views/student/enroll.js"></script>
-<div class="container mt-4">
-    <div id="failEnrollAlert" class="alert alert-danger d-none" role="alert">
-        Failed to enroll!
-    </div>
-    <div id="successEnrollAlert" class="alert alert-success d-none" role="alert">
-        Successfully enrolled!
-    </div>
-
-    <h2 class="mb-4">Available Courses</h2>
-    <div class="row" id="availableCoursesContainer">
-        @if (Model.AvailableCourses != null && Model.AvailableCourses.Any())
-        {
-            foreach (var course in Model.AvailableCourses)
-            {
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0 rounded">
-                        <img src="data:image/jpeg;base64,@course.ImageData" class="card-img-top" alt="@course.Title" />
-                        <div class="card-body">
-                            <h5 class="card-title">@course.Title</h5>
-                            <p class="card-text">@course.Description</p>
-                            <p class="card-text"><strong>Instructor:</strong> @course.InstructorName</p>
-                            <p class="card-text"><strong>Price:</strong> @course.Price JD</p>
-                            <p class="card-text"><strong>Start:</strong> @course.StartDate.ToShortDateString()</p>
-                            <div class="d-flex justify-content-center">
-                                <button class="btn btn-primary enroll-btn" data-course-id="@course.Id">Enroll</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p class="text-muted ms-3">No courses available to enroll.</p>
-        }
-    </div>
-</div>
- *@
- @model LMS.Service.DTOs.Courses.StudentCoursesDto
+﻿@model LMS.Service.DTOs.Courses.StudentCoursesDto
 @{
     ViewBag.Title = "Available Courses";
 }
 <link href="~/css/views/student/enroll.css" rel="stylesheet" />
 <script src="~/js/views/student/enroll.js"></script>
 
-<div class="container mt-4">
+<div class="container">
     <!-- Alert Messages -->
     <div id="failEnrollAlert" class="alert alert-danger d-none" role="alert">
         Failed to enroll!
@@ -58,36 +14,54 @@
         Successfully enrolled!
     </div>
 
+    <div class="col">
+        <h1>Enroll</h1>
+    </div>
     <!-- Search Filters -->
     <div class="row mb-4">
         <div class="col-md-3">
+            <label for="searchTitle" class="form-label">Course Title</label>
             <input type="text" id="searchTitle" class="form-control" placeholder="Search by Title" />
         </div>
         <div class="col-md-3">
+            <label for="searchInstructor" class="form-label">Instructor Name</label>
             <input type="text" id="searchInstructor" class="form-control" placeholder="Search by Instructor" />
         </div>
         <div class="col-md-3">
+            <label for="searchPrice" class="form-label">Price</label>
             <input type="number" id="searchPrice" class="form-control" placeholder="Search by Price" />
         </div>
+    </div>
+    <!-- Buttons -->
+    <div class="row mb-4" style="margin-top: -28px;">
         <div class="col-md-3">
-            <button id="btnSearch" class="btn btn-primary w-100">Search</button>
-            <button id="btnReset" class="btn btn-secondary w-100 mt-2">Reset</button>
+            <button id="btnSearch" class="btn btn-primary">Search</button>
+            <button id="btnReset" class="btn btn-secondary ms-2">Reset</button>
         </div>
     </div>
 
     <!-- Courses List -->
-    <h2 class="mb-4">Available Courses</h2>
+    <h2 class="mb-4 course-section-title active-title">Available Courses <i class="fa fa-play-circle"></i></h2>
     <div class="row" id="availableCoursesContainer">
         @if (Model.AvailableCourses != null && Model.AvailableCourses.Any())
         {
             foreach (var course in Model.AvailableCourses)
             {
-                <div class="col-lg-4 col-md-6 mb-4 course-card" data-title="@course.Title" data-instructor="@course.InstructorName" data-price="@course.Price">
+                <div class="col-lg-3 col-md-4 mb-6 course-card" data-title="@course.Title" data-instructor="@course.InstructorName" data-price="@course.Price">
                     <div class="card shadow-sm border-0 rounded">
                         <img src="data:image/jpeg;base64,@course.ImageData" class="card-img-top" alt="@course.Title" />
                         <div class="card-body">
-                            <h5 class="card-title">@course.Title</h5>
-                            <p class="card-text">@course.Description</p>
+                            <h5 class="card-title">
+                                <a href="javascript:void(0);"
+                                   class="course-title"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#courseModal"
+                                   data-bs-backdrop="false"
+                                   data-title="@course.Title"
+                                   data-description="@course.Description">
+                                    @course.Title
+                                </a>
+                            </h5>
                             <p class="card-text"><strong>Instructor:</strong> @course.InstructorName</p>
                             <p class="card-text"><strong>Price:</strong> @course.Price JD</p>
                             <p class="card-text"><strong>Start:</strong> @course.StartDate.ToShortDateString()</p>
@@ -105,3 +79,38 @@
         }
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="courseModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Description will be injected here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var courseModal = document.getElementById('courseModal');
+      courseModal.addEventListener('show.bs.modal', function (event) {
+        var link = event.relatedTarget;
+        var title = link.getAttribute('data-title');
+        var description = link.getAttribute('data-description');
+
+        var modalTitle = courseModal.querySelector('.modal-title');
+        var modalBody = courseModal.querySelector('.modal-body');
+
+        modalTitle.textContent = title + ' Description';
+        modalBody.textContent = description;
+      });
+    });
+</script>

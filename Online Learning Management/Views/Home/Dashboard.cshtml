@@ -21,13 +21,9 @@
                             {
                                 <a asp-controller="Admin" asp-action="Courses">Courses</a>
                             }
-                            else if (User.IsInRole(RoleConstants.Instructor))
-                            {
-                                <a>Courses</a>
-                            }
                             else
                             {
-                                <a>Courses</a>
+                                <a asp-controller="" asp-action="" onclick="return false;">Courses</a>
                             }
                         </p>
                         <p class="card-text">Total Courses: @ViewBag.CourseCount</p>
@@ -49,13 +45,9 @@
                             {
                                 <a asp-controller="Admin" asp-action="Instructors">Instructors</a>
                             }
-                            else if (User.IsInRole(RoleConstants.Instructor))
-                            {
-                                <a>Instructors</a>
-                            }
                             else
                             {
-                                <a>Instructors</a>
+                                <a asp-controller="" asp-action="" onclick="return false;">Instructors</a>
                             }
                         </p>
                         <p class="card-text">Total Instructors: @ViewBag.InstructorCount</p>
@@ -77,13 +69,9 @@
                             {
                                 <a asp-controller="Admin" asp-action="Students">Students</a>
                             }
-                            else if (User.IsInRole(RoleConstants.Instructor))
-                            {
-                                <a>Students</a>
-                            }
                             else
                             {
-                                <a>Students</a>
+                                <a asp-controller="" asp-action="" onclick="return false;">Students</a>
                             }
                         </p>
                         <p class="card-text">Total Students: @ViewBag.StudentCount</p>

@@ -45,9 +45,19 @@ namespace LMS.Service.Services.Enrollments
             return _enrollmentMapper.MapFromEnrollmentToEnrollmentDTO(pending.ToList());
         }
 
-        public async Task<List<Enrollment>> GetAllEnrollmentsByUserId(string userId)
+        public async Task<List<EnrollmentDTO>> GetAllEnrollmentsByUserId(string userId)
         {
-            return await _enrollmentRepository.GetAllEnrollmentsByUserId(userId);
+            var enrollments = await _enrollmentRepository.GetAllEnrollmentsByUserId(userId);
+
+            return enrollments.Select(e => new EnrollmentDTO
+            {
+                Id = e.Id,
+                StudentName = e.Student.Name,
+                CourseName = e.Course.Title,
+                AddDate = e.AddDate,
+                Price = e.Course.Price,
+                Status = e.Status,
+            }).ToList();
         }
 
         public async Task<List<StudentDetailsDto>> GetStudentsByCourse(int courseId)
@@ -62,9 +72,9 @@ namespace LMS.Service.Services.Enrollments
             }).ToList();
         }
 
-        public async Task RejectStudentByIdAsync(int studentId)
+        public async Task RejectStudentByIdAsync(int studentId, int courseId)
         {
-            await _enrollmentRepository.RejectEnrollmentByStudentIdAsync(studentId);
+            await _enrollmentRepository.RejectEnrollmentByStudentIdAsync(studentId, courseId);
         }
     }
 }

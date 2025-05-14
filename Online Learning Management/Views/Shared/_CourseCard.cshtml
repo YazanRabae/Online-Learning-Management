@@ -1,20 +1,71 @@
 ﻿@model LMS.Service.DTOs.Courses.CourseDTO
+<style>
+    .modal-backdrop.show {
+        opacity: 0.3; /* Adjust the opacity as desired */
+        background-color: rgba(0, 0, 0, 0.5); /* Customize the color and transparency */
+    }
+</style>
 
-<div class="col-lg-4 col-md-6 mb-4">
+<div class="col-lg-3 col-md-4 mb-6 course-card">
     <div class="card shadow-sm border-0 rounded">
         <img src="@($"data:image/jpeg;base64,{Model.ImageData}")" class="card-img-top" alt="@Model.Title" />
         <div class="card-body">
-            <h5 class="card-title">@Model.Title</h5>
-            <p class="card-text">@Model.Description</p>
+            <h5 class="card-title">
+                <a href="javascript:void(0);"
+                   class="course-title"
+                   data-bs-toggle="modal"
+                   data-bs-target="#courseModal"
+                   data-bs-backdrop="false"
+                   data-title="@Model.Title"
+                   data-description="@Model.Description">
+                    @Model.Title
+                </a>
+            </h5>
             <p class="card-text"><strong>Instructor:</strong> @Model.InstructorName</p>
             <p class="card-text"><strong>Price:</strong> @Model.Price JD</p>
             <p class="card-text"><strong>Start:</strong> @Model.StartDate.ToShortDateString()</p>
-            <span class="badge text-white" style="background-color: @(GetBadgeColor(ViewData["Status"]?.ToString()))">
-                @ViewData["Status"]
+            <span class="badge text-white" style="background-color: @(GetBadgeColor(@Model.Status?.ToString()))">
+                @Model.Status
             </span>
         </div>
     </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="courseModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Description will be injected here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var courseModal = document.getElementById('courseModal');
+      courseModal.addEventListener('show.bs.modal', function (event) {
+        var link = event.relatedTarget;
+        var title = link.getAttribute('data-title');
+        var description = link.getAttribute('data-description');
+
+        var modalTitle = courseModal.querySelector('.modal-title');
+        var modalBody = courseModal.querySelector('.modal-body');
+
+        modalTitle.textContent = title + ' Description';
+        modalBody.textContent = description;
+      });
+    });
+</script>
 
 @functions {
     private string GetBadgeColor(string status) => status switch

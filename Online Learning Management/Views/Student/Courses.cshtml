@@ -1,245 +1,29 @@
-﻿@* @model LMS.Service.DTOs.Courses.StudentCoursesDto
+﻿ @model LMS.Service.DTOs.Courses.StudentCoursesDto
 @{
     ViewBag.Title = "My Enrolled Courses";
 }
 <link href="~/css/views/student/courses.css" rel="stylesheet" />
-
-<div class="container mt-4">
-    <h2 class="mb-4">Pending Courses</h2>
-    <div class="row">
-        @if (Model.PendingCourses != null && Model.PendingCourses.Any())
-        {
-            foreach (var course in Model.PendingCourses)
-            {
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0 rounded">
-                        <img src="@($"data:image/jpeg;base64,{course.ImageData}")" class="card-img-top" alt="@course.Title" />
-                        <div class="card-body">
-                            <h5 class="card-title">@course.Title</h5>
-                            <p class="card-text">@course.Description</p>
-                            <p class="card-text"><strong>Instructor:</strong> @course.InstructorName</p>
-                            <p class="card-text"><strong>Price:</strong> @course.Price JD</p>
-                            <p class="card-text"><strong>Start:</strong> @course.StartDate.ToShortDateString()</p>
-                            <span class="badge badge-active text-white" style="background-color: #fd7e14;">Pending</span>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p class="text-muted ms-3">No Pending Courses.</p>
-        }
+<script src="~/js/views/student/courses.js"></script>
+<div class="container">
+    <div class="col">
+        <h1>Courses</h1>
     </div>
-    <h2 class="mb-4">Active Courses</h2>
-    <div class="row">
-        @if (Model.ActiveCourses != null && Model.ActiveCourses.Any())
-        {
-            foreach (var course in Model.ActiveCourses)
-            {
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0 rounded">
-                        <img src="@($"data:image/jpeg;base64,{course.ImageData}")" class="card-img-top" alt="@course.Title" />
-                        <div class="card-body">
-                            <h5 class="card-title">@course.Title</h5>
-                            <p class="card-text">@course.Description</p>
-                            <p class="card-text"><strong>Instructor:</strong> @course.InstructorName</p>
-                            <p class="card-text"><strong>Price:</strong> @course.Price JD</p>
-                            <p class="card-text"><strong>Start:</strong> @course.StartDate.ToShortDateString()</p>
-                            <span class="badge badge-active text-white">Active</span>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p class="text-muted ms-3">No Active Courses.</p>
-        }
-    </div>
-
-    <h2 class="mb-4 mt-5">Finished Courses</h2>
-    <div class="row">
-        @if (Model.FinishedCourses != null && Model.FinishedCourses.Any())
-        {
-            foreach (var course in Model.FinishedCourses)
-            {
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0 rounded card-finished">
-                        <img src="data:image/jpeg;base64,@course.ImageData" class="card-img-top" alt="@course.Title" />
-                        <div class="card-body">
-                            <h5 class="card-title">@course.Title</h5>
-                            <p class="card-text">@course.Description</p>
-                            <p class="card-text"><strong>Instructor:</strong> @course.InstructorName</p>
-                            <p class="card-text"><strong>Price:</strong> @course.Price JD</p>
-                            <p class="card-text"><strong>Start:</strong> @course.StartDate.ToShortDateString()</p>
-                            <span class="badge badge-finished text-white">Finished</span>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p class="text-muted ms-3">No finished courses.</p>
-        }
-    </div>
-    <h2 class="mb-4">Rejected Courses</h2>
-    <div class="row">
-        @if (Model.RejectedCourses != null && Model.RejectedCourses.Any())
-        {
-            foreach (var course in Model.RejectedCourses)
-            {
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0 rounded">
-                        <img src="@($"data:image/jpeg;base64,{course.ImageData}")" class="card-img-top" alt="@course.Title" />
-                        <div class="card-body">
-                            <h5 class="card-title">@course.Title</h5>
-                            <p class="card-text">@course.Description</p>
-                            <p class="card-text"><strong>Instructor:</strong> @course.InstructorName</p>
-                            <p class="card-text"><strong>Price:</strong> @course.Price JD</p>
-                            <p class="card-text"><strong>Start:</strong> @course.StartDate.ToShortDateString()</p>
-                            <span class="badge badge-active text-white" style="background-color: #dc3545;">Rejected</span>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p class="text-muted ms-3">No Rejected Courses.</p>
-        }
-    </div>
-</div>
- *@
-
-
-@* @model LMS.Service.DTOs.Courses.StudentCoursesDto
-@{
-    ViewBag.Title = "My Enrolled Courses";
-}
-<link href="~/css/views/student/courses.css" rel="stylesheet" />
-
-<div class="container mt-4">
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <input type="text" id="searchTitle" class="form-control" placeholder="Search by Title" />
-        </div>
-        <div class="col-md-3">
-            <input type="text" id="searchInstructor" class="form-control" placeholder="Search by Instructor" />
-        </div>
-        <div class="col-md-3">
-            <input type="number" id="searchPrice" class="form-control" placeholder="Search by Price" />
-        </div>
-        <div class="col-md-3">
-            <select id="courseStatusFilter" class="form-control">
-                <option value="">Select Course Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Active">Active</option>
-                <option value="Finished">Finished</option>
-                <option value="Rejected">Rejected</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <button id="btnSearch" class="btn btn-primary">Search</button>
-            <button id="btnReset" class="btn btn-secondary ms-2">Reset</button>
-        </div>
-    </div>
-
-    <div id="pendingCoursesSection">
-        <h2 class="mb-4">Pending Courses</h2>
-        <div class="row" id="pendingCourses">
-            @if (Model.PendingCourses != null && Model.PendingCourses.Any())
-            {
-                foreach (var course in Model.PendingCourses)
-                {
-                    @Html.Partial("_CourseCard", course)
-                }
-            }
-            else
-            {
-                <p class="text-muted ms-3">No Pending Courses.</p>
-            }
-        </div>
-    </div>
-
-    <div id="activeCoursesSection">
-        <h2 class="mb-4">Active Courses</h2>
-        <div class="row" id="activeCourses">
-            @if (Model.ActiveCourses != null && Model.ActiveCourses.Any())
-            {
-                foreach (var course in Model.ActiveCourses)
-                {
-                    @Html.Partial("_CourseCard", course)
-                }
-            }
-            else
-            {
-                <p class="text-muted ms-3">No Active Courses.</p>
-            }
-        </div>
-    </div>
-
-    <div id="finishedCoursesSection">
-        <h2 class="mb-4 mt-5">Finished Courses</h2>
-        <div class="row" id="finishedCourses">
-            @if (Model.FinishedCourses != null && Model.FinishedCourses.Any())
-            {
-                foreach (var course in Model.FinishedCourses)
-                {
-                    @Html.Partial("_CourseCard", course)
-                }
-            }
-            else
-            {
-                <p class="text-muted ms-3">No Finished Courses.</p>
-            }
-        </div>
-    </div>
-
-    <div id="rejectedCoursesSection">
-        <h2 class="mb-4">Rejected Courses</h2>
-        <div class="row" id="rejectedCourses">
-            @if (Model.RejectedCourses != null && Model.RejectedCourses.Any())
-            {
-                foreach (var course in Model.RejectedCourses)
-                {
-                    @Html.Partial("_CourseCard", course)
-                }
-            }
-            else
-            {
-                <p class="text-muted ms-3">No Rejected Courses.</p>
-            }
-        </div>
-    </div>
-</div>
- *@
- @model LMS.Service.DTOs.Courses.StudentCoursesDto
-@{
-    ViewBag.Title = "My Enrolled Courses";
-}
-<link href="~/css/views/student/courses.css" rel="stylesheet" />
-<style>
-
-
-</style>
-<div class="container mt-4">
     <!-- Search Filters -->
-    <div class="row mb-4">
+    <div class="row">
         <div class="col-md-3">
+            <label for="searchTitle" class="form-label">Course Title</label>
             <input type="text" id="searchTitle" class="form-control" placeholder="Search by Title" />
         </div>
         <div class="col-md-3">
+            <label for="searchInstructor" class="form-label">Instructor Name</label>
             <input type="text" id="searchInstructor" class="form-control" placeholder="Search by Instructor" />
         </div>
         <div class="col-md-3">
+            <label for="searchPrice" class="form-label">Price</label>
             <input type="number" id="searchPrice" class="form-control" placeholder="Search by Price" />
         </div>
         <div class="col-md-3">
+            <label for="courseStatusFilter" class="form-label">Course Status</label>
             <select id="courseStatusFilter" class="form-control">
                 <option value="">Select Course Status</option>
                 <option value="Pending">Pending</option>
@@ -327,6 +111,3 @@
         </div>
     </div>
 </div>
-
-
-<script src="~/js/views/student/courses.js"></script>

@@ -1,223 +1,80 @@
-﻿//var GetCoursesIns = {
-//    OnStart: function () {
-//        this.GetData();
-
-//        // Filter logic
-//        $('#btnSearch').click(function () {
-//            const title = $('#searchTitle').val().toLowerCase();
-//            const startDate = $('#searchStartDate').val();
-//            const endDate = $('#searchEndDate').val();
-
-//            $('#courseInsTableBody tr').each(function () {
-//                const row = $(this);
-//                const rowTitle = row.find('td:eq(1)').text().toLowerCase();
-//                const rowStart = row.find('td:eq(3)').text(); // already in locale date string
-//                const rowEnd = row.find('td:eq(4)').text();
-
-//                const matchTitle = !title || rowTitle.includes(title);
-//                const matchStart = !startDate || new Date(rowStart) >= new Date(startDate);
-//                const matchEnd = !endDate || new Date(rowEnd) <= new Date(endDate);
-
-//                row.toggle(matchTitle && matchStart && matchEnd);
-//            });
-//        });
-
-//        // Reset logic
-//        $('#btnReset').click(function () {
-//            $('#searchTitle').val('');
-//            $('#searchStartDate').val('');
-//            $('#searchEndDate').val('');
-//            $('#courseInsTableBody tr').show(); // Show all rows again
-//        });
-//    },
-
-//    GetData: function () {
-//        $.ajax({
-//            url: window.origin + '/Instructors/GetAllCourses',
-//            type: 'GET',
-//            dataType: 'json',
-//            success: function (data) {
-//                var tbody = $('#courseInsTableBody');
-//                tbody.empty();
-
-//                $.each(data, function (index, course) {
-//                    var startDate = new Date(course.startDate).toLocaleDateString();
-//                    var endDate = new Date(course.endDate).toLocaleDateString();
-
-//                    if (course.instructorName.includes('@')) {
-//                        course.instructorName = course.instructorName.split('@')[0];
-//                    }
-
-//                    var descButton = '<button class="btn btn-sm btn-info view-desc-btn" data-description="' +
-//                        encodeURIComponent(course.description) + '">View</button>';
-
-//                    var row = '<tr>' +
-//                        '<td>' + (index + 1) + '</td>' +
-//                        '<td>' + course.title + '</td>' +
-//                        '<td>' + course.instructorName + '</td>' +
-//                        '<td>' + startDate + '</td>' +
-//                        '<td>' + endDate + '</td>' +
-//                        '<td>' + course.maxStudents + '</td>' +
-//                        '<td>' + course.price.toFixed(2) + '</td>' +
-//                        '<td>' + course.courseTime + ' hours</td>' +
-//                        '<td>' + descButton + '</td>' +
-//                        '<td><button class="btn btn-sm btn-primary view-students-btn" data-course-id="' + course.id + '">View Students</button></td>' +
-//                        '</tr>';
-
-//                    tbody.append(row);
-//                });
-
-//                // Attach click handler for course description buttons
-//                $('.view-desc-btn').on('click', function () {
-//                    var fullDescription = decodeURIComponent($(this).data('description'));
-//                    $('#descriptionModalBody').text(fullDescription);
-//                    var modal = new bootstrap.Modal(document.getElementById('descriptionModal'));
-//                    modal.show();
-//                });
-//            },
-//            error: function (xhr, status, error) {
-//                console.error('Error fetching courses:', error);
-//            }
-//        });
-//    }
-//};
-
-//// View Students Modal Handler (outside object)
-//$(document).on("click", ".view-students-btn", function () {
-//    var courseId = $(this).data("course-id");
-
-//    $.ajax({
-//        url: '/Instructors/GetStudentsByCourse?courseId=' + courseId,
-//        type: 'GET',
-//        success: function (students) {
-//            var $list = $("#studentsList");
-//            $list.empty();
-
-//            if (students.length === 0) {
-//                $list.append('<li class="list-group-item">No students enrolled.</li>');
-//            } else {
-//                students.forEach(function (student, index) {
-//                    $list.append('<li class="list-group-item">' + (index + 1) + ') ' + student.name + ' (' + student.email + ')</li>');
-//                });
-//            }
-
-//            $("#studentsModal").modal("show");
-//        },
-//        error: function () {
-//            alert("Error loading students.");
-//        }
-//    });
-//});
-
-var GetCoursesIns = {
+﻿var GetCoursesIns = {
     OnStart: function () {
         this.GetData();
-
-        // 🔍 Filter logic
-        $('#btnSearch').click(function () {
-            const title = $('#searchTitle').val().toLowerCase();
-            const startDate = $('#searchStartDate').val();
-            const endDate = $('#searchEndDate').val();
-
-            $('#courseInsTableBody tr').each(function () {
-                const row = $(this);
-                const rowTitle = row.find('td:eq(1)').text().toLowerCase();
-                const rowStart = row.find('td:eq(3)').text();
-                const rowEnd = row.find('td:eq(4)').text();
-
-                const matchTitle = !title || rowTitle.includes(title);
-                const matchStart = !startDate || new Date(rowStart) >= new Date(startDate);
-                const matchEnd = !endDate || new Date(rowEnd) <= new Date(endDate);
-
-                row.toggle(matchTitle && matchStart && matchEnd);
+        $(function () {
+            $('#startDateRange').daterangepicker({
+                opens: 'left',
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    cancelLabel: 'Clear'
+                }
+            }, function (start, end, label) {
+                
             });
         });
+        $(function () {
+            $('#endDateRange').daterangepicker({
+                opens: 'left',
+                locale: {
+                    format: 'YYYY-MM-DD'
+                }
+            }, function (start, end, label) {
+                
+            });
+        });
+        $('#btnSearch').click(function () {
+            GetCoursesIns.GetData();
+        });
 
-        // 🔄 Reset logic
         $('#btnReset').click(function () {
-            $('#searchTitle').val('');
-            $('#searchStartDate').val('');
-            $('#searchEndDate').val('');
-            $('#courseInsTableBody tr').show();
+            $('#searchTitle').val(null);
+            $('#pageNumber').val(null);
+            GetCoursesIns.GetData();
         });
-    },
 
-    GetData: function () {
-        $.ajax({
-            url: window.origin + '/Instructors/GetAllCourses',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                var tbody = $('#courseInsTableBody');
-                tbody.empty();
-
-                $.each(data, function (index, course) {
-                    var startDate = new Date(course.startDate).toLocaleDateString();
-                    var endDate = new Date(course.endDate).toLocaleDateString();
-
-                    if (course.instructorName.includes('@')) {
-                        course.instructorName = course.instructorName.split('@')[0];
-                    }
-
-                    var descButton = '<button class="btn btn-sm btn-info view-desc-btn" data-description="' +
-                        encodeURIComponent(course.description) + '">View</button>';
-
-                    var row = '<tr>' +
-                        '<td>' + (index + 1) + '</td>' +
-                        '<td>' + course.title + '</td>' +
-                        '<td>' + course.instructorName + '</td>' +
-                        '<td>' + startDate + '</td>' +
-                        '<td>' + endDate + '</td>' +
-                        '<td>' + course.maxStudents + '</td>' +
-                        '<td>' + course.price.toFixed(2) + '</td>' +
-                        '<td>' + course.courseTime + ' hours</td>' +
-                        '<td>' + descButton + '</td>' +
-                        '<td><button class="btn btn-sm btn-primary view-students-btn" data-course-id="' + course.id + '">View Students</button></td>' +
-                        '</tr>';
-
-                    tbody.append(row);
-                });
-
-                // 📘 Description Modal
-                $('.view-desc-btn').on('click', function () {
-                    var fullDescription = decodeURIComponent($(this).data('description'));
-                    $('#descriptionModalBody').text(fullDescription);
-                    var modal = new bootstrap.Modal(document.getElementById('descriptionModal'));
-                    modal.show();
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error('Error fetching courses:', error);
-            }
+        $('#nextPage').on('click', function () {
+            var currentPage = parseInt($('#pageNumber').val(), 10) || 1;
+            $('#pageNumber').val(currentPage + 1);
+            GetCoursesIns.GetData();
         });
-    }
-};
 
-// 👥 View Students Modal Handler
-$(document).on("click", ".view-students-btn", function () {
-    var courseId = $(this).data("course-id");
+        $('#previousPage').on('click', function () {
+            var currentPage = parseInt($('#pageNumber').val(), 10) || 1;
+            $('#pageNumber').val(currentPage - 1);
+            GetCoursesIns.GetData();
+        });
 
-    $.ajax({
-        url: '/Instructors/GetStudentsByCourse?courseId=' + courseId,
-        type: 'GET',
-        success: function (students) {
-            var $list = $("#studentsList");
-            $list.empty();
+        $(document).on("click", ".view-desc-btn", function () {
+            var fullDescription = decodeURIComponent($(this).data("description"));
+            $("#descriptionModalBody").text(fullDescription);
+            var modal = new bootstrap.Modal(document.getElementById("descriptionModal"));
+            modal.show();
+        });
 
-            if (students.length === 0) {
-                $list.append('<li class="list-group-item">No students enrolled.</li>');
-            } else {
-                students.forEach(function (student, index) {
-                    let statusBadge = '';
-                    let actions = '';
+        $(document).on("click", ".view-students-btn", function () {
+            var courseId = $(this).data("course-id");
 
-                    if (student.status === "Rejected") {
-                        statusBadge = `<span class="badge bg-danger ms-2">Rejected</span>`;
+            $.ajax({
+                url: '/Instructors/GetStudentsByCourse?courseId=' + courseId,
+                type: 'GET',
+                success: function (students) {
+                    var $list = $("#studentsList");
+                    $list.empty();
+
+                    if (students.length === 0) {
+                        $list.append('<li class="list-group-item">No students enrolled.</li>');
                     } else {
-                        actions = `<button class="btn btn-sm btn-danger ms-3 reject-btn" data-student-id="${student.studentId}" data-course-id="${courseId}">Reject</button>`;
-                    }
+                        students.forEach(function (student, index) {
+                            let statusBadge = '';
+                            let actions = '';
 
-                    $list.append(`
+                            if (student.status === "Rejected") {
+                                statusBadge = `<span class="badge bg-danger ms-2">Rejected</span>`;
+                            } else {
+                                actions = `<button class="btn btn-sm btn-danger ms-3 reject-btn" data-student-id="${student.id}" data-course-id="${courseId}">Reject</button>`;
+                            }
+
+                            $list.append(`
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
                                 ${index + 1}) ${student.name} (${student.email}) ${statusBadge}
@@ -225,40 +82,116 @@ $(document).on("click", ".view-students-btn", function () {
                             <div>${actions}</div>
                         </li>
                     `);
+                        });
+                    }
+
+                    $("#studentsModal").modal("show");
+                },
+                error: function () {
+                    alert("Error loading students.");
+                }
+            });
+        });
+
+        $(document).on("click", ".reject-btn", function () {
+            const studentId = $(this).data("student-id");
+            const courseId = $(this).data("course-id");
+
+            if (!confirm("Are you sure you want to reject this student?")) return;
+
+            $.ajax({
+                url: '/Instructors/RejectStudent',
+                type: 'POST',
+                data: {
+                    studentId: studentId,
+                    courseId: courseId
+                },
+                success: function () {
+                    alert("Student rejected successfully.");
+                    // Refresh student list
+                    $(".view-students-btn[data-course-id='" + courseId + "']").click();
+                },
+                error: function () {
+                    alert("Error rejecting student.");
+                }
+            });
+        });
+    },
+
+    GetData: function () {
+        var searchTitle = $('#searchTitle').val();
+        var pageNumber = $('#pageNumber').val();
+        var startDateFrom = null;
+        var startDateTo = null;
+        var endDateFrom = null;
+        var endDateTo = null;
+
+        var startPicker = $('#startDateRange').data('daterangepicker');
+        if (startPicker) {
+            startDateFrom = startPicker.startDate.format('YYYY-MM-DD');
+            startDateTo = startPicker.endDate.format('YYYY-MM-DD');
+        }
+
+        var endPicker = $('#endDateRange').data('daterangepicker');
+        if (endPicker) {
+            endDateFrom = endPicker.startDate.format('YYYY-MM-DD');
+            endDateTo = endPicker.endDate.format('YYYY-MM-DD');
+        }
+
+        $.ajax({
+            url: window.origin + '/Instructors/GetAllCourses',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                title: searchTitle,
+                startDateFrom: startDateFrom,
+                startDateTo: startDateTo,
+                endDateFrom: endDateFrom,
+                endDateTo: endDateTo,
+                pageNumber: pageNumber,
+            },
+            success: function (data) {
+                var tbody = $('#courseInsTableBody');
+                tbody.empty();
+
+                $.each(data.courses, function (index, course) {
+                    var startDate = new Date(course.startDate).toLocaleDateString();
+                    var endDate = new Date(course.endDate).toLocaleDateString();
+
+                    var descButton = '<button class="btn btn-sm btn-info view-desc-btn" data-description="' +
+                        encodeURIComponent(course.description) + '">View</button>';
+
+                    var row = '<tr>' +
+                        '<td>' + ((data.pageSize * (data.pageIndex - 1)) + (index + 1)) + '</td>' +
+                        '<td>' + course.title + '</td>' +
+                        '<td>' + course.instructorName + '</td>' +
+                        '<td>' + startDate + '</td>' +
+                        '<td>' + endDate + '</td>' +
+                        '<td>' + course.maxStudents + '</td>' +
+                        '<td>' + course.price.toFixed(2) + '</td>' +
+                        '<td>' + course.courseTime + ' hours</td>' +
+                        '<td><button class="btn btn-sm btn-info view-desc-btn" data-description="' + encodeURIComponent(course.description) + '">View</button></td>' +
+                        '<td><button class="btn btn-sm btn-primary view-students-btn" data-course-id="' + course.id + '">View Students</button></td>' +
+                        '</tr>';
+
+                    tbody.append(row);
                 });
+                GetCoursesIns.toggleButton('#nextPage', data.hasNextPage);
+                GetCoursesIns.toggleButton('#previousPage', data.hasPreviousPage);
+                $('#pageNumber').val(data.pageIndex);
+                // 📘 Description Modal
+                
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching courses:', error);
             }
-
-            $("#studentsModal").modal("show");
-        },
-        error: function () {
-            alert("Error loading students.");
-        }
-    });
-});
-
-// ❌ Reject Student Handler
-$(document).on("click", ".reject-btn", function () {
-    const studentId = $(this).data("student-id");
-    const courseId = $(this).data("course-id");
-
-    if (!confirm("Are you sure you want to reject this student?")) return;
-
-    $.ajax({
-        url: '/Instructors/RejectStudent',
-        type: 'POST',
-        data: { studentId: studentId },
-        success: function () {
-            alert("Student rejected successfully.");
-            // Refresh student list
-            $(".view-students-btn[data-course-id='" + courseId + "']").click();
-        },
-        error: function () {
-            alert("Error rejecting student.");
-        }
-    });
-});
-
-// 🔁 Initialize on document ready
-$(document).ready(function () {
-    GetCoursesIns.OnStart();
-});
+        });
+    },
+    toggleButton(selector, enabled) {
+        $(selector).toggleClass('disabled', !enabled)
+            .css({
+                'pointer-events': enabled ? 'auto' : 'none',
+                'opacity': enabled ? '1' : '0.6'
+            });
+    }
+};
