@@ -8,6 +8,6 @@ namespace LMS.Service.Common.Constants
 {
     public static class PaginationConstants
     {
-        public const int PageSize = 2;
+        public const int PageSize = 5;
     }
 }

@@ -31,9 +31,8 @@
 }
 
 .logo {
-    margin-top: 75px;
-    max-width: 250px;
-    height: auto;
+    height: 100%;
+    width: 100%;
 }
 
 .logo-text {

@@ -214,17 +214,11 @@ namespace LMS.Repository.Migrations
                     CourseTime = table.Column<int>(type: "int", nullable: false),
                     ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     InstructorId = table.Column<int>(type: "int", nullable: false),
-                    InstructorId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     StudentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Course", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Course_AspNetUsers_InstructorId1",
-                        column: x => x.InstructorId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Course_Instructor_InstructorId",
                         column: x => x.InstructorId,
@@ -316,11 +310,6 @@ namespace LMS.Repository.Migrations
                 name: "IX_Course_InstructorId",
                 table: "Course",
                 column: "InstructorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Course_InstructorId1",
-                table: "Course",
-                column: "InstructorId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Course_StudentId",

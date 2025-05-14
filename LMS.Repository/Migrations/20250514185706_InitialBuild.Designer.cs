@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Repository.Migrations
 {
     [DbContext(typeof(DbLMS))]
-    [Migration("20250507171154_InitialBuild")]
+    [Migration("20250514185706_InitialBuild")]
     partial class InitialBuild
     {
         /// <inheritdoc />
@@ -51,9 +51,6 @@ namespace LMS.Repository.Migrations
                     b.Property<int>("InstructorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("InstructorId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("MaxStudents")
                         .HasColumnType("int");
 
@@ -72,8 +69,6 @@ namespace LMS.Repository.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InstructorId");
-
-                    b.HasIndex("InstructorId1");
 
                     b.HasIndex("StudentId");
 
@@ -372,15 +367,11 @@ namespace LMS.Repository.Migrations
 
             modelBuilder.Entity("LMS.Domain.Entities.Courses.Course", b =>
                 {
-                    b.HasOne("LMS.Domain.Entities.Instructors.Instructor", null)
+                    b.HasOne("LMS.Domain.Entities.Instructors.Instructor", "Instructor")
                         .WithMany("Courses")
                         .HasForeignKey("InstructorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("LMS.Domain.Entities.Users.User", "Instructor")
-                        .WithMany()
-                        .HasForeignKey("InstructorId1");
 
                     b.HasOne("LMS.Domain.Entities.Students.Student", null)
                         .WithMany("Courses")

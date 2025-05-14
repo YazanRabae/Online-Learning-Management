@@ -10,11 +10,11 @@ namespace LMS.Service.DTOs.Courses
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Course title is required.")]
-        [StringLength(100, MinimumLength = 5, ErrorMessage = "Course title must be between 5 and 100 characters.")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Course title must be between 5 and 100 characters.")]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Course description is required.")]
-        [StringLength(1000, MinimumLength = 20, ErrorMessage = "Course description must be between 20 and 1000 characters.")]
+        [StringLength(1000, MinimumLength = 10, ErrorMessage = "Course description must be between 10 and 1000 characters.")]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Start date is required.")]
