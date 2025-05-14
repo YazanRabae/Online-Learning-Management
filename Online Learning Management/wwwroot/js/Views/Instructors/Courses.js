@@ -177,6 +177,8 @@
                 GetCoursesIns.toggleButton('#nextPage', data.hasNextPage);
                 GetCoursesIns.toggleButton('#previousPage', data.hasPreviousPage);
                 $('#pageNumber').val(data.pageIndex);
+                $('#totalPage').text('Total Pages: ' +data.totalPages);
+                $('#divPageNumber').text('Page Number: ' + data.pageIndex);
                 // 📘 Description Modal
                 
             },

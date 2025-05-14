@@ -56,6 +56,8 @@ var GetStudents = {
                 GetStudents.toggleButton('#nextPage', data.hasNextPage);
                 GetStudents.toggleButton('#previousPage', data.hasPreviousPage);
                 $('#pageNumber').val(data.pageIndex);
+                $('#totalPage').text('Total Pages: ' + data.totalPages);
+                $('#divPageNumber').text('Page Number: ' + data.pageIndex);
             },
             error: function (xhr, status, error) {
                 console.error('error fetching students:', error);

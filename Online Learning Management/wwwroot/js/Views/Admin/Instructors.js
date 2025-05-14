@@ -55,6 +55,8 @@ var GetInstructors = {
                 GetInstructors.toggleButton('#nextPage', data.hasNextPage);
                 GetInstructors.toggleButton('#previousPage', data.hasPreviousPage);
                 $('#pageNumber').val(data.pageIndex);
+                $('#totalPage').text('Total Pages: ' + data.totalPages);
+                $('#divPageNumber').text('Page Number: ' + data.pageIndex);
             },
             error: function (xhr, status, error) {
                 console.error('Error fetching instructors:', error); 

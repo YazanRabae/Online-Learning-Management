@@ -42,7 +42,8 @@
                 GetEnrollments.toggleButton('#nextPage', data.hasNextPage);
                 GetEnrollments.toggleButton('#previousPage', data.hasPreviousPage);
                 $('#pageNumber').val(data.pageIndex);
-
+                $('#totalPage').text('Total Pages: ' + data.totalPages);
+                $('#divPageNumber').text('Page Number: ' + data.pageIndex);
                 if (data.enrollments.length === 0) {
                     var row = '<tr><td colspan="6" class="text-center">No Pending Enrollments</td></tr>';
                     tbody.append(row);
