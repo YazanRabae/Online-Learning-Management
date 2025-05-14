@@ -23,6 +23,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing.Printing;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web.WebPages.Html;
 using static System.Reflection.Metadata.BlobBuilder;
 
@@ -97,21 +98,42 @@ namespace Online_Learning_Management.Controllers
             });
         }
 
-        public IActionResult CreateUser(string roleName)
+        public async Task<IActionResult> CreateUser(string roleName, int id)
         {
-            return View(new CreateUserDto()
+            if (id > 0)
             {
-                RoleName = roleName
-            });
+                if(roleName == RoleConstants.Student)
+                    return View(await _studentService.GetStudentById(id));
+                if(roleName == RoleConstants.Instructor)
+                    return View(await _instructorService.GetInstructorById(id));
+            }
+
+            return View(new CreateUserDto() {  RoleName = roleName });
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUser([Bind("Name,Email,Password,ConfirmPassword,RoleName")] CreateUserDto createUserDto)
+        public async Task<IActionResult> CreateUser([Bind("Id,Name,Email,Password,ConfirmPassword,RoleName,UserId")] CreateUserDto createUserDto)
         {
             if (ModelState.IsValid)
             {
+                if (createUserDto.Id > 0)
+                {
+                    await _userService.UpdateUserEmailAndUsernameAsync(createUserDto.UserId, createUserDto.Email);
+                    if (createUserDto.RoleName == RoleConstants.Student)
+                    {
+                        await _studentService.UpdateStudent(createUserDto); 
+                        TempData["Success"] = createUserDto.RoleName + " Updates Successfully";
+                        return RedirectToAction("students", "Admin");
+                    } else if (createUserDto.RoleName == RoleConstants.Instructor)
+                    {
+                        await _instructorService.UpdateInstructor(createUserDto);
+                        TempData["Success"] = createUserDto.RoleName + " Updates Successfully";
+                        return RedirectToAction("Instructors", "Admin");
+                    }
+                    return NotFound();
+                }
                 //Regiser Student
                 var result = await _userService.Register(_studentMapper.MapFromCreateStudentDtoToRegiserModel(createUserDto), createUserDto.RoleName);
 

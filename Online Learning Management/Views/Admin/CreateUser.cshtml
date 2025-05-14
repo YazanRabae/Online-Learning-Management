@@ -5,7 +5,15 @@
 }
 
 <div class="container mt-5">
-    <h1 class="text-left">Create a New @Model.RoleName</h1>
+
+    @if (Model.Id > 0)
+    {
+        <h1 class="text-left"> Edit @Model.RoleName </h1>
+    }
+    else
+    {
+        <h1 class="text-left"> Create a New @Model.RoleName </h1>
+    }
     <br />
     <div class="card shadow-lg border-0">
         <div class="card-header bg-secondary text-white text-center">
@@ -15,6 +23,8 @@
             <form asp-action="CreateUser" method="POST" enctype="multipart/form-data">
                 <div class="row">
                     <input asp-for="RoleName" type="hidden">
+                    <input asp-for="Id" type="hidden">
+                    <input asp-for="UserId" type="hidden">
                     <!-- Left Column -->
                     <div class="col-md-6">
                         <div class="form-group mb-4">
@@ -31,24 +41,35 @@
 
                     </div>
 
-                    <!-- Right Column -->
-                    <div class="col-md-6">
-                        <div class="form-group mb-4">
-                            <label for="Password" class="form-label">Password</label>
-                            <input asp-for="Password" type="password" class="form-control" value="@TempData["Password"]" name="Password" placeholder="Password" required>
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
+                    @if (Model.Id == 0)
+                    {
+                        <!-- Right Column -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label for="Password" class="form-label">Password</label>
+                                <input asp-for="Password" type="password" class="form-control" value="@TempData["Password"]" name="Password" placeholder="Password" required>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
 
-                        <div class="form-group mb-4">
-                            <label for="ConfirmPassword" class="form-label">ConfirmPassword</label>
-                            <input asp-for="ConfirmPassword" type="password" class="form-control" value="@TempData["ConfirmPassword"]" name="ConfirmPassword" placeholder="Confirm Password" required>
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            <div class="form-group mb-4">
+                                <label for="ConfirmPassword" class="form-label">ConfirmPassword</label>
+                                <input asp-for="ConfirmPassword" type="password" class="form-control" value="@TempData["ConfirmPassword"]" name="ConfirmPassword" placeholder="Confirm Password" required>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
 
                 <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-secondary btn-lg px-5">Create @Model.RoleName</button>
+                    @if (Model.Id > 0)
+                    {
+                        <button type="submit" class="btn btn-secondary btn-lg px-5">Edit @Model.RoleName</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-secondary btn-lg px-5">Create @Model.RoleName</button>
+                    }
+
                 </div>
             </form>
         </div>

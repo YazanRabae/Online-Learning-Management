@@ -36,5 +36,17 @@ namespace LMS.Repository.Repositories.Students
         {
             return await _context.Students.ToListAsync();
         }
+
+        public async Task<Student> GetStudentById(int id)
+        {
+            return await _context.Students
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+
+        public async Task UpdateStudent(Student student)
+        {
+            _context.Students.Update(student);
+            await _context.SaveChangesAsync();
+        }
     }
 }

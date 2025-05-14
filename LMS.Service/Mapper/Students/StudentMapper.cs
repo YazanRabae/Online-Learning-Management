@@ -36,6 +36,7 @@ namespace LMS.Service.Mapper.Students
         {
             return students.Select(student => new StudentDto
             {
+                Id = student.Id,
                 Email = student.Email,
                 Name = student.Name
             }).ToList();

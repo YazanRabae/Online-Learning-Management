@@ -11,6 +11,7 @@ namespace LMS.Service.Services
         Task<string> GetRoleByName(string email);
         Task<string> GetRoleByUserId(string userId);
         Task<RegisterResultDto> Register(RegisterDto model, string role);
+        Task UpdateUserEmailAndUsernameAsync(string userId, string email);
         Task Logout();
         Task<List<User>> GetInstructors();
         Task<List<User>> GetStudents();

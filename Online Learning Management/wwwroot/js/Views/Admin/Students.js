@@ -48,6 +48,7 @@ var GetStudents = {
                         '<td scope="row">' + ((data.pageSize * (data.pageIndex - 1)) + (index + 1)) + '</td>' +
                         '<td>' + students.name + '</td>' +
                         '<td>' + students.email + '</td>' +
+                        '<td><a type="button" href="/Admin/CreateUser?roleName=' + encodeURIComponent("Student") + '&id=' + students.id + '" class="btn btn-primary"><i class="fas fa-edit"></i></a></td>' +
                         '</tr>';
 
 

@@ -11,5 +11,7 @@ namespace LMS.Service.Services.Students
     {
         public Task CreateStudent(CreateUserDto createStudentDto);
         public Task<List<StudentDto>> GetStudents();
+        public Task<CreateUserDto> GetStudentById(int id);
+        public Task UpdateStudent(CreateUserDto updateStudentDto);
     }
 }

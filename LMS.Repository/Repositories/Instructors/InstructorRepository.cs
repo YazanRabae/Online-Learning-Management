@@ -14,10 +14,16 @@ namespace LMS.Repository.Repositories.Instructors
             _context = context;
         }
 
-        public async Task CreateInstructor(Instructor Instructor)
+        public async Task CreateInstructor(Instructor instructor)
         {
-            await _context.Instructors.AddAsync(Instructor);
+            await _context.Instructors.AddAsync(instructor);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Instructor> GetInstructorById(int id)
+        {
+            return await _context.Instructors
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<int> GetInstructorId(string userId)
@@ -32,6 +38,12 @@ namespace LMS.Repository.Repositories.Instructors
         {
             return await _context.Instructors
                 .ToListAsync();
+        }
+
+        public async Task UpdateInstructor(Instructor instructor)
+        {
+            _context.Instructors.Update(instructor);
+            await _context.SaveChangesAsync();
         }
     }
 }

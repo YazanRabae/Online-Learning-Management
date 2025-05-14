@@ -60,6 +60,15 @@ namespace LMS.Service.Services
             };
         }
 
+        public async Task UpdateUserEmailAndUsernameAsync(string userId, string email)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            await _userManager.SetEmailAsync(user, email);
+
+            await _userManager.SetUserNameAsync(user, email);
+        }
+
         public async Task Logout()
         {
             await _signInManager.SignOutAsync();

@@ -47,7 +47,8 @@ var GetInstructors = {
                     var row = '<tr>' +
                         '<td scope="row">' + ((data.pageSize * (data.pageIndex - 1)) + (index + 1)) + '</td>' +  
                         '<td>' + instructor.name + '</td>' +
-                        '<td>' + instructor.email + '</td>' + 
+                        '<td>' + instructor.email + '</td>' +
+                        '<td><a type="button" href="/Admin/CreateUser?roleName=' + encodeURIComponent("Instructor") + '&id=' + instructor.id + '" class="btn btn-primary"><i class="fas fa-edit"></i></a></td>' +
                         '</tr>';
 
                     tbody.append(row);
