@@ -1,11 +1,21 @@
 ﻿@model LMS.Service.DTOs.Courses.CourseDTO
 
 @{
-    ViewData["Title"] = "Add Course";
+    if(Model == null || Model.Id == 0)
+        ViewData["Title"] = "Add Course";
+    else
+        ViewData["Title"] = "Update Course";
 }
 
 <div class="container">
-    <h1 class="text-left">Create a New Course</h1>
+    @if (Model == null || Model.Id == 0)
+    {
+        <h1 class="text-left">Create a New Course</h1>
+    }
+    else
+    {
+        <h1 class="text-left">Update Course</h1>
+    }
     <div class="col-auto">
         <a class="btn btn-secondary ml-2" asp-controller="Instructors" asp-action="Courses">
             <i class="fas fa-arrow-left"></i> Back To Courses
@@ -20,7 +30,8 @@
             <form asp-action="AddCourses" method="POST" enctype="multipart/form-data">
                 @* Validation summary *@
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
+                <input asp-for="Id" value="@(Model?.Id ?? 0)" type="hidden"/>
+                <input asp-for="InstructorId" value="@(Model?.InstructorId ?? 0)" type="hidden">
                 <div class="row">
                     <!-- Left Column -->
                     <div class="col-md-6">
@@ -78,7 +89,14 @@
                 </div>
 
                 <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-secondary btn-lg px-5">Create Course</button>
+                    @if (Model == null || Model.Id == 0)
+                    {
+                        <button type="submit" class="btn btn-secondary btn-lg px-5">Create Course</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-secondary btn-lg px-5">Update Course</button>
+                    }
                 </div>
             </form>
         </div>

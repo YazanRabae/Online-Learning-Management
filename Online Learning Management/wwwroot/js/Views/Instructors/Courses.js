@@ -169,7 +169,10 @@
                         '<td>' + course.price.toFixed(2) + '</td>' +
                         '<td>' + course.courseTime + ' hours</td>' +
                         '<td><button class="btn btn-sm btn-info view-desc-btn" data-description="' + encodeURIComponent(course.description) + '">View</button></td>' +
-                        '<td><button class="btn btn-sm btn-primary view-students-btn" data-course-id="' + course.id + '">View Students</button></td>' +
+                        '<td>'
+                        + '<button class="btn btn-sm btn-primary view-students-btn" data-course-id="' + course.id + '">View Students</button>'
+                        + '<a type="button" href="/Instructors/AddCourses?id=' + course.id + '" class="btn"><i class="fas fa-edit"></i></a>'
+                        '</td>' +
                         '</tr>';
 
                     tbody.append(row);

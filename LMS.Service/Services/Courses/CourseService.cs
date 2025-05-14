@@ -201,5 +201,51 @@ namespace LMS.Service.Services.Courses
 
             return courseDTOs;
         }
+
+        public async Task<CourseDTO> GetCourseById(int id)
+        {
+            Course course = await _courseRepository.GetCourseById(id);
+
+            return new CourseDTO()
+            {
+                Id = course.Id,
+                Title = course.Title,
+                Description = course.Description,
+                StartDate = course.StartDate,
+                EndDate = course.EndDate,
+                MaxStudents = course.MaxStudents,
+                Price = course.Price,
+                CourseTime = course.CourseTime,
+                CreatedAt = course.CreatedAt,
+                InstructorId = course.InstructorId
+            };
+        }
+
+        public async Task UpdateCourse(CourseDTO courseDTO)
+        {
+            byte[]? imageData = null;
+
+            if (courseDTO.ImageFile != null && courseDTO.ImageFile.Length > 0)
+            {
+                using var ms = new MemoryStream();
+                await courseDTO.ImageFile.CopyToAsync(ms);
+                imageData = ms.ToArray();
+            }
+
+            await _courseRepository.UpdateCourse(new Course()
+            {
+                Id = courseDTO.Id,
+                Title = courseDTO.Title,
+                Description = courseDTO.Description,
+                StartDate = courseDTO.StartDate,
+                EndDate = courseDTO.EndDate,
+                MaxStudents = courseDTO.MaxStudents,
+                Price = courseDTO.Price,
+                CourseTime = courseDTO.CourseTime,
+                CreatedAt = courseDTO.CreatedAt,
+                InstructorId = courseDTO.InstructorId,
+                ImageData = imageData
+            });
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using LMS.Domain.Entities.Courses;
 using LMS.Domain.Entities.Enrollments;
+using LMS.Domain.Entities.Students;
 using LMS.Domain.Entities.Users;
 using LMS.Repository.Context;
 using Microsoft.EntityFrameworkCore;
@@ -125,6 +126,17 @@ namespace LMS.Repository.Repositories.Courses
             return await _context.Courses
                 .Include(c => c.Instructor)
                 .ToListAsync();
+        }
+
+        public async Task<Course> GetCourseById(int id)
+        {
+            return await _context.Courses
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+        public async Task UpdateCourse(Course course)
+        {
+            _context.Courses.Update(course);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -24,6 +24,8 @@ namespace LMS.Repository.Repositories.Courses
         Task AddCourseAsync(Course course);
         Task<List<Course>> GetAllWithInstructorAndEnrollmentsAsync();
         Task<List<Course>> GetCourses();
+        Task UpdateCourse(Course course);
+        Task<Course> GetCourseById(int id);
         Task<List<Course>> GetCoursesByUserId(string userId);
 
         Task<List<Course>> GetEnrolledCoursesByStudentIdAsync(int studentId);

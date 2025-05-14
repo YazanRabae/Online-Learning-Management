@@ -8,6 +8,8 @@ namespace LMS.Service.Services.Courses
         Task<List<CourseDTO>> GetAllCourses(string userId);
         Task<List<CourseDTO>> GetCourses();
         Task CreateCourse(CourseDTO courseDTO, string userId);
+        Task<CourseDTO> GetCourseById(int id);
+        Task UpdateCourse(CourseDTO courseDTO);
         Task AddEnrollment(string userId, int courseId);
         Task<bool> IsEnrolled(string userId, int courseId);
         Task<int> NumberOfCourses(string userId);

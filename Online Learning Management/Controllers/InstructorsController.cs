@@ -83,8 +83,12 @@ namespace Online_Learning_Management.Controllers
             return View();
         }
 
-        public IActionResult AddCourses()
+        public async Task<IActionResult> AddCourses(int id)
         {
+            if(id > 0)
+            {
+                return View(await _courseService.GetCourseById(id));
+            }
             return View();
         }
 
@@ -139,15 +143,23 @@ namespace Online_Learning_Management.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddCourses([Bind("Title,Description,StartDate,EndDate,Price,CourseTime,ImageFile,MaxStudents,InstructorId")] CourseDTO courseDTO)
+        public async Task<IActionResult> AddCourses([Bind("Id,Title,Description,StartDate,EndDate,Price,CourseTime,ImageFile,MaxStudents,InstructorId")] CourseDTO courseDTO)
         {
             if (ModelState.IsValid)
             {
-                var userId = userManager.GetUserId(User);
+                if(courseDTO.Id > 0)
+                {
+                    await _courseService.UpdateCourse(courseDTO);
+                    TempData["Success"] = "Course Updated Successfully!";
+                }
+                else
+                {
+                    var userId = userManager.GetUserId(User);
+                    await _courseService.CreateCourse(courseDTO, userId);
+                    TempData["Success"] = "Course Created Successfully!";
+                }
 
-                await _courseService.CreateCourse(courseDTO, userId);
-
-                TempData["Success"] = "Successfully enrolled!";
+                
                 return RedirectToAction("Courses", "Instructors");
             }
 

@@ -6,7 +6,6 @@ namespace LMS.Service.DTOs.Courses
 {
     public class CourseDTO
     {
-        [Key]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Course title is required.")]
