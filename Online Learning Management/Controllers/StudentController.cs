@@ -10,6 +10,7 @@ using Online_Learning_Management.Models;
 
 namespace Online_Learning_Management.Controllers
 {
+    [Authorize]
     public class StudentController : Controller
     {
         private readonly UserManager<User> userManager;

@@ -61,16 +61,19 @@ namespace LMS.Service.Services.Courses
         {
             var instructorId = await _instructorRepository.GetInstructorId(userId);
             courseDTO.InstructorId = instructorId;
-            byte[]? imageData = null;
+            byte[] imageData = null;
+            string imageName = null;
 
             if (courseDTO.ImageFile != null && courseDTO.ImageFile.Length > 0)
             {
                 using var ms = new MemoryStream();
                 await courseDTO.ImageFile.CopyToAsync(ms);
                 imageData = ms.ToArray();
+                imageName = courseDTO.ImageFile.FileName;
             }
 
             courseDTO.ImageData = imageData == null ? null : Convert.ToBase64String(imageData);
+            courseDTO.ImageName = imageName;
             var course = _courseMapper.MapFromCourseDTOToCourse(courseDTO);
             course.InstructorId = instructorId;
 
@@ -106,17 +109,17 @@ namespace LMS.Service.Services.Courses
             var courses = await _courseRepository.GetCoursesByUserId(userId);
 
             return courses.Select(c => new CourseDTO
-             {
-                 Id = c.Id,
-                 Title = c.Title,
-                 Description = c.Description,
-                 InstructorName = c.Instructor.Name,
-                 StartDate = c.StartDate,
-                 EndDate = c.EndDate,
-                 MaxStudents = c.MaxStudents,
-                 Price = c.Price,
-                 CourseTime = c.CourseTime
-             }).ToList();
+            {
+                Id = c.Id,
+                Title = c.Title,
+                Description = c.Description,
+                InstructorName = c.Instructor.Name,
+                StartDate = c.StartDate,
+                EndDate = c.EndDate,
+                MaxStudents = c.MaxStudents,
+                Price = c.Price,
+                CourseTime = c.CourseTime
+            }).ToList();
         }
 
         public async Task<StudentCoursesDto> GetEnrolledCoursesSplitAsync(string userId)
@@ -217,19 +220,28 @@ namespace LMS.Service.Services.Courses
                 Price = course.Price,
                 CourseTime = course.CourseTime,
                 CreatedAt = course.CreatedAt,
-                InstructorId = course.InstructorId
+                InstructorId = course.InstructorId,
+                ExistingFile = course.ImageData == null ? null : Convert.ToBase64String(course.ImageData),
+                ImageName = course.ImageName
             };
         }
 
         public async Task UpdateCourse(CourseDTO courseDTO)
         {
             byte[]? imageData = null;
+            string imageName = null;
 
             if (courseDTO.ImageFile != null && courseDTO.ImageFile.Length > 0)
             {
                 using var ms = new MemoryStream();
                 await courseDTO.ImageFile.CopyToAsync(ms);
                 imageData = ms.ToArray();
+                imageName = courseDTO.ImageFile.FileName;
+            }
+            else
+            {
+                imageData = courseDTO.ExistingFile == null ? null : Convert.FromBase64String(courseDTO.ExistingFile);
+                imageName = courseDTO.ImageName;
             }
 
             await _courseRepository.UpdateCourse(new Course()
@@ -244,7 +256,8 @@ namespace LMS.Service.Services.Courses
                 CourseTime = courseDTO.CourseTime,
                 CreatedAt = courseDTO.CreatedAt,
                 InstructorId = courseDTO.InstructorId,
-                ImageData = imageData
+                ImageData = imageData,
+                ImageName = imageName
             });
         }
     }

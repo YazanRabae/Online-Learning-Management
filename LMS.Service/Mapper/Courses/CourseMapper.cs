@@ -48,6 +48,7 @@ namespace LMS.Service.Mapper.Courses
             if (courseDTO.ImageFile != null && courseDTO.ImageFile.Length > 0)
             {
                 course.ImageData = Convert.FromBase64String(courseDTO.ImageData);
+                course.ImageName = courseDTO.ImageName;
             }
 
             return course;

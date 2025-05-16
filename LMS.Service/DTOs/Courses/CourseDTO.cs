@@ -41,9 +41,12 @@ namespace LMS.Service.DTOs.Courses
         [Display(Name = "Course Time (hours)")]
         public int CourseTime { get; set; }
 
+        public string ExistingFile { get; set; }
         public string ImageData { get; set; }
+        public string ImageName { get; set; }
 
         [Display(Name = "Course Image")]
+        [FileAttribute(nameof(Id), ErrorMessage = "Upload an image for the course (JPEG, PNG, etc.).")]
         public IFormFile ImageFile { get; set; }
 
         public int InstructorId { get; set; }
@@ -101,4 +104,30 @@ namespace LMS.Service.DTOs.Courses
             return ValidationResult.Success;
         }
     }
+    public class FileAttribute : ValidationAttribute
+    {
+        private readonly string _comparisonProperty;
+
+        public FileAttribute(string comparisonProperty)
+        {
+            _comparisonProperty = comparisonProperty;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var property = validationContext.ObjectType.GetProperty(_comparisonProperty);
+            if (property == null)
+                return new ValidationResult($"Unknown property: {_comparisonProperty}");
+
+            var idObj = property.GetValue(validationContext.ObjectInstance);
+            if (idObj is int id && id == 0)
+            {
+                if (value is not IFormFile file || file.Length == 0)
+                    return new ValidationResult(ErrorMessage ?? "Upload an image for the course (JPEG, PNG, etc.).");
+            }
+
+            return ValidationResult.Success;
+        }
+    }
+
 }

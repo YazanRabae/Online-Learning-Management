@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace Online_Learning_Management.Controllers
 {
+    [Authorize]
     public class InstructorsController : Controller
     {
         private readonly UserManager<User> userManager;
@@ -143,7 +144,7 @@ namespace Online_Learning_Management.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddCourses([Bind("Id,Title,Description,StartDate,EndDate,Price,CourseTime,ImageFile,MaxStudents,InstructorId")] CourseDTO courseDTO)
+        public async Task<IActionResult> AddCourses([Bind("Id,Title,Description,StartDate,EndDate,Price,CourseTime,ImageFile,MaxStudents,InstructorId,ExistingFile,ImageName")] CourseDTO courseDTO)
         {
             if (ModelState.IsValid)
             {

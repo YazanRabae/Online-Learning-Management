@@ -1,4 +1,4 @@
-﻿@model LMS.Service.DTOs.Courses.CourseDTO
+﻿ @model LMS.Service.DTOs.Courses.CourseDTO
 
 @{
     if(Model == null || Model.Id == 0)
@@ -27,11 +27,12 @@
             <h3>Course Details</h3>
         </div>
         <div class="card-body p-4">
-            <form asp-action="AddCourses" method="POST" enctype="multipart/form-data">
-                @* Validation summary *@
+            <form asp-action="AddCourses" method="POST" enctype="multipart/form-data" novalidate>
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                <input asp-for="Id" value="@(Model?.Id ?? 0)" type="hidden"/>
+                <input id="inputId" asp-for="Id" value="@(Model?.Id ?? 0)" type="hidden"/>
                 <input asp-for="InstructorId" value="@(Model?.InstructorId ?? 0)" type="hidden">
+                <input asp-for="ExistingFile" value="@(Model?.ExistingFile ?? null)" type="hidden">
+                <input asp-for="ImageName" value="@(Model?.ImageName ?? null)" type="hidden">
                 <div class="row">
                     <!-- Left Column -->
                     <div class="col-md-6">
@@ -47,15 +48,21 @@
                             <span asp-validation-for="CourseTime" class="text-danger"></span>
                         </div>
 
+
                         <div class="form-group mb-4">
                             <label asp-for="StartDate" class="form-label"></label>
-                            <input asp-for="StartDate" class="form-control" />
+                            <input asp-for="StartDate" class="form-control"
+                            data-val="true"
+                            data-val-datenotinpast="Start date cannot be in the past." />
                             <span asp-validation-for="StartDate" class="text-danger"></span>
                         </div>
 
                         <div class="form-group mb-4">
                             <label asp-for="EndDate" class="form-label"></label>
-                            <input asp-for="EndDate" class="form-control" />
+                            <input asp-for="EndDate" class="form-control"
+                            data-val="true"
+                            data-val-dategreaterthan="End date must be after the start date."
+                            data-val-dategreaterthan-otherproperty="StartDate" />
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
                         <div class="form-group mb-4">
@@ -74,10 +81,15 @@
                         </div>
 
                         <div class="form-group mb-4">
+                            @if (Model?.ExistingFile != null)
+                            {
+                                <p>@Model.ImageName</p>
+                            }
                             <label asp-for="ImageFile" class="form-label"></label>
-                            <input asp-for="ImageFile" class="form-control" accept="image/*" />
+                            <input asp-for="ImageFile" class="form-control" accept="image/*"
+                                   data-val="true" data-val-filerequired="Upload an image for the course (JPEG, PNG, etc.)." 
+                                    placeholder="Test .ld"/>
                             <span asp-validation-for="ImageFile" class="text-danger"></span>
-                            <small class="form-text text-muted">Upload an image for the course (JPEG, PNG, etc.).</small>
                         </div>
 
                         <div class="form-group mb-4">
@@ -103,4 +115,9 @@
     </div>
 </div>
 
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/views/instructors/addcourses.js"></script>
 
+}
