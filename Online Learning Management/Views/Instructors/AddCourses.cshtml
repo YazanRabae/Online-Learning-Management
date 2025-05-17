@@ -52,17 +52,17 @@
                         <div class="form-group mb-4">
                             <label asp-for="StartDate" class="form-label"></label>
                             <input asp-for="StartDate" class="form-control"
-                            data-val="true"
-                            data-val-datenotinpast="Start date cannot be in the past." />
+                                   data-val="true"
+                                   data-val-datenotinpast="Start date cannot be in the past." />
                             <span asp-validation-for="StartDate" class="text-danger"></span>
                         </div>
 
                         <div class="form-group mb-4">
                             <label asp-for="EndDate" class="form-label"></label>
                             <input asp-for="EndDate" class="form-control"
-                            data-val="true"
-                            data-val-dategreaterthan="End date must be after the start date."
-                            data-val-dategreaterthan-otherproperty="StartDate" />
+                                   data-val="true"
+                                   data-val-dategreaterthan="End date must be after the start date."
+                                   data-val-dategreaterthan-otherproperty="StartDate" />
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
                         <div class="form-group mb-4">
@@ -81,15 +81,22 @@
                         </div>
 
                         <div class="form-group mb-4">
-                            @if (Model?.ExistingFile != null)
-                            {
-                                <p>@Model.ImageName</p>
-                            }
-                            <label asp-for="ImageFile" class="form-label"></label>
-                            <input asp-for="ImageFile" class="form-control" accept="image/*"
-                                   data-val="true" data-val-filerequired="Upload an image for the course (JPEG, PNG, etc.)." 
-                                    placeholder="Test .ld"/>
-                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                            <div class="form-group mb-4">
+                                <label class="form-label d-block">Course Image</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <input asp-for="ImageFile" id="ImageFileInput" class="form-control" accept="image/*"
+                                           onchange="previewSelectedImage(this)"
+                                           data-val="true"
+                                           data-val-filerequired="Upload an image for the course (JPEG, PNG, etc.)."
+                                           style="flex: 1;" />
+
+                                    <img id="previewImage"
+                                         src="data:image/jpeg;base64,@Model?.ExistingFile"
+                                         alt="Current image"
+                                         style="height: 60px; width: auto; border-radius: 4px;" />
+                                </div>
+                                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                            </div>
                         </div>
 
                         <div class="form-group mb-4">
@@ -121,3 +128,8 @@
     <script src="~/js/views/instructors/addcourses.js"></script>
 
 }
+<script>
+    $(document).ready(function () {
+        OnStart();
+    });
+</script>

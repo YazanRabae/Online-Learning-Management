@@ -43,3 +43,44 @@ $.validator.unobtrusive.adapters.add("filerequired", ["dependentproperty"], func
     options.rules["filerequired"] = { dependentproperty: options.params.dependentproperty };
     options.messages["filerequired"] = options.message;
 });
+
+let defaultImage = null;
+
+function OnStart() {
+    let id = $('#inputId').val();
+    const img = $('#previewImage');
+
+    if (id != 0) {
+        defaultImage = img.attr('src');
+        console.log(defaultImage);
+    } else {
+        defaultImage = null;
+        img.hide();
+    }
+}
+
+function previewSelectedImage(input) {
+    let id = $('#inputId').val();
+    const img = $('#previewImage');
+
+    // No file selected, fallback to original
+    if (!input.files || input.files.length === 0) {
+        if (id != 0 && defaultImage) {
+            img.attr('src', defaultImage).show();
+        } else {
+            img.hide();
+        }
+        return;
+    }
+
+    if (id == 0) {
+        img.show();
+    }
+
+    // File selected – preview it
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        img.attr('src', e.target.result);
+    };
+    reader.readAsDataURL(input.files[0]);
+}
