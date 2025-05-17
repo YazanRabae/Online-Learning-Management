@@ -96,8 +96,8 @@ namespace LMS.Service.Services.Enrollments
             await _emailService.SendEmailAsync(
                 receiverName: enrollment.Student.Name,
                 receiverMail: EmailTemplates.TestEmail,
-                subject: EmailTemplates.EnrollmentStatusSubject(false, enrollment.Course.Title),
-                body: EmailTemplates.EnrollmentStatusBody(false,
+                subject: EmailTemplates.EnrollmentStatusSubject(isAccepted, enrollment.Course.Title),
+                body: EmailTemplates.EnrollmentStatusBody(isAccepted,
                     enrollment.Student.Name,
                     enrollment.Course.Title));
         }
