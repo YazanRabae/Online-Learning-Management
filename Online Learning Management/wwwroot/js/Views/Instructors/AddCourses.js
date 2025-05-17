@@ -73,6 +73,17 @@ function previewSelectedImage(input) {
         return;
     }
 
+    const file = input.files[0];
+    const fileName = file.name.toLowerCase();
+    const validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+
+    const fileExtension = fileName.split('.').pop();
+
+    if (!validExtensions.includes(fileExtension)) {
+        img.hide();
+        return;
+    }
+
     if (id == 0) {
         img.show();
     }
