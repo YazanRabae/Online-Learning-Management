@@ -35,25 +35,35 @@ namespace LMS.Repository.Repositories.Enrollments
             await _context.SaveChangesAsync();
         }
 
-        public async Task AcceptEnrollmentAsync(int enrollmentId)
+        public async Task<Enrollment> AcceptEnrollmentAsync(int enrollmentId)
         {
-            var enrollment = await _context.Enrollments.FindAsync(enrollmentId);
+            var enrollment = await _context.Enrollments
+                .Include(e => e.Student)
+                .Include(e => e.Course)
+                .FirstOrDefaultAsync(e => e.Id == enrollmentId);
+
             if (enrollment != null)
             {
                 enrollment.Status = EnrollmentStatus.Accepted;
                 _context.Enrollments.Update(enrollment);
                 await _context.SaveChangesAsync();
             }
+            return enrollment;
         }
-        public async Task RejectEnrollmentAsync(int enrollmentId)
+        public async Task<Enrollment> RejectEnrollmentAsync(int enrollmentId)
         {
-            var enrollment = await _context.Enrollments.FindAsync(enrollmentId);
+            var enrollment = await _context.Enrollments
+                .Include(e => e.Student)
+                .Include(e => e.Course)
+                .FirstOrDefaultAsync(e => e.Id == enrollmentId);
+
             if (enrollment != null)
             {
                 enrollment.Status = EnrollmentStatus.Rejected;
                 _context.Enrollments.Update(enrollment);
                 await _context.SaveChangesAsync();
             }
+            return enrollment;
         }
         public async Task<IEnumerable<Enrollment>> GetEnrollmentsByInstructorUsernameAsync(string username)
         {
@@ -86,10 +96,13 @@ namespace LMS.Repository.Repositories.Enrollments
                 .ToListAsync();
         }
 
-        public async Task RejectEnrollmentByStudentIdAsync(int studentId, int courseId)
+        public async Task<Enrollment> RejectEnrollmentByStudentIdAsync(int studentId, int courseId)
         {
             // Find the enrollment by studentId
             var enrollment = await _context.Enrollments
+                .Include(e => e.Course)
+                .Include(e => e.Student)
+                .Include(e => e.Instructor)
                 .Where(e => e.StudentId == studentId && e.CourseId == courseId)
                 .FirstOrDefaultAsync();
 
@@ -99,6 +112,7 @@ namespace LMS.Repository.Repositories.Enrollments
                 _context.Enrollments.Update(enrollment);
                 await _context.SaveChangesAsync();
             }
+            return enrollment;
         }
     }
 }

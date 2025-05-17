@@ -1,7 +1,9 @@
 ﻿using LMS.Domain.Entities.Enrollments;
 using LMS.Repository.Repositories.Enrollments;
+using LMS.Service.Common.Constants;
 using LMS.Service.DTOs.Enrollments;
 using LMS.Service.Mapper.Enrollments;
+using LMS.Service.Services.Shared;
 
 namespace LMS.Service.Services.Enrollments
 {
@@ -9,16 +11,19 @@ namespace LMS.Service.Services.Enrollments
     {
         private readonly IEnrollmentRepository _enrollmentRepository;
         private readonly IEnrollmentMapper _enrollmentMapper;
+        private readonly IEmailService _emailService;
 
-        public EnrollmentService(IEnrollmentRepository enrollmentRepository, IEnrollmentMapper enrollmentMapper)
+        public EnrollmentService(IEnrollmentRepository enrollmentRepository, IEnrollmentMapper enrollmentMapper, IEmailService emailService)
         {
             _enrollmentRepository = enrollmentRepository;
             _enrollmentMapper = enrollmentMapper;
+            _emailService = emailService;
         }
 
         public async Task AcceptEnrollmentAsync(int enrollmentId)
         {
-            await _enrollmentRepository.AcceptEnrollmentAsync(enrollmentId);
+            var enrollment = await _enrollmentRepository.AcceptEnrollmentAsync(enrollmentId);
+            await SendEnrollmentStatus(enrollment, true);
         }
 
         public async Task<List<EnrollmentDTO>> GetAllPendingEnrollments()
@@ -29,7 +34,8 @@ namespace LMS.Service.Services.Enrollments
 
         public async Task RejectEnrollmentAsync(int enrollmentId)
         {
-            await _enrollmentRepository.RejectEnrollmentAsync(enrollmentId);
+            var enrollment = await _enrollmentRepository.RejectEnrollmentAsync(enrollmentId);
+            await SendEnrollmentStatus(enrollment, false);
         }
 
         public async Task UpdateEnrollment(EnrollmentDTO enrollmentDTO)
@@ -74,7 +80,26 @@ namespace LMS.Service.Services.Enrollments
 
         public async Task RejectStudentByIdAsync(int studentId, int courseId)
         {
-            await _enrollmentRepository.RejectEnrollmentByStudentIdAsync(studentId, courseId);
+            var enrollment = await _enrollmentRepository.RejectEnrollmentByStudentIdAsync(studentId, courseId);
+
+            await _emailService.SendEmailAsync(
+                receiverName: enrollment.Student.Name,
+                receiverMail: EmailTemplates.TestEmail,
+                subject: EmailTemplates.RemovedFromCourseSubject(enrollment.Course.Title),
+                body: EmailTemplates.RemovedFromCourseBody(enrollment.Student.Name,
+                    enrollment.Course.Title,
+                    enrollment.Instructor.Name));
+        }
+
+        private async Task SendEnrollmentStatus(Enrollment enrollment, bool isAccepted)
+        {
+            await _emailService.SendEmailAsync(
+                receiverName: enrollment.Student.Name,
+                receiverMail: EmailTemplates.TestEmail,
+                subject: EmailTemplates.EnrollmentStatusSubject(false, enrollment.Course.Title),
+                body: EmailTemplates.EnrollmentStatusBody(false,
+                    enrollment.Student.Name,
+                    enrollment.Course.Title));
         }
     }
 }

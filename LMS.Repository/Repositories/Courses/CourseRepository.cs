@@ -37,12 +37,19 @@ namespace LMS.Repository.Repositories.Courses
             return await _context.Enrollments
                 .AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId);
         }
-        public async Task AddEnrollmentAsync(Enrollment enrollment)
+        public async Task<Enrollment> AddEnrollmentAsync(Enrollment enrollment)
         {
             try
             {
                 await _context.Enrollments.AddAsync(enrollment);
                 await SaveChangesAsync();
+
+                return await _context.Enrollments
+                    .Include(e => e.Student)
+                    .Include(e => e.Instructor)
+                    .Include(e => e.Course)
+                    .FirstOrDefaultAsync(e => e.StudentId == enrollment.StudentId 
+                        && e.CourseId == enrollment.CourseId && e.InstructorId == enrollment.InstructorId);
             }
             catch (Exception ex)
             {

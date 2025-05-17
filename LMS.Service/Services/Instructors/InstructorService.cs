@@ -5,6 +5,7 @@ using LMS.Service.Common.Constants;
 using LMS.Service.DTOs.Instructors;
 using LMS.Service.DTOs.Students;
 using LMS.Service.Mapper.Instructors;
+using LMS.Service.Services.Shared;
 
 namespace LMS.Service.Services.Instructors
 {
@@ -12,19 +13,30 @@ namespace LMS.Service.Services.Instructors
     {
         private readonly IInstructorRepository _InstructorRepository;
         private readonly IInstructorMapper _InstructorMapper;
+        private readonly IEmailService _emailService;
 
         public InstructorService(
             IInstructorRepository InstructorRepository,
-            IInstructorMapper InstructorMapper)
+            IInstructorMapper InstructorMapper,
+            IEmailService emailService)
         {
             _InstructorRepository = InstructorRepository;
             _InstructorMapper = InstructorMapper;
+            _emailService = emailService;
         }
         public async Task CreateInstructor(CreateUserDto createInstructorDto)
         {
             Instructor Instructor = _InstructorMapper.MapFromCreateInstructorDtoToEntity(createInstructorDto);
 
             await _InstructorRepository.CreateInstructor(Instructor);
+
+            await _emailService.SendEmailAsync(
+                receiverName: createInstructorDto.Name,
+                receiverMail: EmailTemplates.TestEmail,
+                subject: EmailTemplates.CreateUserSubject(RoleConstants.Instructor),
+                body: EmailTemplates.CreateUserBody(createInstructorDto.Name,
+                    createInstructorDto.Email,
+                    createInstructorDto.Password));
         }
 
         public async Task<CreateUserDto> GetInstructorById(int id)
@@ -48,15 +60,23 @@ namespace LMS.Service.Services.Instructors
             return _InstructorMapper.MapFromInstructorEntityToDto(instructors);
         }
 
-        public async Task UpdateInstructor(CreateUserDto updateStudentDto)
+        public async Task UpdateInstructor(CreateUserDto updateInstructorDto)
         {
             await _InstructorRepository.UpdateInstructor(new Instructor()
             {
-                Id = updateStudentDto.Id,
-                Name = updateStudentDto.Name,
-                Email = updateStudentDto.Email,
-                UserId = updateStudentDto.UserId
+                Id = updateInstructorDto.Id,
+                Name = updateInstructorDto.Name,
+                Email = updateInstructorDto.Email,
+                UserId = updateInstructorDto.UserId
             });
+
+            await _emailService.SendEmailAsync(
+                receiverName: updateInstructorDto.Name,
+                receiverMail: EmailTemplates.TestEmail,
+                subject: EmailTemplates.UpdateUserSubject(RoleConstants.Instructor),
+                body: EmailTemplates.UpdateUserBody(updateInstructorDto.Name,
+                    updateInstructorDto.Email,
+                    updateInstructorDto.Password));
         }
     }
 }

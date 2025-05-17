@@ -13,6 +13,6 @@ namespace LMS.Service.Services.Instructors
         public Task CreateInstructor(CreateUserDto createInstructorDto);
         public Task<List<InstructorDto>> GetInstructors();
         public Task<CreateUserDto> GetInstructorById(int id);
-        public Task UpdateInstructor(CreateUserDto updateStudentDto);
+        public Task UpdateInstructor(CreateUserDto updateInstructorDto);
     }
 }

@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using LMS.Repository.Repositories.Students;
 using LMS.Repository.Repositories.Instructors;
 using LMS.Domain.Entities.Students;
+using LMS.Service.Common.Constants;
+using LMS.Service.Services.Shared;
 
 namespace LMS.Service.Services.Courses
 {
@@ -18,20 +20,20 @@ namespace LMS.Service.Services.Courses
         private readonly IStudentRepository _studentRepository;
         private readonly IInstructorRepository _instructorRepository;
         private readonly ICourseMapper _courseMapper;
-        private readonly UserManager<User> _userManager;
+        private readonly IEmailService _emailService;
 
         public CourseService(
             ICourseRepository courseRepository,
             ICourseMapper courseMapper,
             IStudentRepository studentRepository,
-            UserManager<User> userManager,
-            IInstructorRepository instructorRepository)
+            IInstructorRepository instructorRepository,
+            IEmailService emailService)
         {
             _courseRepository = courseRepository;
             _courseMapper = courseMapper;
-            _userManager = userManager;
             _studentRepository = studentRepository;
             _instructorRepository = instructorRepository;
+            _emailService = emailService;
         }
 
         public async Task<List<CourseDTO>> GetAllCourses(string userId)
@@ -91,7 +93,15 @@ namespace LMS.Service.Services.Courses
                 Status = EnrollmentStatus.Pending
             };
 
-            await _courseRepository.AddEnrollmentAsync(enrollment);
+            var enroll = await _courseRepository.AddEnrollmentAsync(enrollment);
+
+            await _emailService.SendEmailAsync(
+                receiverName: enroll.Instructor.Name,
+                receiverMail: EmailTemplates.TestEmail,
+                subject: EmailTemplates.StudentEnrollSubject(enroll.Course.Title),
+                body: EmailTemplates.StudentEnrollBody(enroll.Instructor.Name,
+                    enroll.Student.Name,
+                    enroll.Course.Title));
         }
 
         public async Task<bool> IsEnrolled(string userId, int courseId)

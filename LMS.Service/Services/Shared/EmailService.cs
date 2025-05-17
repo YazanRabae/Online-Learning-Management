@@ -8,11 +8,11 @@ namespace LMS.Service.Services.Shared
     {
         private readonly string _gmailAddress = "yazanrabae78@gmail.com";
         private readonly string _appPassword = "wclz oiiz wkgl ijxc";
-        public async Task SendEmailAsync(string receiverName, string toMail, string subject, string body)
+        public async Task SendEmailAsync(string receiverName, string receiverMail, string subject, string body)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("LMS", _gmailAddress));
-            message.To.Add(new MailboxAddress(receiverName, toMail));
+            message.To.Add(new MailboxAddress(receiverName, receiverMail));
             message.Subject = subject;
 
             message.Body = new TextPart("plain")

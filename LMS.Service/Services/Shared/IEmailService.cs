@@ -8,6 +8,6 @@ namespace LMS.Service.Services.Shared
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string receiverName, string toMail, string subject, string body);
+        Task SendEmailAsync(string receiverName, string receiverMail, string subject, string body);
     }
 }
