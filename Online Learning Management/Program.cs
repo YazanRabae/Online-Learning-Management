@@ -57,6 +57,7 @@ namespace Online_Learning_Management
             builder.Services.AddScoped<IStudentService, StudentService>();
             builder.Services.AddScoped<IInstructorService, InstructorService>();
             builder.Services.AddScoped<ISharedService, SharedService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<ICourseMapper, CourseMapper>();
             builder.Services.AddScoped<IStudentMapper, StudentMapper>();
             builder.Services.AddScoped<IInstructorMapper, InstructorMapper>();
